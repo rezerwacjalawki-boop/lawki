@@ -1,0 +1,869 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rezerwacja miejsc | SeatDesk</title>
+  <meta name="description" content="Profesjonalny system wyboru i zgłoszenia rezerwacji miejsc w ławkach.">
+  <style>
+    :root{
+      --bg:#f5f7fb;
+      --surface:#fff;
+      --surface-soft:#f8fafc;
+      --text:#162033;
+      --muted:#718096;
+      --line:#e4e9f1;
+      --line-strong:#cfd7e4;
+      --primary:#19713d;
+      --primary-2:#2db95a;
+      --primary-soft:#eaf8ef;
+      --primary-dark:#0d5d31;
+      --danger:#b42318;
+      --warning:#a15c00;
+      --shadow:0 20px 60px rgba(21,32,51,.08);
+      --shadow-sm:0 8px 24px rgba(21,32,51,.06);
+      --radius:24px;
+    }
+
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{
+      margin:0;
+      background:
+        radial-gradient(circle at 10% -5%, #fff 0, transparent 34%),
+        radial-gradient(circle at 95% 0%, #eff8f2 0, transparent 28%),
+        var(--bg);
+      color:var(--text);
+      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+      line-height:1.5;
+    }
+    button,input,select,textarea{font:inherit}
+    button{border:0}
+    a{color:inherit}
+    .wrap{width:min(1180px,calc(100% - 32px));margin:auto}
+
+    /* Header */
+    header{padding:28px 0 18px}
+    .topbar{
+      display:flex;align-items:center;justify-content:space-between;gap:16px;
+      padding:11px 14px 11px 12px;
+      border:1px solid var(--line);background:rgba(255,255,255,.82);
+      backdrop-filter:blur(12px);border-radius:18px;box-shadow:var(--shadow-sm)
+    }
+    .brand{display:flex;align-items:center;gap:12px}
+    .logo-mark{
+      width:42px;height:42px;border-radius:13px;
+      display:grid;place-items:center;color:#fff;font-weight:900;
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      box-shadow:0 9px 24px rgba(45,185,90,.22)
+    }
+    .brand-copy{display:grid;line-height:1.05}
+    .brand-copy strong{font-size:14px}
+    .brand-copy span{font-size:11px;color:var(--muted);margin-top:4px}
+    .status{
+      display:inline-flex;align-items:center;gap:8px;
+      padding:8px 12px;border-radius:999px;background:var(--primary-soft);
+      color:var(--primary-dark);font-size:12px;font-weight:800
+    }
+    .status-dot{width:8px;height:8px;background:var(--primary-2);border-radius:50%;box-shadow:0 0 0 4px rgba(45,185,90,.12)}
+    h1{
+      max-width:850px;margin:28px 0 12px;
+      font-size:clamp(32px,5vw,56px);line-height:1.02;letter-spacing:-.045em
+    }
+    .lead{max-width:800px;margin:0;color:var(--muted);font-size:17px}
+    .trust-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+    .trust{
+      display:inline-flex;align-items:center;gap:8px;padding:9px 12px;
+      border:1px solid var(--line);background:#fff;border-radius:12px;
+      color:#5f6b7c;font-size:12px;font-weight:700
+    }
+
+    /* Steps */
+    .steps{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 24px
+    }
+    .step{
+      display:flex;align-items:center;gap:10px;padding:12px 14px;
+      border:1px solid var(--line);background:#fff;border-radius:15px
+    }
+    .step-num{
+      width:28px;height:28px;border-radius:9px;display:grid;place-items:center;
+      background:#eef2f7;color:#667085;font-size:12px;font-weight:900;flex:none
+    }
+    .step strong{display:block;font-size:12px}
+    .step span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+
+    /* Main */
+    .layout{display:grid;grid-template-columns:1.08fr .92fr;gap:22px;align-items:start;padding-bottom:48px}
+    .card{
+      background:var(--surface);border:1px solid rgba(228,233,241,.95);
+      border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden
+    }
+    .card-head{
+      padding:24px 24px 14px;
+      display:flex;justify-content:space-between;gap:16px;align-items:flex-start
+    }
+    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:#98a2b3;font-weight:900;margin-bottom:6px}
+    .card-head h2{margin:0;font-size:21px;letter-spacing:-.025em}
+    .card-head p{margin:6px 0 0;color:var(--muted);font-size:13px}
+    .mini-count{
+      white-space:nowrap;padding:9px 11px;border-radius:11px;
+      background:var(--surface-soft);border:1px solid var(--line);
+      font-size:11px;font-weight:800;color:#586477
+    }
+
+    /* Map */
+    .map-area{padding:8px 24px 24px}
+    .map-top{
+      display:flex;justify-content:space-between;gap:16px;align-items:center;
+      margin:0 0 14px;padding:12px 14px;border-radius:15px;
+      background:#f8fafc;border:1px solid var(--line)
+    }
+    .map-top strong{font-size:13px}
+    .map-top span{font-size:11px;color:var(--muted)}
+    .map-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
+    .lane{display:flex;flex-direction:column;gap:13px}
+    .lane-title{
+      display:flex;justify-content:space-between;align-items:center;
+      padding:0 2px 2px
+    }
+    .lane-title strong{font-size:12px}
+    .lane-title span{font-size:11px;color:#98a2b3;font-weight:700}
+    .bench{
+      display:grid;grid-template-columns:1fr 1fr;min-height:82px;
+      border:2px solid #1b2431;border-radius:7px;background:#fff;overflow:hidden;
+      box-shadow:0 4px 12px rgba(18,32,52,.03)
+    }
+    .seat{
+      position:relative;min-height:80px;padding:0;
+      background:#fafbfd;color:#a5afbe;cursor:not-allowed
+    }
+    .seat + .seat{border-left:2px solid #1b2431}
+    .seat.available{
+      cursor:pointer;
+      color:#fff;
+      background:linear-gradient(145deg,#20b64e,#2bb95b)
+    }
+    .seat.available:hover{filter:brightness(1.025)}
+    .seat.selected{box-shadow:inset 0 0 0 4px #0a5530}
+    .seat-label{
+      position:absolute;top:9px;left:10px;
+      font-size:12px;font-weight:900;letter-spacing:.01em
+    }
+    .seat-name{
+      position:absolute;left:10px;right:10px;bottom:24px;
+      font-size:12px;font-weight:800
+    }
+    .seat-status{
+      position:absolute;left:10px;bottom:9px;
+      font-size:10px;font-weight:800;opacity:.85
+    }
+    .seat.unavailable::after{
+      content:"Niedostępne";position:absolute;left:10px;bottom:9px;
+      color:#9aa4b2;font-size:10px;font-weight:800
+    }
+    .selection-badge{
+      position:absolute;right:9px;top:9px;
+      width:22px;height:22px;border-radius:50%;display:none;
+      place-items:center;background:#fff;color:var(--primary-dark);font-size:12px;font-weight:900
+    }
+    .seat.selected .selection-badge{display:grid}
+    .legend{display:flex;gap:15px;flex-wrap:wrap;margin-top:16px}
+    .legend span{display:flex;align-items:center;color:var(--muted);font-size:11px;font-weight:700}
+    .legend i{width:10px;height:10px;border-radius:3px;border:1px solid var(--line-strong);margin-right:6px;background:#f8fafc}
+    .legend .free i{background:#29b957;border-color:#23aa4e}
+    .legend .chosen i{background:#fff;border:3px solid #0d5d31}
+    .selection-note{
+      display:flex;align-items:flex-start;gap:10px;margin-top:15px;
+      padding:12px 13px;border-radius:14px;background:#f8fbf9;
+      border:1px solid #dcefe2;color:#496152;font-size:11px
+    }
+
+    /* Form */
+    .card-body{padding:8px 24px 24px}
+    .section-block{padding-top:12px;margin-top:14px;border-top:1px solid var(--line)}
+    .section-title{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+    .section-icon{
+      width:28px;height:28px;border-radius:9px;display:grid;place-items:center;
+      background:var(--primary-soft);color:var(--primary-dark);font-weight:900;font-size:12px
+    }
+    .section-title strong{font-size:13px}
+    .section-title span{font-size:11px;color:var(--muted);margin-left:auto}
+    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+    .field{margin-bottom:13px}
+    label{display:block;margin:0 0 7px;font-size:12px;font-weight:900}
+    .helper{margin:-2px 0 8px;font-size:11px;color:var(--muted)}
+    input,select,textarea{
+      width:100%;border:1px solid var(--line);background:#fbfcfe;
+      color:var(--text);border-radius:13px;padding:12px 13px;outline:0;
+      transition:.18s ease
+    }
+    input::placeholder,textarea::placeholder{color:#a8b2bf}
+    input:focus,select:focus,textarea:focus{
+      border-color:#86bf98;box-shadow:0 0 0 4px rgba(45,185,90,.10);background:#fff
+    }
+    textarea{min-height:100px;resize:vertical}
+    .counter{text-align:right;color:#9aa4b2;font-size:10px;margin-top:5px}
+
+    .plans{display:grid;gap:9px}
+    .plan{
+      display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:center;
+      position:relative;padding:13px;border:1px solid var(--line);border-radius:15px;
+      background:#fff;cursor:pointer
+    }
+    .plan input{position:absolute;opacity:0;pointer-events:none}
+    .radio{width:18px;height:18px;border:2px solid #c6cfdb;border-radius:50%}
+    .plan:has(input:checked){border-color:#89bf99;background:var(--primary-soft)}
+    .plan:has(input:checked) .radio{border:5px solid var(--primary)}
+    .plan-name{font-size:13px;font-weight:900}
+    .plan-note{font-size:11px;color:var(--muted)}
+    .price{font-size:13px;font-weight:900;white-space:nowrap}
+    .plan-per{display:block;font-size:10px;color:#95a0ad;font-weight:700;text-align:right;margin-top:2px}
+    .plan-standard{min-height:68px}
+    .plan-plus{
+      min-height:84px;
+      border:1px solid #8bb7ff;
+      background:linear-gradient(135deg,#f5f9ff 0%,#eaf3ff 55%,#f6faff 100%);
+      box-shadow:0 10px 28px rgba(37,99,235,.10);
+      overflow:visible;
+      isolation:isolate;
+    }
+    .plan-plus::before{
+      content:"";
+      position:absolute;
+      inset:-1px;
+      z-index:-1;
+      border-radius:15px;
+      padding:1px;
+      background:linear-gradient(110deg,#2563eb,#38bdf8,#2563eb);
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask-composite:exclude;
+    }
+    .plan-plus:hover{
+      transform:translateY(-2px);
+      box-shadow:0 14px 32px rgba(37,99,235,.16);
+    }
+    .plan-plus:has(input:checked){
+      border-color:#2563eb;
+      background:linear-gradient(135deg,#eef5ff,#e1edff 55%,#f7fbff);
+      box-shadow:0 14px 36px rgba(37,99,235,.20);
+    }
+    .plan-plus:has(input:checked) .radio{border:5px solid #2563eb}
+    .plan-plus .plan-name{color:#174ea6}
+    .plan-plus .price{color:#174ea6}
+    .plan-plus .plan-note{color:#5d7392}
+    .plan-ribbon{
+      position:absolute;
+      top:-10px;
+      left:13px;
+      z-index:3;
+      padding:5px 9px;
+      border-radius:999px;
+      color:#fff;
+      background:linear-gradient(90deg,#1d4ed8,#0ea5e9);
+      font-size:9px;
+      font-weight:1000;
+      letter-spacing:.08em;
+      box-shadow:0 7px 16px rgba(37,99,235,.25);
+      animation:ribbonFloat 2.8s ease-in-out infinite;
+    }
+    .best-offer .plan-ribbon{
+      background:linear-gradient(90deg,#2563eb,#06b6d4,#2563eb);
+      background-size:180% auto;
+      animation:gradientShift 3s linear infinite, ribbonFloat 2.8s ease-in-out infinite;
+    }
+    .plan-tagline{
+      position:absolute;
+      right:14px;
+      bottom:8px;
+      font-size:9px;
+      font-weight:900;
+      color:#2563eb;
+      letter-spacing:.02em;
+    }
+    .plan-glow{
+      position:absolute;
+      width:80px;height:80px;
+      right:-24px;top:-25px;
+      border-radius:50%;
+      background:rgba(56,189,248,.20);
+      filter:blur(8px);
+      pointer-events:none;
+      animation:pulseGlow 2.4s ease-in-out infinite;
+    }
+    .bestseller .plan-glow{animation-delay:.2s}
+    .best-offer .plan-glow{background:rgba(37,99,235,.18);animation-delay:.55s}
+    @keyframes pulseGlow{
+      0%,100%{transform:scale(.9);opacity:.45}
+      50%{transform:scale(1.2);opacity:.9}
+    }
+    @keyframes ribbonFloat{
+      0%,100%{transform:translateY(0)}
+      50%{transform:translateY(-2px)}
+    }
+    @keyframes gradientShift{
+      0%{background-position:0% 50%}
+      100%{background-position:180% 50%}
+    }
+
+    .summary{
+      margin:16px 0 12px;padding:15px;border-radius:17px;
+      background:linear-gradient(180deg,#f8fcf9,#f1f8f3);border:1px solid #dceee1
+    }
+    .summary-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:8px}
+    .summary-head strong{font-size:13px}
+    .summary-head span{font-size:10px;color:#6c7c70}
+    .summary-row{display:flex;justify-content:space-between;gap:12px;padding:6px 0;font-size:12px}
+    .summary-row + .summary-row{border-top:1px solid #e3eee7}
+    .summary-row.total{padding-top:10px;margin-top:4px;font-size:13px}
+    .summary-row.total strong{font-size:20px;letter-spacing:-.03em}
+
+    .checkbox{display:flex;align-items:flex-start;gap:10px;color:#697586;font-size:11px;margin:12px 0 15px}
+    .checkbox input{width:17px;height:17px;margin:1px 0 0;accent-color:var(--primary)}
+    .cta{
+      width:100%;display:flex;align-items:center;justify-content:center;gap:10px;
+      border-radius:14px;padding:14px 16px;color:#fff;
+      background:linear-gradient(135deg,var(--primary),var(--primary-2));
+      font-weight:900;font-size:14px;cursor:pointer;
+      box-shadow:0 12px 24px rgba(31,122,69,.20)
+    }
+    .cta:hover{filter:brightness(1.025)}
+    .cta:disabled{opacity:.6;cursor:not-allowed;box-shadow:none}
+    .btn-icon{font-size:16px}
+    .secure-note{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px;color:#8792a1;font-size:10px}
+
+    .notice{display:none;margin-top:12px;padding:12px 13px;border-radius:13px;font-size:11px}
+    .notice.ok{display:block;background:#ecfdf3;border:1px solid #abefc6;color:#067647}
+    .notice.err{display:block;background:#fff4f2;border:1px solid #fecdca;color:var(--danger)}
+
+    /* Extras */
+    .below-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:22px;padding-bottom:40px}
+    .info-strip{
+      display:grid;grid-template-columns:repeat(3,1fr);gap:10px
+    }
+    .info-box{
+      padding:15px;border:1px solid var(--line);background:#fff;border-radius:16px;box-shadow:var(--shadow-sm)
+    }
+    .info-box strong{display:block;font-size:13px}
+    .info-box span{display:block;color:var(--muted);font-size:11px;margin-top:4px}
+    details{
+      border:1px solid var(--line);background:#fff;border-radius:15px;padding:13px 14px
+    }
+    details + details{margin-top:8px}
+    summary{cursor:pointer;font-size:12px;font-weight:900}
+    details p{margin:9px 0 0;color:var(--muted);font-size:11px}
+    footer{
+      padding:0 0 34px;color:#8c97a6;text-align:center;font-size:10px
+    }
+
+    @media (max-width: 960px){
+      .layout,.below-grid{grid-template-columns:1fr}
+    }
+    @media (max-width: 680px){
+      .wrap{width:min(100% - 20px,1180px)}
+      .topbar{padding:10px}
+      .status{display:none}
+      .steps{grid-template-columns:1fr}
+      .grid-2,.map-grid,.info-strip{grid-template-columns:1fr}
+      .card-head,.card-body{padding-left:17px;padding-right:17px}
+      .map-area{padding-left:16px;padding-right:16px}
+      h1{margin-top:22px}
+      .bench{min-height:76px}
+      .seat{min-height:74px}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="topbar">
+        <div class="brand">
+          <div class="logo-mark">✓</div>
+          <div class="brand-copy">
+            <strong>SeatDesk</strong>
+            <span>System rezerwacji miejsc</span>
+          </div>
+        </div>
+        <div class="status"><i class="status-dot"></i> Formularz aktywny</div>
+      </div>
+
+      <h1>Zarezerwuj swoje miejsce<br>bez zbędnych formalności.</h1>
+      <p class="lead">
+        Wybierz wolny sektor na mapie, dopasuj wariant godzinowy, dzienny lub Subskrypcję Plus i uzupełnij dane kontaktowe.
+        Zgłoszenie trafi na skonfigurowany adres e-mail administratora.
+      </p>
+
+      <div class="trust-row">
+        <span class="trust">✓ Czytelne podsumowanie</span>
+        <span class="trust">✓ Szybkie zgłoszenie online</span>
+        <span class="trust">✓ Odpowiedź na Twój e-mail</span>
+      </div>
+    </header>
+
+    <div class="steps" aria-label="Proces rezerwacji">
+      <div class="step"><span class="step-num">01</span><div><strong>Wybierz miejsce</strong><span>Zielone sektory są dostępne</span></div></div>
+      <div class="step"><span class="step-num">02</span><div><strong>Podaj dane</strong><span>Kontakt i ławka źródłowa</span></div></div>
+      <div class="step"><span class="step-num">03</span><div><strong>Wyślij zgłoszenie</strong><span>Otrzymasz potwierdzenie wysłania</span></div></div>
+    </div>
+
+    <main class="layout">
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <div class="eyebrow">01 · Wybór miejsca</div>
+            <h2>Układ ławek</h2>
+            <p>Zielony kolor oznacza sektor, który można wybrać.</p>
+          </div>
+          <div class="mini-count"><span id="availableCount">3</span> wolne</div>
+        </div>
+
+        <div class="map-area">
+          <div class="map-top">
+            <div>
+              <strong>Mapa miejsc</strong>
+              <span> · kliknij jeden lub kilka zielonych sektorów</span>
+            </div>
+            <span id="selectionCount">0 wybranych</span>
+          </div>
+
+          <div class="map-grid">
+            <div class="lane">
+              <div class="lane-title"><strong>Lewy rząd</strong><span>Ławki 1–6</span></div>
+
+              <div class="bench">
+                <button class="seat unavailable" type="button" aria-label="Ławka 1 sektor A niedostępny"><span class="seat-label">L1-A</span></button>
+                <button class="seat unavailable" type="button" aria-label="Ławka 1 sektor B niedostępny"><span class="seat-label">L1-B</span></button>
+              </div>
+              <div class="bench">
+                <button class="seat unavailable" type="button" aria-label="Ławka 2 sektor A niedostępny"><span class="seat-label">L2-A</span></button>
+                <button class="seat unavailable" type="button" aria-label="Ławka 2 sektor B niedostępny"><span class="seat-label">L2-B</span></button>
+              </div>
+              <div class="bench">
+                <button class="seat available" type="button" data-seat="L3-A" aria-label="Ławka 3 sektor A — wybierz">
+                  <span class="seat-label">L3-A</span><span class="seat-name">Sektor A</span><span class="seat-status">Wolne</span><span class="selection-badge">✓</span>
+                </button>
+                <button class="seat available" type="button" data-seat="L3-B" aria-label="Ławka 3 sektor B — wybierz">
+                  <span class="seat-label">L3-B</span><span class="seat-name">Sektor B</span><span class="seat-status">Wolne</span><span class="selection-badge">✓</span>
+                </button>
+              </div>
+              <div class="bench">
+                <button class="seat unavailable" type="button" aria-label="Ławka 4 sektor A niedostępny"><span class="seat-label">L4-A</span></button>
+                <button class="seat unavailable" type="button" aria-label="Ławka 4 sektor B niedostępny"><span class="seat-label">L4-B</span></button>
+              </div>
+              <div class="bench">
+                <button class="seat available" type="button" data-seat="L5-A" aria-label="Ławka 5 sektor A — wybierz">
+                  <span class="seat-label">L5-A</span><span class="seat-name">Sektor A</span><span class="seat-status">Wolne</span><span class="selection-badge">✓</span>
+                </button>
+                <button class="seat unavailable" type="button" aria-label="Ławka 5 sektor B niedostępny"><span class="seat-label">L5-B</span></button>
+              </div>
+              <div class="bench">
+                <button class="seat unavailable" type="button" aria-label="Ławka 6 sektor A niedostępny"><span class="seat-label">L6-A</span></button>
+                <button class="seat unavailable" type="button" aria-label="Ławka 6 sektor B niedostępny"><span class="seat-label">L6-B</span></button>
+              </div>
+            </div>
+
+            <div class="lane">
+              <div class="lane-title"><strong>Prawy rząd</strong><span>Ławki 7–8</span></div>
+
+              <div class="bench">
+                <button class="seat unavailable" type="button" aria-label="Ławka 7 sektor A niedostępny"><span class="seat-label">P1-A</span></button>
+                <button class="seat unavailable" type="button" aria-label="Ławka 7 sektor B niedostępny"><span class="seat-label">P1-B</span></button>
+              </div>
+              <div class="bench">
+                <button class="seat unavailable" type="button" aria-label="Ławka 8 sektor A niedostępny"><span class="seat-label">P2-A</span></button>
+                <button class="seat unavailable" type="button" aria-label="Ławka 8 sektor B niedostępny"><span class="seat-label">P2-B</span></button>
+              </div>
+            </div>
+          </div>
+
+          <div class="legend">
+            <span class="free"><i></i> Wolne</span>
+            <span><i></i> Niedostępne</span>
+            <span class="chosen"><i></i> Wybrane</span>
+          </div>
+
+          <div class="selection-note">
+            <strong>Wskazówka:</strong>
+            <span>Możesz zaznaczyć więcej niż jedno wolne miejsce. Łączna cena zostanie policzona automatycznie jako cena abonamentu × liczba wybranych miejsc.</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="card">
+        <div class="card-head">
+          <div>
+            <div class="eyebrow">02 · Dane rezerwacji</div>
+            <h2>Dane najemcy</h2>
+            <p>Wypełnij formularz, aby przygotować kompletne zgłoszenie.</p>
+          </div>
+        </div>
+
+        <div class="card-body">
+          <form id="bookingForm">
+            <!-- Formspree: specjalne pola subject oraz email są używane do tematu i Reply-To. -->
+            <input type="hidden" id="hiddenName" name="name">
+            <input type="hidden" id="hiddenSubject" name="subject">
+            <input type="hidden" name="typ_zgloszenia" value="Rezerwacja miejsca w ławce">
+            <input type="hidden" id="hiddenMessage" name="message">
+
+            <div class="section-block" style="border-top:0;margin-top:0;padding-top:0">
+              <div class="section-title">
+                <span class="section-icon">A</span><strong>Kontakt</strong><span>Wymagane dane</span>
+              </div>
+
+              <div class="grid-2">
+                <div class="field">
+                  <label for="firstName">Imię</label>
+                  <input id="firstName" name="imie" autocomplete="given-name" placeholder="np. Jan" required>
+                </div>
+                <div class="field">
+                  <label for="lastName">Nazwisko</label>
+                  <input id="lastName" name="nazwisko" autocomplete="family-name" placeholder="np. Kowalski" required>
+                </div>
+              </div>
+
+              <div class="grid-2">
+                <div class="field">
+                  <label for="email">Adres e-mail</label>
+                  <input id="email" name="email" type="email" autocomplete="email" placeholder="jan@example.com" required>
+                </div>
+                <div class="field">
+                  <label for="phone">Telefon</label>
+                  <input id="phone" name="telefon" type="tel" autocomplete="tel" placeholder="+48 000 000 000">
+                </div>
+              </div>
+            </div>
+
+            <div class="section-block">
+              <div class="section-title">
+                <span class="section-icon">B</span><strong>Informacje organizacyjne</strong><span>Do rezerwacji</span>
+              </div>
+
+              <div class="field">
+                <label for="sourceBench">Z której innej ławki jesteś?</label>
+                <p class="helper">Wybierz swoją obecną ławkę źródłową.</p>
+                <select id="sourceBench" name="lawka_zrodlowa" required>
+                  <option value="">Wybierz ławkę</option>
+                  <option>Lewy rząd — ławka 1</option>
+                  <option>Lewy rząd — ławka 2</option>
+                  <option>Lewy rząd — ławka 3</option>
+                  <option>Lewy rząd — ławka 4</option>
+                  <option>Lewy rząd — ławka 5</option>
+                  <option>Lewy rząd — ławka 6</option>
+                  <option>Prawy rząd — ławka 7</option>
+                  <option>Prawy rząd — ławka 8</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="section-block">
+              <div class="section-title">
+                <span class="section-icon">C</span><strong>Okres najmu</strong><span>Cena za 1 miejsce</span>
+              </div>
+
+              <div class="plans">
+                <label class="plan plan-standard">
+                  <input type="radio" name="abonament" value="1 godzina" data-price="1" required>
+                  <span class="radio"></span>
+                  <span>
+                    <span class="plan-name">1 godzina</span><br>
+                    <span class="plan-note">Na szybki, krótkoterminowy dostęp</span>
+                  </span>
+                  <span><span class="price">1 zł</span><span class="plan-per">/ miejsce</span></span>
+                </label>
+
+                <label class="plan plan-standard">
+                  <input type="radio" name="abonament" value="1 dzień" data-price="5">
+                  <span class="radio"></span>
+                  <span>
+                    <span class="plan-name">1 dzień</span><br>
+                    <span class="plan-note">Wygodny dostęp na cały dzień</span>
+                  </span>
+                  <span><span class="price">5 zł</span><span class="plan-per">/ miejsce</span></span>
+                </label>
+
+                <label class="plan plan-plus bestseller">
+                  <span class="plan-ribbon">BESTSELLER</span>
+                  <span class="plan-glow"></span>
+                  <input type="radio" name="abonament" value="Subskrypcja Plus — 1 tydzień" data-price="15">
+                  <span class="radio"></span>
+                  <span>
+                    <span class="plan-name">Subskrypcja Plus · tydzień</span><br>
+                    <span class="plan-note">Świetny balans ceny i czasu</span>
+                  </span>
+                  <span><span class="price">15 zł</span><span class="plan-per">/ miejsce</span></span>
+                  <span class="plan-tagline">Najczęściej wybierana</span>
+                </label>
+
+                <label class="plan plan-plus best-offer">
+                  <span class="plan-ribbon">NAJLEPSZA OFERTA</span>
+                  <span class="plan-glow"></span>
+                  <input type="radio" name="abonament" value="Subskrypcja Plus — 1 miesiąc" data-price="50">
+                  <span class="radio"></span>
+                  <span>
+                    <span class="plan-name">Subskrypcja Plus · miesiąc</span><br>
+                    <span class="plan-note">Najlepsza cena przy dłuższym korzystaniu</span>
+                  </span>
+                  <span><span class="price">50 zł</span><span class="plan-per">/ miejsce</span></span>
+                  <span class="plan-tagline">Maksymalna opłacalność</span>
+                </label>
+              </div>
+            </div>
+
+            <div class="section-block">
+              <div class="section-title">
+                <span class="section-icon">D</span><strong>Dodatkowe informacje</strong><span>Opcjonalnie</span>
+              </div>
+
+              <div class="field">
+                <label for="notes">Uwagi</label>
+                <textarea id="notes" name="uwagi" maxlength="800" placeholder="Np. proszę o kontakt po godzinie 16:00..."></textarea>
+                <div class="counter"><span id="notesCount">0</span>/800</div>
+              </div>
+            </div>
+
+            <label class="checkbox">
+              <input id="consent" name="zgoda" type="checkbox" value="Tak" required>
+              <span>Potwierdzam poprawność podanych danych i zgadzam się na kontakt w sprawie wybranej rezerwacji.</span>
+            </label>
+
+            <div class="summary">
+              <div class="summary-head">
+                <strong>Podsumowanie rezerwacji</strong>
+                <span>Aktualizuje się automatycznie</span>
+              </div>
+              <div class="summary-row"><span>Wybrane miejsca</span><strong id="sumSeats">—</strong></div>
+              <div class="summary-row"><span>Abonament</span><strong id="sumPlan">—</strong></div>
+              <div class="summary-row"><span>Liczba miejsc</span><strong id="sumQty">0</strong></div>
+              <div class="summary-row"><span>Cena za miejsce</span><strong id="sumUnit">—</strong></div>
+              <div class="summary-row total"><span>Łącznie</span><strong id="sumTotal">—</strong></div>
+            </div>
+
+            <button class="cta" id="submitBtn" type="submit">
+              <span class="btn-icon">✉</span>
+              <span>Wyślij zgłoszenie rezerwacji</span>
+            </button>
+            <div class="secure-note">Dane są wysyłane do skonfigurowanego formularza Formspree.</div>
+
+            <div id="notice" class="notice" role="status" aria-live="polite"></div>
+          </form>
+        </div>
+      </section>
+    </main>
+
+    <section class="below-grid">
+      <div>
+        <div class="info-strip">
+          <div class="info-box"><strong>Automatyczna wycena</strong><span>Łączna kwota zależy od liczby zaznaczonych miejsc.</span></div>
+          <div class="info-box"><strong>Kontakt zwrotny</strong><span>Adres osoby zgłaszającej trafia do pola Reply-To.</span></div>
+          <div class="info-box"><strong>Czytelne zgłoszenie</strong><span>Do wiadomości trafia gotowe podsumowanie po polsku.</span></div>
+        </div>
+      </div>
+
+      <div>
+        <details>
+          <summary>Co stanie się po wysłaniu?</summary>
+          <p>Formularz wyśle zgłoszenie do ustawionego endpointu Formspree. Po stronie odbiorcy pojawi się temat oraz czytelne podsumowanie rezerwacji.</p>
+        </details>
+        <details>
+          <summary>Czy można wybrać kilka miejsc?</summary>
+          <p>Tak. Wystarczy kliknąć kilka zielonych sektorów. System doliczy każde miejsce do łącznej ceny.</p>
+        </details>
+        <details>
+          <summary>Gdzie zmienić ceny?</summary>
+          <p>Ceny są zapisane przy wariantach w kodzie HTML jako atrybuty <code>data-price</code> — możesz je łatwo zmienić.</p>
+        </details>
+      </div>
+    </section>
+
+    <footer>
+      SeatDesk · wersja demonstracyjna systemu rezerwacji · status miejsc jest zapisany w kodzie strony
+    </footer>
+  </div>
+
+  <script>
+    /*
+      KONFIGURACJA FORMSPREE
+      Endpoint został zachowany z przesłanego pliku.
+      Możesz zmienić go na własny endpoint bez przebudowy reszty strony.
+    */
+    const FORM_ENDPOINT = 'https://formspree.io/f/xzebvjop';
+
+    const selected = new Set();
+    const seatButtons = [...document.querySelectorAll('.seat.available')];
+    const form = document.getElementById('bookingForm');
+    const submitBtn = document.getElementById('submitBtn');
+    const notice = document.getElementById('notice');
+    const firstName = document.getElementById('firstName');
+    const lastName = document.getElementById('lastName');
+    const email = document.getElementById('email');
+    const notes = document.getElementById('notes');
+
+    const availableCount = seatButtons.length;
+    document.getElementById('availableCount').textContent = availableCount;
+
+    function getPlan() {
+      return document.querySelector('input[name="abonament"]:checked');
+    }
+
+    function formatMoney(value) {
+      return `${value.toLocaleString('pl-PL')} zł`;
+    }
+
+    function updateSummary() {
+      const plan = getPlan();
+      const qty = selected.size;
+      const unit = plan ? Number(plan.dataset.price) : 0;
+      const total = qty * unit;
+
+      document.getElementById('sumSeats').textContent = qty ? [...selected].join(', ') : '—';
+      document.getElementById('sumPlan').textContent = plan ? plan.value : '—';
+      document.getElementById('sumQty').textContent = qty;
+      document.getElementById('sumUnit').textContent = plan ? formatMoney(unit) : '—';
+      document.getElementById('sumTotal').textContent = plan ? formatMoney(total) : '—';
+      document.getElementById('selectionCount').textContent = `${qty} ${qty === 1 ? 'wybrane miejsce' : (qty < 5 ? 'wybrane miejsca' : 'wybranych miejsc')}`;
+
+      const summarySeats = document.getElementById('sumSeats');
+      summarySeats.title = qty ? [...selected].join(', ') : '';
+    }
+
+    seatButtons.forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const seat = btn.dataset.seat;
+        if (selected.has(seat)) {
+          selected.delete(seat);
+          btn.classList.remove('selected');
+          btn.setAttribute('aria-label', `${seat} — wybierz`);
+        } else {
+          selected.add(seat);
+          btn.classList.add('selected');
+          btn.setAttribute('aria-label', `${seat} — wybrane`);
+        }
+        updateSummary();
+      });
+    });
+
+    document.querySelectorAll('input[name="abonament"]').forEach((input) => {
+      input.addEventListener('change', updateSummary);
+    });
+
+    notes.addEventListener('input', () => {
+      document.getElementById('notesCount').textContent = notes.value.length;
+    });
+
+    function showNotice(text, ok) {
+      notice.textContent = text;
+      notice.className = `notice ${ok ? 'ok' : 'err'}`;
+      notice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+
+    function buildPolishMessage() {
+      const plan = getPlan();
+      const unit = plan ? Number(plan.dataset.price) : 0;
+      const total = selected.size * unit;
+      const source = document.getElementById('sourceBench').value;
+      const phone = document.getElementById('phone').value.trim();
+      const note = notes.value.trim();
+      const timestamp = new Intl.DateTimeFormat('pl-PL', {
+        dateStyle: 'full',
+        timeStyle: 'short'
+      }).format(new Date());
+
+      return [
+        '══════════════════════════════════════',
+        '        NOWE ZGŁOSZENIE REZERWACJI',
+        '══════════════════════════════════════',
+        '',
+        'DANE NAJEMCY',
+        `Imię i nazwisko: ${firstName.value.trim()} ${lastName.value.trim()}`,
+        `E-mail: ${email.value.trim()}`,
+        `Telefon: ${phone || 'Nie podano'}`,
+        '',
+        'SZCZEGÓŁY REZERWACJI',
+        `Wybrane miejsca: ${[...selected].join(', ')}`,
+        `Liczba miejsc: ${selected.size}`,
+        `Ławka źródłowa: ${source}`,
+        `Abonament: ${plan ? plan.value : 'Nie wybrano'}`,
+        `Cena za miejsce: ${plan ? formatMoney(unit) : '—'}`,
+        `Łączna kwota: ${plan ? formatMoney(total) : '—'}`,
+        '',
+        'DODATKOWE INFORMACJE',
+        `Uwagi: ${note || 'Brak'}`,
+        '',
+        `Data wysłania: ${timestamp}`,
+        '',
+        '══════════════════════════════════════',
+        'Wiadomość wygenerowana automatycznie przez formularz rezerwacji.'
+      ].join('\n');
+    }
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      if (!selected.size) {
+        showNotice('Najpierw wybierz co najmniej jedno wolne miejsce na mapie.', false);
+        return;
+      }
+
+      const plan = getPlan();
+      if (!plan) {
+        showNotice('Wybierz okres abonamentu.', false);
+        return;
+      }
+
+      if (!form.reportValidity()) return;
+
+      document.getElementById('hiddenName').value = `${firstName.value.trim()} ${lastName.value.trim()}`;
+      document.getElementById('hiddenSubject').value =
+        `Rezerwacja miejsc — ${[...selected].join(', ')}`;
+
+      const message = buildPolishMessage();
+      document.getElementById('hiddenMessage').value = message;
+
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<span class="btn-icon">⌛</span><span>Wysyłanie zgłoszenia…</span>';
+
+      const formData = new FormData(form);
+
+      // Osobne, czytelne pola pomocnicze dla odbiorcy Formspree.
+      formData.append('miejsca_rezerwowane', [...selected].join(', '));
+      formData.append('liczba_miejsc', String(selected.size));
+      formData.append('cena_laczna', formatMoney(selected.size * Number(plan.dataset.price)));
+
+      try {
+        const response = await fetch(FORM_ENDPOINT, {
+          method: 'POST',
+          body: formData,
+          headers: { 'Accept': 'application/json' }
+        });
+
+        if (!response.ok) throw new Error('send failed');
+
+        showNotice(
+          'Zgłoszenie zostało wysłane. W wiadomości e-mail znajdziesz kompletne podsumowanie wybranych miejsc.',
+          true
+        );
+
+        form.reset();
+        selected.clear();
+        seatButtons.forEach((button) => {
+          button.classList.remove('selected');
+        });
+        document.getElementById('notesCount').textContent = '0';
+        updateSummary();
+      } catch (error) {
+        showNotice(
+          'Nie udało się wysłać zgłoszenia. Sprawdź konfigurację Formspree lub spróbuj ponownie.',
+          false
+        );
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<span class="btn-icon">✉</span><span>Wyślij zgłoszenie rezerwacji</span>';
+      }
+    });
+
+    updateSummary();
+  </script>
+</body>
+</html>
