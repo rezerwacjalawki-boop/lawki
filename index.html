@@ -403,7 +403,7 @@
 
         const defaultCoupons = { "SZKOLA10": 10, "LATO20": 20 };
 
-        // For Firebase JS SDK v7.20.0 and later, measurementId is optional
+       // For Firebase JS SDK v7.20.0 and later, measurementId is optional
 const firebaseConfig = {
   apiKey: "AIzaSyBaMwRyKvCTYtHCZJNI71ZMdLw5v4O9bOE",
   authDomain: "shop-fcb82.firebaseapp.com",
@@ -549,13 +549,19 @@ const firebaseConfig = {
 
         async function loadCloudImages() {
             if(!firebaseEnabled || !db) return;
-            const snap = await db.collection("productImages").get();
-            snap.forEach(doc => {
-                const p = products.find(x => String(x.id) === doc.id);
-                if(p && doc.data().imageData) p.imageData = doc.data().imageData;
-            });
-            renderProducts();
-            renderAdminProducts();
+            try {
+                const snap = await db.collection("productImages").get();
+                snap.forEach(doc => {
+                    const p = products.find(x => String(x.id) === doc.id);
+                    if(p && doc.data().imageData) p.imageData = doc.data().imageData;
+                });
+                saveLocalData();
+                renderProducts();
+                renderAdminProducts();
+            } catch(err) {
+                console.error("Błąd odczytu grafik:", err);
+                setFirebaseStatus("⚠️ Firebase: brak grafik", false);
+            }
         }
 
         function saveData() {
@@ -589,7 +595,9 @@ const firebaseConfig = {
                     <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between relative transition hover:shadow-md">
                         ${p.tag ? `<span class="absolute top-4 right-4 bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-black px-2.5 py-0.5 rounded-full">${p.tag}</span>` : ''}
                         <div>
-                            <div class="text-2xl mb-2">${p.emoji}</div>
+                            <div class="w-full h-40 mb-3 rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden flex items-center justify-center">
+                                ${p.imageData ? `<img src="${p.imageData}" class="w-full h-full object-contain" alt="${p.name}">` : `<span class="text-5xl">${p.emoji}</span>`}
+                            </div>
                             <div class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider mb-0.5">${p.category}</div>
                             <h4 class="font-bold text-slate-900 text-base">${p.name}</h4>
                             <p class="text-xs text-slate-400 mt-0.5">${p.desc}</p>
