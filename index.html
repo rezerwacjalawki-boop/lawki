@@ -6,25 +6,12 @@
     <title>SKLEP PRO - Szkolny Mini-Market</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.5/firebase-firestore-compat.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
         .fade-in { animation: fadeIn 0.25s ease-in-out; }
-        .product-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}.product-card:hover{transform:translateY(-3px);box-shadow:0 14px 30px rgba(15,23,42,.08)}
-        .admin-input{width:100%;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:10px 12px;font-size:12px;outline:none}.admin-input:focus{box-shadow:0 0 0 3px rgba(99,102,241,.12);border-color:#818cf8}
-        .emoji-btn{border:1px solid #e2e8f0;background:#fff;border-radius:10px;padding:7px 9px;cursor:pointer;transition:.15s}.emoji-btn:hover{background:#f8fafc;transform:translateY(-1px)}
-        .toast{position:fixed;right:18px;bottom:18px;z-index:100;padding:12px 16px;border-radius:14px;background:#0f172a;color:#fff;font-size:12px;font-weight:700;box-shadow:0 12px 30px rgba(15,23,42,.2)}
-        .badge-hot{background:#fff7ed;color:#c2410c;border:1px solid #fed7aa}.badge-new{background:#eef2ff;color:#4338ca;border:1px solid #c7d2fe}
-        .bestseller-card{animation:bestsellerFloat 3.2s ease-in-out infinite;box-shadow:0 18px 45px rgba(245,158,11,.16),0 0 0 1px rgba(251,191,36,.28);border-color:#fde68a!important}
-        .bestseller-card:before{content:'';position:absolute;inset:-2px;border-radius:26px;padding:2px;background:linear-gradient(120deg,transparent 15%,rgba(251,191,36,.8) 40%,transparent 62%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:bestsellerShine 2.4s linear infinite;pointer-events:none}
-        .bestseller-card .product-visual{animation:bestsellerBob 2.6s ease-in-out infinite;filter:drop-shadow(0 10px 14px rgba(245,158,11,.18))}
-        .bestseller-badge{animation:bestsellerPulse 1.8s ease-in-out infinite;transform-origin:center;box-shadow:0 7px 18px rgba(245,158,11,.2)}
-        .product-photo{width:100%;height:100%;object-fit:contain;border-radius:16px}
-        .product-image-wrap{width:76px;height:76px;border-radius:22px;background:linear-gradient(145deg,#fff7ed,#f8fafc);display:flex;align-items:center;justify-content:center;overflow:hidden;position:relative}
-        @keyframes bestsellerFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
-        @keyframes bestsellerBob{0%,100%{transform:translateY(0) rotate(-1deg)}50%{transform:translateY(-5px) rotate(1deg)}}
-        @keyframes bestsellerPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.045)}}
-        @keyframes bestsellerShine{0%{transform:translateX(-55%) rotate(10deg)}100%{transform:translateX(55%) rotate(10deg)}}
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
@@ -41,7 +28,6 @@
                 </div>
             </div>
             <div class="flex items-center space-x-3">
-                <span id="firebase-sync-badge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-slate-100 text-slate-500 border border-slate-200">☁️ Łączenie…</span>
                 <span id="store-status-badge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
                     <span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Sklep otwarty
                 </span>
@@ -108,9 +94,6 @@
                         <option value="Przekąski">Przekąski</option>
                         <option value="Napoje">Napoje</option>
                         <option value="Słodycze">Słodycze</option>
-                    </select>
-                    <select id="sort-select" onchange="filterProducts()" class="bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm text-slate-700 font-medium focus:outline-none shadow-sm">
-                        <option value="default">Polecane</option><option value="bestseller">Bestsellery</option><option value="priceAsc">Cena ↑</option><option value="priceDesc">Cena ↓</option><option value="name">Nazwa A–Z</option>
                     </select>
                 </div>
 
@@ -189,33 +172,15 @@
                     <div class="w-10 h-10 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black"><i class="fa-solid fa-shield-halved"></i></div>
                     <div>
                         <span class="text-indigo-600 font-bold text-xs uppercase tracking-wider">SKLEP PRO — ADMIN</span>
+                        <span id="firebase-status" class="inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500">☁️ Firebase: łączenie…</span>
                         <h2 class="text-2xl font-extrabold text-slate-900 mt-0.5">Panel zarządzania</h2>
                     </div>
                 </div>
                 <button onclick="showStore()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-md shadow-indigo-500/20">
                     <i class="fa-solid fa-store mr-1.5"></i> Wróć do sklepu
                 </button>
-                <button onclick="logoutAdmin()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl text-xs font-bold transition ml-2">
-                    <i class="fa-solid fa-right-from-bracket mr-1"></i> Wyloguj
-                </button>
             </div>
 
-            <div id="admin-extra-dashboard" class="mb-6 space-y-4">
-                <div class="grid grid-cols-2 lg:grid-cols-5 gap-3">
-                    <div class="p-4 rounded-2xl border border-slate-100 bg-slate-50"><div class="text-[10px] uppercase font-black text-slate-400">Aktywne</div><div id="extra-active" class="text-2xl font-black mt-1">0</div></div>
-                    <div class="p-4 rounded-2xl border border-slate-100 bg-slate-50"><div class="text-[10px] uppercase font-black text-slate-400">Bestsellery</div><div id="extra-best" class="text-2xl font-black text-indigo-600 mt-1">0</div></div>
-                    <div class="p-4 rounded-2xl border border-slate-100 bg-slate-50"><div class="text-[10px] uppercase font-black text-slate-400">Niski stan</div><div id="extra-low" class="text-2xl font-black text-amber-600 mt-1">0</div></div>
-                    <div class="p-4 rounded-2xl border border-slate-100 bg-slate-50"><div class="text-[10px] uppercase font-black text-slate-400">Zamówienia</div><div id="extra-orders" class="text-2xl font-black mt-1">0</div></div>
-                    <div class="p-4 rounded-2xl border border-slate-100 bg-slate-50"><div class="text-[10px] uppercase font-black text-slate-400">Utarg</div><div id="extra-revenue" class="text-2xl font-black text-emerald-600 mt-1">0,00 zł</div></div>
-                </div>
-                <div id="admin-cloud-status" class="text-xs font-bold text-slate-500 bg-slate-50 border border-slate-100 rounded-2xl px-4 py-3">☁️ Zmiany zapisują się globalnie po podłączeniu Firebase.</div>
-                <div class="flex flex-wrap gap-2">
-                    <button onclick="openProductEditor()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold">+ Dodaj produkt</button>
-                    <button onclick="switchAdminTab('products')" class="bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700">Edytuj ceny / emoji</button>
-                    <button onclick="switchAdminTab('coupons')" class="bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700">Kody rabatowe</button>
-                    <button onclick="exportShopBackup()" class="bg-white border border-slate-200 px-4 py-2.5 rounded-xl text-xs font-bold text-slate-700"><i class="fa-solid fa-download mr-1"></i> Kopia zapasowa</button>
-                </div>
-            </div>
             <div class="flex space-x-2 border-b border-slate-100 pb-4 mb-6 text-sm font-bold overflow-x-auto">
                 <button onclick="switchAdminTab('orders')" id="admin-tab-btn-orders" class="px-4 py-2.5 rounded-xl bg-slate-900 text-white transition">Zamówienia</button>
                 <button onclick="switchAdminTab('products')" id="admin-tab-btn-products" class="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">Produkty</button>
@@ -252,7 +217,7 @@
 
             <div id="admin-tab-products" class="hidden space-y-4">
                 <div class="flex justify-between items-center">
-                    <span class="text-xs text-slate-500 font-medium">Zarządzaj stanami magazynowymi</span>
+                    <span class="text-xs text-slate-500 font-medium">Globalny katalog: ceny, stany, zdjęcia i bestsellery</span>
                     <button onclick="addNewProductPrompt()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition">
                         <i class="fa-solid fa-plus mr-1.5"></i> Dodaj produkt
                     </button>
@@ -286,58 +251,26 @@
                     <textarea id="setting-announcement-text" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:outline-none" placeholder="Np. Dziś wyjątkowe promocje!"></textarea>
                 </div>
                 <button onclick="saveSettings()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl text-xs font-bold transition shadow-sm">Zapisz ustawienia</button>
+                <div class="text-[10px] text-slate-400 leading-relaxed">Firebase synchronizuje katalog, ceny, stany, bestsellery i grafiki między urządzeniami. Zamówienia i dane formularza pozostają lokalne/FormSubmit.</div>
             </div>
         </div>
     </main>
 
 
-    <!-- MODAL HASŁA ADMINA — lokalny panel jak wcześniej -->
+    <!-- MODAL HASŁA ADMINA (Bezpieczny, bez podpowiedzi) -->
     <div id="admin-pass-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
             <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
             <div class="text-center mb-4">
-                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-2 text-lg font-bold"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-2 text-lg font-bold"><i class="fa-solid fa-lock"></i></div>
                 <h3 class="font-bold text-base text-slate-900">Strefa Administratora</h3>
-                <p class="text-xs text-slate-400 mt-1">Panel administratora jest chroniony lokalnym hasłem.</p>
+                <p class="text-xs text-slate-400 mt-1">Wpisz hasło dostępu</p>
             </div>
-            <input type="password" id="admin-password-input" autocomplete="current-password" placeholder="Hasło" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-bold mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-            <div id="firebase-login-message" class="text-xs font-bold text-red-500 mb-3 hidden"></div>
-            <button onclick="verifyAdminPassword()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl text-xs font-bold transition shadow-md">Wejdź do panelu</button>
+            <input type="password" id="admin-password-input" placeholder="Hasło..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-bold mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button onclick="verifyAdminPassword()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl text-xs font-bold transition shadow-md">Zaloguj się</button>
         </div>
     </div>
 
-
-    <div id="product-editor-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-2xl w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
-            <button onclick="closeProductEditor()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
-            <div class="flex items-center gap-3 mb-5"><div class="w-11 h-11 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center"><i class="fa-solid fa-box"></i></div><div><h3 id="product-editor-title" class="font-black text-lg text-slate-900">Dodaj produkt</h3><p class="text-xs text-slate-400">Ceny, emoji i bestseller ustawisz tutaj.</p></div></div>
-            <input type="hidden" id="product-edit-id">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div class="md:col-span-2"><label class="block text-xs font-bold text-slate-700 mb-1.5">Nazwa produktu *</label><input id="product-edit-name" class="admin-input" placeholder="np. Lizak"></div>
-                <div><label class="block text-xs font-bold text-slate-700 mb-1.5">Kategoria</label><select id="product-edit-category" class="admin-input"><option>Batoniki</option><option>Przekąski</option><option>Napoje</option><option>Słodycze</option><option>Inne</option></select></div>
-                <div><label class="block text-xs font-bold text-slate-700 mb-1.5">Emoji</label><input id="product-edit-emoji" class="admin-input text-lg" value="🍬" maxlength="4"><div class="flex flex-wrap gap-1.5 mt-2"><button type="button" class="emoji-btn" onclick="setProductEmoji('🍭')">🍭</button><button type="button" class="emoji-btn" onclick="setProductEmoji('🍬')">🍬</button><button type="button" class="emoji-btn" onclick="setProductEmoji('🍫')">🍫</button><button type="button" class="emoji-btn" onclick="setProductEmoji('🍪')">🍪</button><button type="button" class="emoji-btn" onclick="setProductEmoji('🥨')">🥨</button><button type="button" class="emoji-btn" onclick="setProductEmoji('🥔')">🥔</button><button type="button" class="emoji-btn" onclick="setProductEmoji('🥤')">🥤</button><button type="button" class="emoji-btn" onclick="setProductEmoji('🧃')">🧃</button><button type="button" class="emoji-btn" onclick="setProductEmoji('💧')">💧</button><button type="button" class="emoji-btn" onclick="setProductEmoji('🍎')">🍎</button><button type="button" class="emoji-btn" onclick="setProductEmoji('🍿')">🍿</button><button type="button" class="emoji-btn" onclick="setProductEmoji('🌟')">🌟</button></div></div>
-                <div class="md:col-span-2">
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Zdjęcie produktu</label>
-                    <div class="grid grid-cols-1 sm:grid-cols-[1fr_120px] gap-3 items-center">
-                        <div>
-                            <input id="product-edit-image-file" type="file" accept="image/png,image/jpeg,image/webp,image/gif" class="admin-input" onchange="handleProductImageUpload(event)">
-                            <div class="text-[10px] text-slate-400 mt-1.5">Wybierz prawdziwe zdjęcie produktu. Po podłączeniu Firebase zostanie zsynchronizowane online i będzie widoczne dla wszystkich klientów.</div>
-                            <input id="product-edit-image" type="hidden">
-                            <button type="button" onclick="clearProductImage()" class="mt-2 text-[10px] font-bold text-red-500 hover:text-red-700">Usuń zdjęcie</button>
-                        </div>
-                        <div id="product-image-preview" class="product-image-wrap mx-auto"><span class="text-3xl">🍬</span></div>
-                    </div>
-                </div>
-                <div><label class="block text-xs font-bold text-slate-700 mb-1.5">Cena sprzedaży (zł) *</label><input id="product-edit-price" type="number" min="0" step="0.01" class="admin-input"></div>
-                <div><label class="block text-xs font-bold text-slate-700 mb-1.5">Koszt zakupu / szt. (opcjonalnie)</label><input id="product-edit-buy" type="number" min="0" step="0.01" class="admin-input" placeholder="np. 1,69"></div>
-                <div><label class="block text-xs font-bold text-slate-700 mb-1.5">Stan magazynowy *</label><input id="product-edit-stock" type="number" min="0" step="1" class="admin-input"></div>
-                <div><label class="block text-xs font-bold text-slate-700 mb-1.5">Etykieta</label><select id="product-edit-tag" class="admin-input"><option value="">Brak</option><option value="🔥 HIT">🔥 HIT</option><option value="⭐ BESTSELLER">⭐ BESTSELLER</option><option value="🆕 NOWOŚĆ">🆕 NOWOŚĆ</option><option value="💥 PROMO">💥 PROMO</option></select></div>
-                <div class="md:col-span-2"><label class="block text-xs font-bold text-slate-700 mb-1.5">Opis</label><input id="product-edit-desc" class="admin-input" placeholder="Krótki opis produktu"></div>
-                <div class="md:col-span-2 flex flex-wrap gap-5"><label class="inline-flex items-center gap-2 text-xs font-bold text-slate-700"><input type="checkbox" id="product-edit-best"> ⭐ Bestseller</label><label class="inline-flex items-center gap-2 text-xs font-bold text-slate-700"><input type="checkbox" id="product-edit-active" checked> Pokaż w sklepie</label></div>
-            </div>
-            <div class="flex justify-between items-center mt-6 pt-4 border-t border-slate-100"><button id="product-delete-btn" onclick="deleteEditingProduct()" class="hidden bg-red-50 text-red-600 hover:bg-red-100 px-4 py-2.5 rounded-xl text-xs font-bold">Usuń</button><div class="ml-auto flex gap-2"><button onclick="closeProductEditor()" class="bg-slate-100 px-4 py-2.5 rounded-xl text-xs font-bold">Anuluj</button><button onclick="saveProductFromEditor()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold">Zapisz produkt</button></div></div>
-        </div>
-    </div>
 
     <!-- MODAL FINALIZACJI ZAMÓWIENIA -->
     <div id="checkout-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
@@ -451,10 +384,6 @@
     </div>
 
 
-    <!-- FIREBASE: globalna synchronizacja sklepu -->
-    <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-app-compat.js"></script>
-            <script src="https://www.gstatic.com/firebasejs/12.19.0/firebase-storage-compat.js"></script>
-
     <!-- SKRYPT LOGIKI -->
     <script>
         const defaultProducts = [
@@ -478,14 +407,16 @@
 const firebaseConfig = {
   apiKey: "AIzaSyBaMwRyKvCTYtHCZJNI71ZMdLw5v4O9bOE",
   authDomain: "shop-fcb82.firebaseapp.com",
+  databaseURL: "https://shop-fcb82-default-rtdb.europe-west1.firebasedatabase.app",
   projectId: "shop-fcb82",
   storageBucket: "shop-fcb82.firebasestorage.app",
   messagingSenderId: "716775971140",
   appId: "1:716775971140:web:60e304c057caa61c171f11",
   measurementId: "G-PLWGL5G39X"
 };
+
+        let db = null;
         let firebaseEnabled = false;
-        let firebaseStorage = null;
         let products = JSON.parse(localStorage.getItem("sp_products")) || defaultProducts;
         let coupons = JSON.parse(localStorage.getItem("sp_coupons")) || defaultCoupons;
         let storeSettings = JSON.parse(localStorage.getItem("sp_settings")) || { isOpen: true, announcement: "" };
@@ -495,28 +426,7 @@ const firebaseConfig = {
         let appliedCouponName = "";
         let ordersHistory = JSON.parse(localStorage.getItem("sp_orders")) || [];
 
-        function setFirebaseBadge(text, ok){
-            var el=document.getElementById('firebase-sync-badge'); if(!el)return;
-            el.innerText=text;
-            el.className='inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold '+(ok?'bg-emerald-50 text-emerald-700 border border-emerald-200':'bg-amber-50 text-amber-700 border border-amber-200');
-        }
-
-        function firebaseConfigLooksReady(){
-            return firebaseConfig.apiKey && !String(firebaseConfig.apiKey).startsWith('WKLEJ_') && firebaseConfig.projectId && !String(firebaseConfig.projectId).startsWith('TWOJ-');
-        }
-
-        function initFirebase(){
-            if(!firebaseConfigLooksReady()){ setFirebaseBadge('☁️ Firebase: konfiguracja do zdjęć',false); return; }
-            try{
-                var app=firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
-                firebaseStorage=app.storage(); firebaseEnabled=true;
-                setFirebaseBadge('☁️ Firebase: zdjęcia online',true);
-            }catch(err){ console.error(err); setFirebaseBadge('⚠️ Błąd Firebase',false); }
-        }
-
-        initFirebase();
-
-        document.addEventListener('keydown',function(e){ if(e.key==='Enter' && !document.getElementById('admin-pass-modal').classList.contains('hidden')) verifyAdminPassword(); });
+        const ADMIN_PASSWORD = "admin123";
 
         window.onload = function() {
             renderProducts();
@@ -525,14 +435,132 @@ const firebaseConfig = {
             updateStoreStatusUI();
             document.getElementById("setting-store-open").checked = storeSettings.isOpen;
             document.getElementById("setting-announcement-text").value = storeSettings.announcement || "";
+            initFirebase();
         };
 
-        function saveData(syncCloud=true) {
+        function firebaseConfigLooksReady() {
+            return firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("WKLEJ_") &&
+                   firebaseConfig.projectId && firebaseConfig.projectId !== "TWOJ-PROJEKT" &&
+                   firebaseConfig.appId && !firebaseConfig.appId.startsWith("WKLEJ_");
+        }
+
+        function setFirebaseStatus(text, ok) {
+            const el = document.getElementById("firebase-status");
+            if(!el) return;
+            el.innerText = text;
+            el.className = "inline-flex items-center mt-1 px-2 py-0.5 rounded-full text-[10px] font-bold " +
+                (ok ? "bg-emerald-50 text-emerald-700" : "bg-amber-50 text-amber-700");
+        }
+
+        function initFirebase() {
+            if(!firebaseConfigLooksReady()) {
+                setFirebaseStatus("☁️ Firebase: wklej konfigurację", false);
+                return;
+            }
+            try {
+                const app = firebase.apps.length ? firebase.app() : firebase.initializeApp(firebaseConfig);
+                db = app.firestore();
+                firebaseEnabled = true;
+                setFirebaseStatus("☁️ Firebase: online", true);
+                subscribeToCloud();
+            } catch(err) {
+                console.error(err);
+                setFirebaseStatus("⚠️ Firebase: błąd", false);
+            }
+        }
+
+        function saveLocalData() {
             localStorage.setItem("sp_products", JSON.stringify(products));
             localStorage.setItem("sp_coupons", JSON.stringify(coupons));
             localStorage.setItem("sp_settings", JSON.stringify(storeSettings));
             localStorage.setItem("sp_orders", JSON.stringify(ordersHistory));
-            // Firebase służy tutaj wyłącznie do przechowywania zdjęć produktów.
+        }
+
+        async function syncCatalogToCloud() {
+            if(!firebaseEnabled || !db) return;
+            try {
+                const batch = db.batch();
+                products.forEach(p => {
+                    const safe = {...p};
+                    delete safe.imageData;
+                    batch.set(db.collection("products").doc(String(p.id)), safe, {merge:true});
+                });
+                batch.set(db.collection("shopConfig").doc("main"), {
+                    coupons: coupons,
+                    isOpen: !!storeSettings.isOpen,
+                    announcement: storeSettings.announcement || ""
+                }, {merge:true});
+                await batch.commit();
+            } catch(err) {
+                console.error("Błąd synchronizacji Firebase:", err);
+                setFirebaseStatus("⚠️ Firebase: brak zapisu", false);
+            }
+        }
+
+        async function syncProductImageToCloud(productId, dataUrl) {
+            if(!firebaseEnabled || !db || !dataUrl) return;
+            try {
+                await db.collection("productImages").doc(String(productId)).set({
+                    imageData: dataUrl,
+                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+            } catch(err) {
+                console.error("Błąd zapisu grafiki:", err);
+                alert("Nie udało się zapisać grafiki w Firebase. Sprawdź konfigurację i reguły Firestore.");
+            }
+        }
+
+        function subscribeToCloud() {
+            if(!firebaseEnabled || !db) return;
+            db.collection("products").onSnapshot(snapshot => {
+                if(snapshot.empty) {
+                    syncCatalogToCloud();
+                    return;
+                }
+                const cloudProducts = snapshot.docs.map(d => ({...d.data(), id: Number(d.id)}));
+                cloudProducts.sort((a,b) => Number(a.id) - Number(b.id));
+                products = cloudProducts.map(p => ({
+                    id: p.id, name: p.name || "Produkt", category: p.category || "Przekąski",
+                    desc: p.desc || "", price: Number(p.price) || 0, stock: Math.max(0, Number(p.stock) || 0),
+                    emoji: p.emoji || "📦", tag: p.tag || "", active: p.active !== false
+                }));
+                saveLocalData();
+                renderProducts();
+                renderAdminProducts();
+                loadCloudImages();
+            }, err => {
+                console.error(err);
+                setFirebaseStatus("⚠️ Firebase: brak odczytu", false);
+            });
+
+            db.collection("shopConfig").doc("main").onSnapshot(doc => {
+                if(!doc.exists) return;
+                const d = doc.data() || {};
+                coupons = d.coupons || coupons;
+                storeSettings.isOpen = d.isOpen !== false;
+                storeSettings.announcement = d.announcement || "";
+                saveLocalData();
+                renderAdminCoupons();
+                document.getElementById("setting-store-open").checked = storeSettings.isOpen;
+                document.getElementById("setting-announcement-text").value = storeSettings.announcement;
+                updateStoreStatusUI();
+            });
+        }
+
+        async function loadCloudImages() {
+            if(!firebaseEnabled || !db) return;
+            const snap = await db.collection("productImages").get();
+            snap.forEach(doc => {
+                const p = products.find(x => String(x.id) === doc.id);
+                if(p && doc.data().imageData) p.imageData = doc.data().imageData;
+            });
+            renderProducts();
+            renderAdminProducts();
+        }
+
+        function saveData() {
+            saveLocalData();
+            syncCatalogToCloud();
         }
 
         function renderProducts() {
@@ -700,25 +728,16 @@ const firebaseConfig = {
         function closeAdminModal() {
             document.getElementById("admin-pass-modal").classList.add("hidden");
         }
-        async function verifyAdminPassword() {
-            var pass=document.getElementById('admin-password-input').value;
-            var msg=document.getElementById('firebase-login-message');
-            msg.classList.add('hidden');
-            // To samo proste wejście do panelu jak w poprzedniej wersji.
-            var ADMIN_PASSWORD = 'admin123';
-            if(pass === ADMIN_PASSWORD){
+        function verifyAdminPassword() {
+            let pass = document.getElementById("admin-password-input").value;
+            if(pass === ADMIN_PASSWORD) {
                 closeAdminModal();
-                document.getElementById('admin-password-input').value='';
+                document.getElementById("admin-password-input").value = "";
                 showAdmin();
             } else {
-                msg.innerText='Nieprawidłowe hasło administratora.';
-                msg.classList.remove('hidden');
+                alert("Nieprawidłowe hasło administratora!");
             }
         }
-
-        async function ensureCloudSeed(){ return; }
-
-        function logoutAdmin(){ showStore(); }
 
         function showStore() {
             document.getElementById("store-view").classList.remove("hidden");
@@ -846,7 +865,7 @@ const firebaseConfig = {
                 items: {...cart}
             });
 
-            saveData(false);
+            saveData();
 
             closeCheckoutModal();
             cart = {};
@@ -873,28 +892,126 @@ const firebaseConfig = {
             list.innerHTML = "";
             products.forEach(p => {
                 list.innerHTML += `
-                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs">
-                        <div class="flex items-center space-x-3">
-                            <span class="text-xl">${p.emoji}</span>
-                            <div>
-                                <span class="font-bold text-slate-900 text-sm">${p.name}</span>
-                                <div class="text-slate-400 text-[10px]">${p.category} · ${p.price.toFixed(2)} zł</div>
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs space-y-3">
+                        <div class="flex items-center justify-between gap-3">
+                            <div class="flex items-center space-x-3 min-w-0">
+                                <div class="w-12 h-12 rounded-xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
+                                    ${p.imageData ? `<img src="${p.imageData}" class="w-full h-full object-contain" alt="">` : `<span class="text-2xl">${p.emoji}</span>`}
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="font-bold text-slate-900 text-sm block truncate">${p.name}</span>
+                                    <div class="text-slate-400 text-[10px]">${p.category} · ID ${p.id}</div>
+                                </div>
                             </div>
-                        </div>
-                        <div class="flex items-center space-x-4">
-                            <div class="flex items-center space-x-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200">
-                                <button onclick="changeStock(${p.id}, -1)" class="text-slate-400 hover:text-red-500 font-bold">−</button>
-                                <span class="font-black w-6 text-center">${p.stock}</span>
-                                <button onclick="changeStock(${p.id}, 1)" class="text-slate-400 hover:text-emerald-500 font-bold">+</button>
-                            </div>
-                            <label class="relative inline-flex items-center cursor-pointer">
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0" title="Pokaż produkt">
                                 <input type="checkbox" ${p.active ? 'checked' : ''} onchange="toggleProduct(${p.id})" class="sr-only peer">
                                 <div class="w-9 h-5 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
                             </label>
                         </div>
+                        <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
+                            <label class="text-[10px] font-bold text-slate-500">Cena
+                                <input id="price-${p.id}" type="number" step="0.01" min="0" value="${Number(p.price).toFixed(2)}" class="mt-1 w-full bg-white border border-slate-200 rounded-xl px-3 py-2 font-bold">
+                            </label>
+                            <label class="text-[10px] font-bold text-slate-500">Emoji
+                                <input id="emoji-${p.id}" type="text" maxlength="4" value="${p.emoji || ''}" class="mt-1 w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-lg">
+                            </label>
+                            <label class="text-[10px] font-bold text-slate-500">Tag / bestseller
+                                <input id="tag-${p.id}" type="text" maxlength="20" value="${p.tag || ''}" placeholder="🔥 HIT" class="mt-1 w-full bg-white border border-slate-200 rounded-xl px-3 py-2 font-bold">
+                            </label>
+                            <div class="text-[10px] font-bold text-slate-500">Stan
+                                <div class="mt-1 flex items-center space-x-2 bg-white border border-slate-200 rounded-xl px-2 py-1.5">
+                                    <button onclick="changeStock(${p.id}, -1)" class="text-slate-400 hover:text-red-500 font-bold px-1">−</button>
+                                    <span class="font-black w-7 text-center">${p.stock}</span>
+                                    <button onclick="changeStock(${p.id}, 1)" class="text-slate-400 hover:text-emerald-500 font-bold px-1">+</button>
+                                </div>
+                            </div>
+                            <div class="text-[10px] font-bold text-slate-500">Grafika
+                                <label class="mt-1 block bg-indigo-600 hover:bg-indigo-700 text-white text-center rounded-xl px-2 py-2 cursor-pointer transition">
+                                    <span>📷 Wybierz</span>
+                                    <input type="file" accept="image/png,image/jpeg,image/webp" class="hidden" onchange="handleProductImage(${p.id}, this.files[0])">
+                                </label>
+                            </div>
+                        </div>
+                        <div class="flex justify-end gap-2">
+                            <button onclick="removeProductImage(${p.id})" class="px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-red-500 font-bold">Usuń grafikę</button>
+                            <button onclick="saveProductEdits(${p.id})" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold">Zapisz zmiany globalnie</button>
+                        </div>
                     </div>
                 `;
             });
+        }
+
+        function compressImage(file) {
+            return new Promise((resolve, reject) => {
+                if(!file) return reject(new Error("Brak pliku"));
+                if(file.size > 5 * 1024 * 1024) return reject(new Error("Plik jest większy niż 5 MB."));
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const img = new Image();
+                    img.onload = () => {
+                        const max = 700;
+                        const scale = Math.min(1, max / Math.max(img.width, img.height));
+                        const canvas = document.createElement("canvas");
+                        canvas.width = Math.max(1, Math.round(img.width * scale));
+                        canvas.height = Math.max(1, Math.round(img.height * scale));
+                        const ctx = canvas.getContext("2d");
+                        ctx.fillStyle = "#ffffff";
+                        ctx.fillRect(0,0,canvas.width,canvas.height);
+                        ctx.drawImage(img,0,0,canvas.width,canvas.height);
+                        const data = canvas.toDataURL("image/webp",0.68);
+                        if(data.length > 700000) return reject(new Error("Po kompresji grafika nadal jest za duża. Wybierz prostsze zdjęcie."));
+                        resolve(data);
+                    };
+                    img.onerror = () => reject(new Error("Nie udało się odczytać grafiki."));
+                    img.src = reader.result;
+                };
+                reader.onerror = () => reject(new Error("Nie udało się wczytać pliku."));
+                reader.readAsDataURL(file);
+            });
+        }
+
+        async function handleProductImage(id, file) {
+            try {
+                const dataUrl = await compressImage(file);
+                const p = products.find(x => x.id === id);
+                if(!p) return;
+                p.imageData = dataUrl;
+                await syncProductImageToCloud(id, dataUrl);
+                saveLocalData();
+                renderAdminProducts();
+                renderProducts();
+                alert("Grafika została skompresowana i zapisana w Firestore.");
+            } catch(err) {
+                alert(err.message || "Nie udało się zapisać grafiki.");
+                renderAdminProducts();
+            }
+        }
+
+        async function removeProductImage(id) {
+            const p = products.find(x => x.id === id);
+            if(!p) return;
+            delete p.imageData;
+            saveLocalData();
+            if(firebaseEnabled && db) {
+                try { await db.collection("productImages").doc(String(id)).delete(); } catch(err) { console.error(err); }
+            }
+            renderAdminProducts();
+            renderProducts();
+        }
+
+        async function saveProductEdits(id) {
+            const p = products.find(x => x.id === id);
+            if(!p) return;
+            const price = parseFloat(document.getElementById(`price-${id}`).value);
+            if(isNaN(price) || price < 0) { alert("Podaj prawidłową cenę."); return; }
+            p.price = price;
+            p.emoji = document.getElementById(`emoji-${id}`).value.trim() || "📦";
+            p.tag = document.getElementById(`tag-${id}`).value.trim();
+            saveLocalData();
+            await syncCatalogToCloud();
+            renderAdminProducts();
+            renderProducts();
+            alert("Zmiany zapisane globalnie.");
         }
 
         function changeStock(id, amount) {
@@ -1060,200 +1177,9 @@ const firebaseConfig = {
 
         function updateOrderStatus(index, status) {
             ordersHistory[index].status = status;
-            saveData(false);
+            saveData();
             renderAdminOrders();
         }
-            // ===== ULEPSZENIA SKLEP PRO =====
-        function ensureEnhancedData(syncCloud=true) {
-            products = products.map(function(p){
-                p.buyPrice = Number(p.buyPrice || 0);
-                p.bestseller = !!p.bestseller || p.tag === '🔥 HIT' || p.tag === '⭐ BESTSELLER';
-                if(!p.emoji || p.emoji === '📦') p.emoji = enhancedEmojiForCategory(p.category);
-                p.image = p.image || p.imageData || '';
-                return p;
-            });
-            var normalized = {};
-            Object.keys(coupons || {}).forEach(function(code){
-                var c = coupons[code];
-                normalized[code] = typeof c === 'number' ? { discount: Math.min(100,Math.max(1,c)), minOrder:0, active:true, uses:0 } : {
-                    discount: Math.min(100,Math.max(1,Number(c.discount)||1)),
-                    minOrder: Math.max(0,Number(c.minOrder)||0), active: c.active !== false, uses:Number(c.uses)||0
-                };
-            });
-            coupons = normalized;
-            if(!storeSettings || typeof storeSettings !== 'object') storeSettings = {};
-            if(storeSettings.lowStock == null) storeSettings.lowStock = 5;
-            saveData(false);
-        }
-
-        function enhancedEmojiForCategory(cat){
-            return ({'Batoniki':'🍫','Przekąski':'🥨','Napoje':'🥤','Słodycze':'🍬','Inne':'📦'})[cat] || '📦';
-        }
-        function setProductEmoji(e){ document.getElementById('product-edit-emoji').value=e; }
-        function handleProductImageUpload(event){
-            var file=event.target.files && event.target.files[0];
-            if(!file)return;
-            if(file.size>2.5*1024*1024){ alert('Zdjęcie jest za duże. Wybierz plik do 2,5 MB.'); event.target.value=''; return; }
-            var reader=new FileReader();
-            reader.onload=function(){ document.getElementById('product-edit-image').value=reader.result; renderProductImagePreview(reader.result); };
-            reader.readAsDataURL(file);
-        }
-        function renderProductImagePreview(src){
-            var box=document.getElementById('product-image-preview');
-            if(src){ box.innerHTML='<img src="'+src+'" class="product-photo" alt="Podgląd produktu">'; }
-            else { box.innerHTML='<span class="text-3xl">'+(document.getElementById('product-edit-emoji').value||'🍬')+'</span>'; }
-        }
-        function clearProductImage(){ document.getElementById('product-edit-image').value=''; document.getElementById('product-edit-image-file').value=''; renderProductImagePreview(''); }
-        function openProductEditor(id){
-            var modal=document.getElementById('product-editor-modal'), del=document.getElementById('product-delete-btn');
-            if(id==null){
-                document.getElementById('product-editor-title').innerText='Dodaj produkt';
-                document.getElementById('product-edit-id').value='';
-                document.getElementById('product-edit-name').value='';
-                document.getElementById('product-edit-category').value='Przekąski';
-                document.getElementById('product-edit-emoji').value='🥨';
-                document.getElementById('product-edit-price').value='2.00';
-                document.getElementById('product-edit-buy').value='';
-                document.getElementById('product-edit-stock').value='10';
-                document.getElementById('product-edit-tag').value='🆕 NOWOŚĆ';
-                document.getElementById('product-edit-desc').value='';
-                document.getElementById('product-edit-best').checked=false;
-                document.getElementById('product-edit-active').checked=true;
-                document.getElementById('product-edit-image').value='';
-                document.getElementById('product-edit-image-file').value='';
-                renderProductImagePreview('');
-                del.classList.add('hidden');
-            } else {
-                var p=products.find(function(x){return x.id==id}); if(!p) return;
-                document.getElementById('product-editor-title').innerText='Edytuj produkt';
-                document.getElementById('product-edit-id').value=p.id;
-                document.getElementById('product-edit-name').value=p.name;
-                document.getElementById('product-edit-category').value=(['Batoniki','Przekąski','Napoje','Słodycze','Inne'].indexOf(p.category)>=0?p.category:'Inne');
-                document.getElementById('product-edit-emoji').value=p.emoji||enhancedEmojiForCategory(p.category);
-                document.getElementById('product-edit-price').value=Number(p.price||0).toFixed(2);
-                document.getElementById('product-edit-buy').value=p.buyPrice?Number(p.buyPrice).toFixed(2):'';
-                document.getElementById('product-edit-stock').value=p.stock;
-                document.getElementById('product-edit-tag').value=p.tag||'';
-                document.getElementById('product-edit-desc').value=p.desc||'';
-                document.getElementById('product-edit-best').checked=!!p.bestseller;
-                document.getElementById('product-edit-active').checked=p.active!==false;
-                document.getElementById('product-edit-image').value=p.image||'';
-                document.getElementById('product-edit-image-file').value='';
-                renderProductImagePreview(p.image||'');
-                del.classList.remove('hidden');
-            }
-            modal.classList.remove('hidden');
-        }
-        function closeProductEditor(){ document.getElementById('product-editor-modal').classList.add('hidden'); }
-        async function saveProductFromEditor(){
-            var name=document.getElementById('product-edit-name').value.trim(), price=parseFloat(document.getElementById('product-edit-price').value), stock=parseInt(document.getElementById('product-edit-stock').value,10);
-            if(!name || isNaN(price) || price<0 || isNaN(stock) || stock<0){ alert('Podaj nazwę, cenę i poprawny stan magazynowy.'); return; }
-            var rawId=document.getElementById('product-edit-id').value, id=rawId?Number(rawId):Date.now();
-            var cat=document.getElementById('product-edit-category').value, emoji=document.getElementById('product-edit-emoji').value.trim()||enhancedEmojiForCategory(cat);
-            var imageValue=document.getElementById('product-edit-image').value||'';
-            if(imageValue.startsWith('data:image/') && firebaseEnabled && firebaseStorage){
-                try{
-                    toast('Wysyłanie zdjęcia…');
-                    var safeId=String(id).replace(/[^a-zA-Z0-9_-]/g,'_');
-                    var uploadRef=firebaseStorage.ref('products/'+safeId+'-'+Date.now()+'.jpg');
-                    await uploadRef.putString(imageValue,'data_url',{contentType:imageValue.substring(5,imageValue.indexOf(';'))});
-                    imageValue=await uploadRef.getDownloadURL();
-                }catch(err){ console.error(err); alert('Nie udało się wysłać zdjęcia do Firebase. Sprawdź konfigurację Storage i reguły Firebase.'); return; }
-            }
-            var obj={id:id,name:name,category:cat,desc:document.getElementById('product-edit-desc').value.trim()||'Nowy produkt',price:Number(price.toFixed(2)),buyPrice:Math.max(0,parseFloat(document.getElementById('product-edit-buy').value)||0),stock:stock,emoji:emoji,image:imageValue,tag:document.getElementById('product-edit-tag').value,bestseller:document.getElementById('product-edit-best').checked,active:document.getElementById('product-edit-active').checked};
-            var idx=products.findIndex(function(x){return x.id===id}); if(idx>=0) products[idx]=obj; else products.push(obj);
-            saveData(); renderProducts(); renderAdminProducts(); refreshExtraDashboard(); closeProductEditor(); toast(idx>=0?'Zmieniono produkt.':'Dodano produkt.');
-        }
-        function deleteEditingProduct(){
-            var id=Number(document.getElementById('product-edit-id').value), p=products.find(function(x){return x.id===id});
-            if(!p) return; if(confirm('Usunąć „'+p.name+'”?')){ products=products.filter(function(x){return x.id!==id}); delete cart[id]; saveData(); renderProducts(); renderAdminProducts(); refreshExtraDashboard(); closeProductEditor(); toast('Produkt usunięty.'); }
-        }
-        function quickPrice(id,delta){ var p=products.find(function(x){return x.id===id}); if(!p)return; p.price=Math.max(0,Number((p.price+delta).toFixed(2))); saveData(); renderProducts(); renderAdminProducts(); toast('Cena: '+p.price.toFixed(2)+' zł'); }
-        function toggleBest(id){ var p=products.find(function(x){return x.id===id}); if(!p)return; p.bestseller=!p.bestseller; if(p.bestseller && !p.tag)p.tag='⭐ BESTSELLER'; saveData(); renderProducts(); renderAdminProducts(); refreshExtraDashboard(); }
-
-        function renderAdminProducts(){
-            var list=document.getElementById('admin-products-list'); if(!list)return; list.innerHTML='';
-            products.forEach(function(p){
-                var margin=p.buyPrice>0 ? ((p.price-p.buyPrice)/p.buyPrice*100) : null;
-                list.innerHTML += '<div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs"><div class="flex flex-col lg:flex-row lg:items-center justify-between gap-3"><div class="flex items-center gap-3 min-w-0"><span class="text-2xl">'+p.emoji+'</span><div class="min-w-0"><div class="flex flex-wrap items-center gap-2"><span class="font-bold text-slate-900 text-sm">'+p.name+'</span>'+(p.bestseller?'<span class="badge-hot px-2 py-0.5 rounded-md text-[9px] font-black">⭐ BESTSELLER</span>':'')+(!p.active?'<span class="bg-red-50 text-red-600 border border-red-100 px-2 py-0.5 rounded-md text-[9px] font-black">UKRYTY</span>':'')+'</div><div class="text-slate-400 text-[10px]">'+p.category+' · <b>'+Number(p.price).toFixed(2)+' zł</b>'+(margin!==null?' · marża ~'+margin.toFixed(0)+'%':'')+' · '+p.stock+' szt.</div></div></div><div class="flex flex-wrap items-center gap-2"><button onclick="quickPrice('+p.id+',-0.5)" class="bg-white border border-slate-200 px-2.5 py-1.5 rounded-xl font-bold">−0,50</button><button onclick="quickPrice('+p.id+',0.5)" class="bg-white border border-slate-200 px-2.5 py-1.5 rounded-xl font-bold">+0,50</button><button onclick="changeStock('+p.id+',-1)" class="bg-white border border-slate-200 px-2.5 py-1.5 rounded-xl font-bold">−1</button><button onclick="changeStock('+p.id+',1)" class="bg-white border border-slate-200 px-2.5 py-1.5 rounded-xl font-bold">+1</button><button onclick="toggleBest('+p.id+')" class="'+(p.bestseller?'bg-amber-100 text-amber-700':'bg-white text-slate-600')+' border border-slate-200 px-3 py-1.5 rounded-xl font-bold">⭐</button><button onclick="openProductEditor('+p.id+')" class="bg-indigo-50 text-indigo-700 border border-indigo-100 px-3 py-1.5 rounded-xl font-bold">Edytuj</button><label class="relative inline-flex items-center cursor-pointer"><input type="checkbox" '+(p.active?'checked':'')+' onchange="toggleProduct('+p.id+')" class="sr-only peer"><div class="w-9 h-5 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full after:content-[\'\'] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div></label></div></div></div>';
-            });
-        }
-
-        function normalizeEnhancedCoupons(){
-            var out={}; Object.keys(coupons||{}).forEach(function(code){ var c=coupons[code]; out[code]=(typeof c==='number')?{discount:c,minOrder:0,active:true,uses:0}:{discount:Number(c.discount)||1,minOrder:Number(c.minOrder)||0,active:c.active!==false,uses:Number(c.uses)||0}; }); coupons=out;
-        }
-        function renderAdminCoupons(){
-            normalizeEnhancedCoupons(); var list=document.getElementById('admin-coupons-list'); if(!list)return; list.innerHTML='';
-            Object.keys(coupons).forEach(function(code){ var c=coupons[code]; list.innerHTML += '<div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 bg-white rounded-2xl border border-slate-100 shadow-sm"><div><div class="flex items-center gap-2"><span class="font-black text-slate-900">'+code+'</span><span class="text-[9px] font-black px-2 py-0.5 rounded-md '+(c.active?'badge-new':'bg-red-50 text-red-600 border border-red-100')+'">'+(c.active?'AKTYWNY':'WYŁĄCZONY')+'</span></div><div class="text-[10px] text-slate-400 mt-1">−'+c.discount+'% · min. '+Number(c.minOrder).toFixed(2)+' zł · użycia: '+c.uses+'</div></div><div class="flex gap-2"><button onclick="toggleEnhancedCoupon(\''+code+'\')" class="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl text-[10px] font-bold">'+(c.active?'Wyłącz':'Włącz')+'</button><button onclick="editEnhancedCoupon(\''+code+'\')" class="bg-indigo-50 text-indigo-700 border border-indigo-100 px-3 py-1.5 rounded-xl text-[10px] font-bold">Edytuj</button><button onclick="deleteEnhancedCoupon(\''+code+'\')" class="text-slate-400 hover:text-red-500 px-2"><i class="fa-solid fa-trash"></i></button></div></div>'; });
-        }
-        function addNewCoupon(){
-            normalizeEnhancedCoupons(); var code=document.getElementById('new-coupon-code').value.trim().toUpperCase(), disc=parseInt(document.getElementById('new-coupon-discount').value,10);
-            if(!code||isNaN(disc)||disc<1||disc>100){alert('Rabat musi być od 1% do 100%.');return;}
-            var inputMin=document.getElementById('new-coupon-min'); var min=inputMin?Math.max(0,parseFloat(inputMin.value)||0):0;
-            coupons[code]={discount:disc,minOrder:min,active:true,uses:(coupons[code]&&coupons[code].uses)||0}; saveData(); renderAdminCoupons(); document.getElementById('new-coupon-code').value=''; if(inputMin) inputMin.value='0'; toast('Dodano kod '+code+'.');
-        }
-        function toggleEnhancedCoupon(code){normalizeEnhancedCoupons(); if(!coupons[code])return; coupons[code].active=!coupons[code].active; saveData(); renderAdminCoupons();}
-        function editEnhancedCoupon(code){normalizeEnhancedCoupons(); if(!coupons[code])return; var d=parseInt(prompt('Rabat dla '+code+' (1–100):',coupons[code].discount),10); if(isNaN(d)||d<1||d>100)return; var m=parseFloat(prompt('Minimalny koszyk (zł):',coupons[code].minOrder)); coupons[code].discount=d; coupons[code].minOrder=isNaN(m)?0:Math.max(0,m); saveData(); renderAdminCoupons(); toast('Kod zaktualizowany.');}
-        function deleteEnhancedCoupon(code){normalizeEnhancedCoupons(); if(confirm('Usunąć kod '+code+'?')){delete coupons[code]; saveData(); renderAdminCoupons(); toast('Kod usunięty.');}}
-        function applyCoupon(){
-            var inputVal=document.getElementById('coupon-input').value.trim(), upper=inputVal.toUpperCase(), msg=document.getElementById('coupon-message');
-            if(inputVal==='/admin'){document.getElementById('coupon-input').value='';openAdminModal();return;}
-            normalizeEnhancedCoupons(); var c=coupons[upper];
-            var subtotal=Object.keys(cart).reduce(function(s,id){var p=products.find(function(x){return x.id==id});return s+(p?p.price*cart[id]:0)},0);
-            if(!c||!c.active){activeDiscount=0;appliedCouponName='';msg.className='text-xs text-red-500 font-bold';msg.innerText='Nieprawidłowy lub wyłączony kod.';updateCartUI();return;}
-            if(subtotal < c.minOrder){msg.className='text-xs text-red-500 font-bold';msg.innerText='Ten kod działa od '+Number(c.minOrder).toFixed(2)+' zł.';return;}
-            activeDiscount=c.discount; appliedCouponName=upper; msg.className='text-xs text-emerald-600 font-bold'; msg.innerText='Kod '+upper+' (-'+c.discount+'%) aktywny!'; updateCartUI();
-        }
-
-        function enhancedRenderProducts(){
-            var grid=document.getElementById('products-grid'); if(!grid)return; grid.innerHTML='';
-            var q=(document.getElementById('search-input').value||'').toLowerCase(), cat=document.getElementById('category-select').value, sortEl=document.getElementById('sort-select'), sort=sortEl?sortEl.value:'default';
-            var filtered=products.filter(function(p){return p.active && (cat==='Wszystkie'||p.category===cat) && ((p.name+' '+p.desc).toLowerCase().includes(q));});
-            filtered.sort(function(a,b){if(sort==='bestseller')return Number(b.bestseller)-Number(a.bestseller)||a.name.localeCompare(b.name);if(sort==='priceAsc')return a.price-b.price;if(sort==='priceDesc')return b.price-a.price;if(sort==='name')return a.name.localeCompare(b.name);return Number(b.bestseller)-Number(a.bestseller)||a.name.localeCompare(b.name);});
-            document.getElementById('product-count-badge').innerText=filtered.length+' prod.';
-            if(!filtered.length){grid.innerHTML='<div class="col-span-full text-center py-12 text-slate-400 text-xs">Brak produktów spełniających kryteria.</div>';return;}
-            filtered.forEach(function(p){
-                var out=p.stock<=0, low=!out&&p.stock<=(storeSettings.lowStock??5);
-                var best=p.bestseller;
-                var visual=p.image ? '<img src="'+p.image+'" class="product-photo product-visual" alt="'+p.name+'">' : '<span class="text-4xl product-visual">'+(p.emoji||enhancedEmojiForCategory(p.category))+'</span>';
-                var visualWrap='<div class="product-image-wrap product-visual">'+visual+'</div>';
-                grid.innerHTML+='<div class="product-card '+(best?'bestseller-card ':'')+'bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between relative overflow-hidden">'+(best?'<span class="absolute top-4 right-4 badge-hot bestseller-badge text-[10px] font-black px-2.5 py-0.5 rounded-full z-10">⭐ BESTSELLER</span>':(p.tag?'<span class="absolute top-4 right-4 bg-slate-50 text-slate-600 border border-slate-200 text-[10px] font-black px-2.5 py-0.5 rounded-full z-10">'+p.tag+'</span>':''))+'<div>'+visualWrap+'<div class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider mb-0.5 mt-3">'+p.category+'</div><h4 class="font-bold text-slate-900 text-base">'+p.name+'</h4><p class="text-xs text-slate-400 mt-0.5 min-h-[30px]">'+p.desc+'</p></div><div class="mt-6 pt-4 border-t border-dashed border-slate-100 flex items-center justify-between"><div><div class="font-extrabold text-slate-900 text-base">'+Number(p.price).toFixed(2)+' zł</div><div class="text-[10px] font-bold '+(out?'text-red-500':(low?'text-amber-600':'text-slate-400'))+'">'+(out?'Wyprzedane':(low?'Zostało tylko '+p.stock:'Dostępne: '+p.stock))+'</div></div><button onclick="addToCart('+p.id+')" '+(out||!storeSettings.isOpen?'disabled':'')+' class="'+(out||!storeSettings.isOpen?'bg-slate-200 text-slate-400 cursor-not-allowed':'bg-emerald-500 hover:bg-emerald-600 text-white shadow-md shadow-emerald-500/20 cursor-pointer')+' px-4 py-2 rounded-xl text-xs font-bold transition">'+(out?'Brak':'Dodaj +')+'</button></div></div>';
-            });
-        }
-
-        function refreshExtraDashboard(){
-            var active=products.filter(function(p){return p.active}).length,best=products.filter(function(p){return p.bestseller}).length,low=products.filter(function(p){return p.active&&p.stock>0&&p.stock<=(storeSettings.lowStock??5)}).length,rev=ordersHistory.reduce(function(s,o){return s+Number(o.total||0)},0);
-            [['extra-active',active],['extra-best',best],['extra-low',low],['extra-orders',ordersHistory.length],['extra-revenue',rev.toFixed(2)+' zł']].forEach(function(x){var el=document.getElementById(x[0]);if(el)el.innerText=x[1]});
-        }
-        function exportShopBackup(){var payload={products:products,coupons:coupons,storeSettings:storeSettings,ordersHistory:ordersHistory};var b=new Blob([JSON.stringify(payload,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='sklep-pro-backup.json';a.click();URL.revokeObjectURL(a.href);toast('Kopia zapisana.');}
-        function toast(m){document.querySelectorAll('.toast').forEach(function(x){x.remove()});var e=document.createElement('div');e.className='toast';e.innerText=m;document.body.appendChild(e);setTimeout(function(){e.remove()},2200)}
-        document.addEventListener('DOMContentLoaded',function(){
-            var emoji=document.getElementById('product-edit-emoji');
-            if(emoji) emoji.addEventListener('input',function(){ if(!document.getElementById('product-edit-image').value) renderProductImagePreview(''); });
-        });
-
-        // Podmień rendering po załadowaniu oryginalnego kodu.
-        addNewProductPrompt=function(){openProductEditor();};
-        var _oldRenderProducts=renderProducts;
-        renderProducts=enhancedRenderProducts;
-        var _oldSaveData=saveData;
-        var _oldFinishOrder=finishOrderSuccess;
-        finishOrderSuccess=function(orderCode,combinedPickup,finalTotal){
-            if(appliedCouponName && coupons[appliedCouponName]){ normalizeEnhancedCoupons(); coupons[appliedCouponName].uses=(coupons[appliedCouponName].uses||0)+1; }
-            _oldFinishOrder(orderCode,combinedPickup,finalTotal);
-            refreshExtraDashboard();
-        };
-        var _oldToggleProduct=toggleProduct;
-        toggleProduct=function(id){_oldToggleProduct(id);refreshExtraDashboard();};
-        var _oldChangeStock=changeStock;
-        changeStock=function(id,amount){_oldChangeStock(id,amount);refreshExtraDashboard();};
-
-        ensureEnhancedData(false);
-        if(!document.querySelector('#category-select option[value="Inne"]')) document.getElementById('category-select').insertAdjacentHTML('beforeend','<option value="Inne">Inne</option>');
-        if(typeof updateStoreStatusUI==='function') updateStoreStatusUI();
-        renderProducts(); renderAdminProducts(); renderAdminCoupons(); refreshExtraDashboard();
-
-    
-</script>
+    </script>
 </body>
 </html>
