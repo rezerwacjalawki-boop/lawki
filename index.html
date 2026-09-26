@@ -1,1033 +1,354 @@
 <!doctype html>
 <html lang="pl">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Rezerwacja miejsc | SeatDesk Pro</title>
-  <meta name="description" content="Profesjonalny system wyboru i zgłoszenia rezerwacji miejsc w ławkach z zaawansowaną interakcją.">
-  <style>
-    :root{
-      --bg:#f0f4f9;
-      --surface:#ffffff;
-      --surface-soft:#f8fafc;
-      --text:#0f172a;
-      --muted:#64748b;
-      --line:#e2e8f0;
-      --line-strong:#cbd5e1;
-      --primary:#10b981;
-      --primary-2:#059669;
-      --primary-soft:#ecfdf5;
-      --primary-dark:#065f46;
-      --accent:#6366f1;
-      --accent-glow:rgba(99,102,241,.25);
-      --danger:#ef4444;
-      --warning:#f59e0b;
-      --shadow:0 25px 50px -12px rgba(15,23,42,.12);
-      --shadow-sm:0 10px 30px -5px rgba(15,23,42,.05);
-      --shadow-hover:0 30px 60px -12px rgba(16,185,129,.2);
-      --radius:28px;
-    }
-
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{
-      margin:0;
-      background:
-        radial-gradient(circle at 5% 0%, rgba(16,185,129,.08) 0%, transparent 40%),
-        radial-gradient(circle at 95% 10%, rgba(99,102,241,.08) 0%, transparent 40%),
-        radial-gradient(circle at 50% 90%, rgba(14,165,233,.06) 0%, transparent 50%),
-        var(--bg);
-      color:var(--text);
-      font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
-      line-height:1.5;
-      overflow-x:hidden;
-    }
-    button,input,select,textarea{font:inherit}
-    button{border:0; background:none}
-    a{color:inherit; text-decoration:none}
-    .wrap{width:min(1200px,calc(100% - 32px));margin:auto}
-
-    /* Ambient background grid pattern */
-    body::before {
-      content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
-      background-image: linear-gradient(to right, rgba(0,0,0,.02) 1px, transparent 1px),
-                        linear-gradient(to bottom, rgba(0,0,0,.02) 1px, transparent 1px);
-      background-size: 32px 32px;
-    }
-
-    /* Header & Navbar Glassmorphism with Entrance Animation */
-    header{padding:32px 0 20px; animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;}
-    .topbar{
-      display:flex;align-items:center;justify-content:space-between;gap:16px;
-      padding:12px 18px 12px 14px;
-      border:1px solid rgba(255,255,255,.8); background:rgba(255,255,255,.75);
-      backdrop-filter:blur(20px); -webkit-backdrop-filter:blur(20px);
-      border-radius:20px; box-shadow:var(--shadow-sm);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .topbar:hover{box-shadow:0 12px 35px -5px rgba(15,23,42,.08)}
-    .brand{display:flex;align-items:center;gap:14px}
-    .logo-mark{
-      width:46px;height:46px;border-radius:14px;
-      display:grid;place-items:center;color:#fff;font-weight:900;font-size:18px;
-      background:linear-gradient(135deg,var(--primary),var(--accent));
-      box-shadow:0 10px 25px rgba(16,185,129,.35);
-      position:relative; overflow:hidden;
-      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .logo-mark::after{
-      content:""; position:absolute; inset:0;
-      background:linear-gradient(135deg,transparent,rgba(255,255,255,.4),transparent);
-      transform:translateX(-100%); transition:transform 0.6s ease;
-    }
-    .brand:hover .logo-mark{transform:scale(1.08) rotate(5deg)}
-    .brand:hover .logo-mark::after{transform:translateX(100%)}
-
-    .brand-copy{display:grid;line-height:1.1}
-    .brand-copy strong{font-size:15px; letter-spacing:-.01em}
-    .brand-copy span{font-size:11px;color:var(--muted);margin-top:2px;font-weight:500}
-    
-    .status{
-      display:inline-flex;align-items:center;gap:8px;
-      padding:8px 14px;border-radius:999px;background:var(--primary-soft);
-      color:var(--primary-dark);font-size:12px;font-weight:800;
-      border:1px solid rgba(16,185,129,.2);
-      box-shadow:0 4px 12px rgba(16,185,129,.1);
-    }
-    .status-dot{
-      width:8px;height:8px;background:var(--primary);border-radius:50%;
-      box-shadow:0 0 0 4px rgba(16,185,129,.2);
-      animation: pulseDot 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
-    }
-
-    h1{
-      max-width:850px;margin:32px 0 16px;
-      font-size:clamp(34px, 5.5vw, 60px);line-height:1.02;letter-spacing:-.04em;
-      background:linear-gradient(135deg, var(--text) 30%, #334155 100%);
-      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
-      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s both;
-    }
-    .lead{
-      max-width:800px;margin:0;color:var(--muted);font-size:18px;line-height:1.6;
-      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.2s both;
-    }
-    .trust-row{
-      display:flex;gap:12px;flex-wrap:wrap;margin-top:24px;
-      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.3s both;
-    }
-    .trust{
-      display:inline-flex;align-items:center;gap:8px;padding:10px 14px;
-      border:1px solid var(--line);background:rgba(255,255,255,.8); backdrop-filter:blur(10px);
-      border-radius:14px;color:#475569;font-size:12px;font-weight:700;
-      box-shadow:0 4px 12px rgba(0,0,0,.02);
-      transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-    }
-    .trust:hover{transform:translateY(-2px); border-color:var(--primary); background:#fff}
-
-    /* Steps with staggered animations */
-    .steps{
-      display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin:20px 0 28px;
-      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.4s both;
-    }
-    .step{
-      display:flex;align-items:center;gap:14px;padding:16px 18px;
-      border:1px solid var(--line);background:rgba(255,255,255,.8); backdrop-filter:blur(10px);
-      border-radius:18px; box-shadow:var(--shadow-sm);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-    }
-    .step:hover{transform:translateY(-4px); box-shadow:var(--shadow); border-color:rgba(16,185,129,.4)}
-    .step-num{
-      width:34px;height:34px;border-radius:11px;display:grid;place-items:center;
-      background:linear-gradient(135deg, #f1f5f9, #e2e8f0);color:#475569;font-size:13px;font-weight:900;flex:none;
-      box-shadow:inset 0 2px 4px rgba(255,255,255,.8);
-      transition: background 0.3s ease, color 0.3s ease;
-    }
-    .step:hover .step-num{background:var(--primary-soft); color:var(--primary-dark)}
-    .step strong{display:block;font-size:13px; letter-spacing:-.01em}
-    .step span{display:block;color:var(--muted);font-size:11.5px;margin-top:2px}
-
-    /* Main Layout */
-    .layout{
-      display:grid;grid-template-columns:1.08fr .92fr;gap:26px;align-items:start;padding-bottom:56px;
-      animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.5s both;
-    }
-    .card{
-      background:var(--surface);border:1px solid rgba(226,232,240,.8);
-      border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;
-      position:relative; transition: box-shadow 0.4s ease;
-    }
-    .card:hover{box-shadow:0 30px 70px -15px rgba(15,23,42,.15)}
-    .card-head{
-      padding:28px 28px 16px;
-      display:flex;justify-content:space-between;gap:16px;align-items:flex-start
-    }
-    .eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:var(--accent);font-weight:900;margin-bottom:6px}
-    .card-head h2{margin:0;font-size:22px;letter-spacing:-.025em}
-    .card-head p{margin:6px 0 0;color:var(--muted);font-size:13.5px}
-    .mini-count{
-      white-space:nowrap;padding:10px 14px;border-radius:12px;
-      background:var(--primary-soft);border:1px solid rgba(16,185,129,.2);
-      font-size:12px;font-weight:800;color:var(--primary-dark);
-      box-shadow:0 4px 12px rgba(16,185,129,.08);
-      animation: pulseSlow 3s infinite ease-in-out;
-    }
-
-    /* Interactive Map Area */
-    .map-area{padding:8px 28px 28px}
-    .map-top{
-      display:flex;justify-content:space-between;gap:16px;align-items:center;
-      margin:0 0 16px;padding:14px 16px;border-radius:16px;
-      background:var(--surface-soft);border:1px solid var(--line);
-    }
-    .map-top strong{font-size:13.5px}
-    .map-top span{font-size:11.5px;color:var(--muted)}
-    .map-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px}
-    .lane{display:flex;flex-direction:column;gap:14px}
-    .lane-title{
-      display:flex;justify-content:space-between;align-items:center;
-      padding:0 4px 4px
-    }
-    .lane-title strong{font-size:12.5px; color:#334155}
-    .lane-title span{font-size:11px;color:var(--muted);font-weight:700}
-    
-    .bench{
-      display:grid;grid-template-columns:1fr 1fr;min-height:86px;
-      border:2px solid #1e293b;border-radius:10px;background:#fff;overflow:hidden;
-      box-shadow:0 6px 16px rgba(15,23,42,.04);
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-    }
-    .bench:hover{box-shadow:0 10px 25px rgba(15,23,42,.08)}
-    
-    .seat{
-      position:relative;min-height:84px;padding:0;
-      background:#f8fafc;color:#94a3b8;cursor:not-allowed;
-      transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1), background 0.2s ease, filter 0.2s ease;
-    }
-    .seat + .seat{border-left:2px solid #1e293b}
-    
-    /* Available Seat with Stunning Hover & Ripple Effects */
-    .seat.available{
-      cursor:pointer;
-      color:#fff;
-      background:linear-gradient(145deg, #10b981, #059669);
-      box-shadow: inset 0 2px 4px rgba(255,255,255,.3);
-    }
-    .seat.available:hover{
-      transform:scale(0.97);
-      filter:brightness(1.1);
-      box-shadow: inset 0 2px 8px rgba(255,255,255,.5), 0 0 20px rgba(16,185,129,.4);
-      z-index: 2;
-    }
-    .seat.available:active{transform:scale(0.93)}
-    
-    /* Selected State Glow & Pop Animation */
-    .seat.selected{
-      background:linear-gradient(145deg, #047857, #065f46) !important;
-      box-shadow:inset 0 0 0 3px #fff, inset 0 0 0 6px #047857, 0 10px 25px rgba(4,120,87,.4) !important;
-      animation: seatPop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-      z-index: 3;
-    }
-    
-    .seat-label{
-      position:absolute;top:9px;left:10px;
-      font-size:12px;font-weight:900;letter-spacing:.02em;
-    }
-    .seat-name{
-      position:absolute;left:10px;right:10px;bottom:24px;
-      font-size:12px;font-weight:800; opacity:.95;
-    }
-    .seat-status{
-      position:absolute;left:10px;bottom:9px;
-      font-size:10px;font-weight:800;opacity:.85;
-      text-transform:uppercase; letter-spacing:.05em;
-    }
-    .seat.unavailable::after{
-      content:"Niedostępne";position:absolute;left:10px;bottom:9px;
-      color:#94a3b8;font-size:10px;font-weight:800; opacity:0.7;
-    }
-    .selection-badge{
-      position:absolute;right:8px;top:8px;
-      width:22px;height:22px;border-radius:50%;display:none;
-      place-items:center;background:#fff;color:var(--primary-dark);font-size:12px;font-weight:900;
-      box-shadow:0 4px 10px rgba(0,0,0,.2);
-      animation: badgePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .seat.selected .selection-badge{display:grid}
-    
-    .legend{display:flex;gap:18px;flex-wrap:wrap;margin-top:20px}
-    .legend span{display:flex;align-items:center;color:var(--muted);font-size:11.5px;font-weight:700}
-    .legend i{width:12px;height:12px;border-radius:4px;border:1px solid var(--line-strong);margin-right:8px;background:#f8fafc; transition: transform 0.2s ease;}
-    .legend span:hover i{transform:scale(1.2)}
-    .legend .free i{background:#10b981;border-color:#059669;box-shadow:0 0 8px rgba(16,185,129,.3)}
-    .legend .chosen i{background:#047857;border:2px solid #fff;box-shadow:0 0 10px rgba(4,120,87,.5)}
-    
-    .selection-note{
-      display:flex;align-items:flex-start;gap:12px;margin-top:18px;
-      padding:14px 16px;border-radius:16px;background:linear-gradient(135deg, #ecfdf5, #f0fdf4);
-      border:1px solid rgba(16,185,129,0.3);color:#065f46;font-size:11.5px;
-      box-shadow:0 4px 15px rgba(16,185,129,.05);
-    }
-
-    /* Form & Input Enhancements */
-    .card-body{padding:8px 28px 28px}
-    .section-block{padding-top:16px;margin-top:18px;border-top:1px solid var(--line)}
-    .section-title{display:flex;align-items:center;gap:10px;margin-bottom:14px}
-    .section-icon{
-      width:30px;height:30px;border-radius:10px;display:grid;place-items:center;
-      background:var(--primary-soft);color:var(--primary-dark);font-weight:900;font-size:12px;
-      box-shadow:0 4px 10px rgba(16,185,129,.15);
-    }
-    .section-title strong{font-size:13.5px}
-    .section-title span{font-size:11.5px;color:var(--muted);margin-left:auto;font-weight:600}
-    
-    .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-    .field{margin-bottom:16px}
-    label{display:block;margin:0 0 7px;font-size:12.5px;font-weight:900;letter-spacing:-.01em}
-    .helper{margin:-2px 0 8px;font-size:11.5px;color:var(--muted)}
-    
-    input,select,textarea{
-      width:100%;border:1px solid var(--line);background:#fbfcfe;
-      color:var(--text);border-radius:14px;padding:13px 15px;outline:0;
-      transition:all .25s cubic-bezier(0.16, 1, 0.3, 1);
-      box-shadow: inset 0 2px 4px rgba(0,0,0,.01);
-    }
-    input::placeholder,textarea::placeholder{color:#94a3b8}
-    input:hover,select:hover,textarea:hover{border-color:var(--line-strong); background:#fff}
-    input:focus,select:focus,textarea:focus{
-      border-color:var(--primary);
-      box-shadow:0 0 0 5px rgba(16,185,129,.15), inset 0 1px 2px rgba(0,0,0,.02);
-      background:#fff;
-      transform:translateY(-1px);
-    }
-    textarea{min-height:100px;resize:vertical}
-    .counter{text-align:right;color:#94a3b8;font-size:11px;margin-top:6px;font-weight:600}
-
-    /* Subscription Plans with Stunning 3D Lift & Glow */
-    .plans{display:grid;gap:12px}
-    .plan{
-      display:grid;grid-template-columns:auto 1fr auto;gap:14px;align-items:center;
-      position:relative;padding:16px;border:1px solid var(--line);border-radius:18px;
-      background:#fff;cursor:pointer;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-      box-shadow: 0 4px 15px rgba(0,0,0,.02);
-    }
-    .plan:hover{
-      transform: translateY(-3px);
-      border-color: var(--line-strong);
-      box-shadow: 0 12px 30px rgba(15,23,42,.08);
-    }
-    .plan input{position:absolute;opacity:0;pointer-events:none}
-    
-    .radio{
-      width:20px;height:20px;border:2px solid #cbd5e1;border-radius:50%;
-      transition: all 0.25s ease;
-      position: relative;
-    }
-    .plan:has(input:checked){
-      border-color:var(--primary);
-      background:var(--primary-soft);
-      box-shadow: 0 10px 25px rgba(16,185,129,.15);
-    }
-    .plan:has(input:checked) .radio{
-      border:6px solid var(--primary);
-      transform: scale(1.1);
-    }
-    
-    .plan-name{font-size:14px;font-weight:900;letter-spacing:-.01em}
-    .plan-note{font-size:11.5px;color:var(--muted);margin-top:2px}
-    .price{font-size:15px;font-weight:950;white-space:nowrap;letter-spacing:-.02em}
-    .plan-per{display:block;font-size:10.5px;color:#94a3b8;font-weight:700;text-align:right;margin-top:2px}
-    
-    .plan-standard{min-height:74px}
-    
-    /* Special Plan Plus with Advanced Cyberpunk / Glass Glow Effects */
-    .plan-plus{
-      min-height:90px;
-      border:1px solid rgba(99,102,241,.3);
-      background:linear-gradient(135deg, rgba(238,242,255,.6) 0%, rgba(224,231,255,.4) 55%, rgba(243,244,246,.5) 100%);
-      box-shadow:0 10px 30px rgba(99,102,241,.08);
-      overflow:visible;
-      isolation:isolate;
-    }
-    .plan-plus::before{
-      content:"";
-      position:absolute; inset:-1px; z-index:-1; border-radius:18px; padding:1.5px;
-      background:linear-gradient(110deg,#6366f1,#38bdf8,#6366f1);
-      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
-      -webkit-mask-composite:xor; mask-composite:exclude;
-      opacity:0.6; transition: opacity 0.3s ease;
-    }
-    .plan-plus:hover{
-      transform:translateY(-4px);
-      box-shadow:0 18px 40px rgba(99,102,241,.18);
-    }
-    .plan-plus:hover::before{opacity:1}
-    
-    .plan-plus:has(input:checked){
-      border-color:#6366f1;
-      background:linear-gradient(135deg,#e0e7ff,#c7d2fe 55%,#eef2ff);
-      box-shadow:0 20px 45px rgba(99,102,241,.25);
-    }
-    .plan-plus:has(input:checked) .radio{border:6px solid #6366f1}
-    .plan-plus .plan-name{color:#312e81}
-    .plan-plus .price{color:#312e81}
-    .plan-plus .plan-note{color:#4f46e5}
-    
-    .plan-ribbon{
-      position:absolute; top:-11px; left:16px; z-index:3;
-      padding:5px 11px; border-radius:999px; color:#fff;
-      background:linear-gradient(90deg,#4f46e5,#0ea5e9);
-      font-size:9.5px; font-weight:1000; letter-spacing:.08em;
-      box-shadow:0 6px 16px rgba(79,70,229,.3);
-      animation: ribbonFloat 2.8s ease-in-out infinite;
-    }
-    .best-offer .plan-ribbon{
-      background:linear-gradient(90deg,#6366f1,#06b6d4,#6366f1);
-      background-size:180% auto;
-      animation: gradientShift 3s linear infinite, ribbonFloat 2.8s ease-in-out infinite;
-    }
-    .plan-tagline{
-      position:absolute; right:16px; bottom:10px;
-      font-size:9.5px; font-weight:900; color:#4f46e5; letter-spacing:.02em;
-    }
-    .plan-glow{
-      position:absolute; width:90px; height:90px; right:-20px; top:-20px;
-      border-radius:50%; background:rgba(56,189,248,.25); filter:blur(12px);
-      pointer-events:none; animation: pulseGlow 2.4s ease-in-out infinite;
-    }
-    .bestseller .plan-glow{animation-delay:.2s}
-    .best-offer .plan-glow{background:rgba(99,102,241,.25); animation-delay:.55s}
-
-    /* Summary Card Styling */
-    .summary{
-      margin:20px 0 16px;padding:18px;border-radius:20px;
-      background:linear-gradient(180deg,#f0fdf4,#ecfdf5);
-      border:1px solid rgba(16,185,129,.3);
-      box-shadow: 0 10px 30px rgba(16,185,129,.06);
-      position: relative; overflow: hidden;
-    }
-    .summary::before{
-      content:""; position:absolute; top:0; right:0; width:120px; height:120px;
-      background:radial-gradient(circle, rgba(16,185,129,.15) 0%, transparent 70%);
-      pointer-events:none;
-    }
-    .summary-head{display:flex;justify-content:space-between;gap:10px;align-items:center;margin-bottom:10px}
-    .summary-head strong{font-size:14px; color:var(--primary-dark)}
-    .summary-head span{font-size:11px;color:#047857; font-weight:700; background:rgba(16,185,129,.1); padding:3px 8px; border-radius:6px;}
-    .summary-row{display:flex;justify-content:space-between;gap:12px;padding:8px 0;font-size:12.5px; color:#334155}
-    .summary-row + .summary-row{border-top:1px dashed rgba(16,185,129,.2)}
-    .summary-row.total{padding-top:12px;margin-top:6px;font-size:14px; border-top:2px solid rgba(16,185,129,.3) !important; color:var(--primary-dark)}
-    .summary-row.total strong{font-size:22px;letter-spacing:-.03em; color:var(--primary-dark)}
-
-    .checkbox{display:flex;align-items:flex-start;gap:12px;color:#475569;font-size:11.5px;margin:16px 0 18px; cursor: pointer;}
-    .checkbox input{width:18px;height:18px;margin:2px 0 0;accent-color:var(--primary); cursor: pointer; border-radius:4px;}
-    
-    /* Ultimate CTA Button with Shimmer & Fluid Hover */
-    .cta{
-      width:100%;display:flex;align-items:center;justify-content:center;gap:12px;
-      border-radius:16px;padding:16px 20px;color:#fff;
-      background:linear-gradient(135deg,var(--primary),var(--primary-2));
-      font-weight:900;font-size:15px;cursor:pointer;
-      box-shadow:0 15px 30px rgba(16,185,129,.3);
-      position: relative; overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .cta::after{
-      content:""; position:absolute; inset:0;
-      background:linear-gradient(90deg, transparent, rgba(255,255,255,.3), transparent);
-      transform:translateX(-100%); transition:transform 0.7s ease;
-    }
-    .cta:hover{
-      transform: translateY(-3px);
-      box-shadow:0 20px 40px rgba(16,185,129,.45);
-      filter:brightness(1.05);
-    }
-    .cta:hover::after{transform:translateX(100%)}
-    .cta:active{transform:translateY(-1px)}
-    .cta:disabled{opacity:.6;cursor:not-allowed;box-shadow:none; transform:none}
-    
-    .btn-icon{font-size:18px; transition: transform 0.3s ease;}
-    .cta:hover .btn-icon{transform: scale(1.2) rotate(10deg)}
-    
-    .secure-note{display:flex;gap:8px;justify-content:center;align-items:center;margin-top:12px;color:#94a3b8;font-size:11px;font-weight:500}
-
-    .notice{display:none;margin-top:14px;padding:14px 16px;border-radius:14px;font-size:12px; animation: fadeInUp 0.4s ease;}
-    .notice.ok{display:block;background:#ecfdf3;border:1px solid #10b981;color:#065f46; box-shadow:0 6px 20px rgba(16,185,129,.1);}
-    .notice.err{display:block;background:#fef2f2;border:1px solid #ef4444;color:var(--danger); box-shadow:0 6px 20px rgba(239,68,68,.1);}
-
-    /* Below Grid & FAQ Details Animation */
-    .below-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:26px;padding-bottom:48px}
-    .info-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .info-box{
-      padding:18px;border:1px solid var(--line);background:rgba(255,255,255,.8); backdrop-filter:blur(10px);
-      border-radius:18px;box-shadow:var(--shadow-sm);
-      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.3s ease, border-color 0.3s ease;
-    }
-    .info-box:hover{transform:translateY(-4px); box-shadow:var(--shadow); border-color:var(--primary)}
-    .info-box strong{display:block;font-size:13.5px; letter-spacing:-.01em}
-    .info-box span{display:block;color:var(--muted);font-size:11.5px;margin-top:6px; line-height:1.4}
-    
-    details{
-      border:1px solid var(--line);background:rgba(255,255,255,.8); backdrop-filter:blur(10px);
-      border-radius:16px;padding:15px 18px; box-shadow:var(--shadow-sm);
-      transition: all 0.3s ease;
-    }
-    details + details{margin-top:10px}
-    details:hover{border-color:var(--line-strong); box-shadow:0 8px 25px rgba(0,0,0,.04)}
-    summary{cursor:pointer;font-size:13px;font-weight:900; outline:none; transition: color 0.2s ease;}
-    summary:hover{color:var(--primary-dark)}
-    details p{margin:10px 0 0;color:var(--muted);font-size:11.5px;line-height:1.5}
-    
-    footer{
-      padding:10px 0 40px;color:#94a3b8;text-align:center;font-size:11px;font-weight:500;
-    }
-
-    /* Keyframe Animations */
-    @keyframes fadeInDown {
-      from { opacity:0; transform: translateY(-20px); }
-      to { opacity:1; transform: translateY(0); }
-    }
-    @keyframes fadeInUp {
-      from { opacity:0; transform: translateY(20px); }
-      to { opacity:1; transform: translateY(0); }
-    }
-    @keyframes pulseDot {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(16,185,129, 0.4); }
-      50% { box-shadow: 0 0 0 8px rgba(16,185,129, 0); }
-    }
-    @keyframes pulseSlow {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.03); }
-    }
-    @keyframes seatPop {
-      0% { transform: scale(0.9); }
-      50% { transform: scale(1.08); }
-      100% { transform: scale(1); }
-    }
-    @keyframes badgePop {
-      0% { transform: scale(0) rotate(-45deg); opacity: 0; }
-      100% { transform: scale(1) rotate(0deg); opacity: 1; }
-    }
-    @keyframes pulseGlow {
-      0%,100%{transform:scale(.9);opacity:.45}
-      50%{transform:scale(1.25);opacity:.85}
-    }
-    @keyframes ribbonFloat {
-      0%,100%{transform:translateY(0)}
-      50%{transform:translateY(-3px)}
-    }
-    @keyframes gradientShift {
-      0%{background-position:0% 50%}
-      100%{background-position:180% 50%}
-    }
-
-    /* Responsive Queries */
-    @media (max-width: 960px){
-      .layout,.below-grid{grid-template-columns:1fr}
-    }
-    @media (max-width: 680px){
-      .wrap{width:min(100% - 20px,1200px)}
-      .topbar{padding:10px}
-      .status{display:none}
-      .steps{grid-template-columns:1fr}
-      .grid-2,.map-grid,.info-strip{grid-template-columns:1fr}
-      .card-head,.card-body{padding-left:18px;padding-right:18px}
-      .map-area{padding-left:16px;padding-right:16px}
-      h1{margin-top:24px}
-      .bench{min-height:80px}
-      .seat{min-height:78px}
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SKLEP PRO — Sklep szkolny</title>
+<meta name="description" content="Nowoczesny sklep szkolny z koszykiem i zamówieniami wysyłanymi e-mailem.">
+<style>
+:root{
+  --bg:#eef2f7;
+  --surface:#fff;
+  --surface-soft:#f8fafc;
+  --text:#0f172a;
+  --muted:#64748b;
+  --line:#e2e8f0;
+  --primary:#10b981;
+  --primary-2:#059669;
+  --primary-soft:#ecfdf5;
+  --accent:#6366f1;
+  --danger:#ef4444;
+  --warning:#f59e0b;
+  --shadow:0 22px 55px -20px rgba(15,23,42,.18);
+  --shadow-sm:0 8px 24px -10px rgba(15,23,42,.12);
+  --radius:24px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  margin:0;background:
+  radial-gradient(circle at 5% 0%,rgba(16,185,129,.09),transparent 35%),
+  radial-gradient(circle at 95% 5%,rgba(99,102,241,.08),transparent 35%),
+  var(--bg);color:var(--text);
+  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
+}
+button,input,select,textarea{font:inherit}
+button{border:0;background:none}
+.wrap{width:min(1220px,calc(100% - 28px));margin:auto}
+header{padding:26px 0 18px}
+.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 14px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.78);backdrop-filter:blur(18px);border-radius:20px;box-shadow:var(--shadow-sm)}
+.brand{display:flex;align-items:center;gap:12px}
+.logo{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;font-weight:1000;font-size:19px;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:0 12px 24px rgba(16,185,129,.28)}
+.brand strong{display:block;font-size:15px;line-height:1.1}.brand span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
+.status{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--primary-soft);color:#065f46;font-size:12px;font-weight:800;border:1px solid rgba(16,185,129,.2)}
+.status i{width:8px;height:8px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px rgba(16,185,129,.12)}
+.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:18px;align-items:stretch;margin-top:18px}
+.hero-main,.hero-side{border-radius:30px;background:rgba(255,255,255,.88);border:1px solid rgba(226,232,240,.9);box-shadow:var(--shadow);overflow:hidden}
+.hero-main{padding:30px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--accent);font-weight:950;margin-bottom:8px}
+h1{margin:0;font-size:clamp(34px,5vw,58px);line-height:.98;letter-spacing:-.045em}.lead{margin:16px 0 0;color:var(--muted);font-size:16px;line-height:1.6;max-width:780px}
+.hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}.chip{padding:9px 12px;border:1px solid var(--line);background:#fff;border-radius:999px;color:#475569;font-size:11px;font-weight:800}
+.hero-side{padding:24px;background:linear-gradient(145deg,#0f172a,#1e293b);color:#fff;position:relative}
+.hero-side:after{content:"";position:absolute;width:190px;height:190px;right:-55px;top:-70px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.34),transparent 68%)}
+.cash-label{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#94a3b8;font-weight:900}.cash-value{font-size:38px;letter-spacing:-.04em;font-weight:1000;margin-top:5px}.cash-note{color:#cbd5e1;font-size:12px;margin-top:4px}.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}.mini-stat{padding:13px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);border-radius:15px}.mini-stat strong{display:block;font-size:16px}.mini-stat span{display:block;color:#94a3b8;font-size:10px;margin-top:2px}
+.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin:18px 0}.search{position:relative}.search input{padding-left:42px}.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#94a3b8}.control,input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:15px;padding:13px 14px;outline:none;transition:.2s ease}.control:focus,input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 5px rgba(16,185,129,.12)}
+.catalog{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start;padding-bottom:42px}
+.products-card,.cart-card{background:rgba(255,255,255,.93);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);overflow:hidden}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:23px 24px 15px}.section-head h2{margin:0;font-size:20px;letter-spacing:-.025em}.section-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.count{padding:7px 10px;border-radius:10px;background:#f1f5f9;color:#475569;font-size:11px;font-weight:900;white-space:nowrap}
+.products{padding:0 18px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.product{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:19px;background:#fff;overflow:hidden;transition:.25s ease}.product:hover{transform:translateY(-3px);box-shadow:0 16px 35px -16px rgba(15,23,42,.25);border-color:#cbd5e1}.product-top{padding:16px 16px 10px}.product-icon{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:29px;background:linear-gradient(145deg,#f1f5f9,#e2e8f0)}.product-cat{margin-top:10px;color:#6366f1;font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:.1em}.product-name{font-size:15px;font-weight:950;margin-top:4px}.product-note{font-size:11px;color:var(--muted);margin-top:3px;min-height:30px}.product-bottom{padding:12px 16px 15px;margin-top:auto;border-top:1px dashed var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}.product-price{font-size:18px;font-weight:1000;letter-spacing:-.03em}.stock{display:block;color:#64748b;font-size:10px;margin-top:2px}.stock.low{color:#b45309}.stock.out{color:var(--danger);font-weight:900}.add-btn{padding:10px 12px;border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-2));font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 8px 16px rgba(16,185,129,.22)}.add-btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}.badge{position:absolute;right:10px;top:10px;padding:5px 8px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:9px;font-weight:950}.empty{grid-column:1/-1;padding:38px;text-align:center;color:var(--muted);font-size:13px}
+.cart-card{position:sticky;top:14px}.cart-head{padding:21px 22px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}.cart-head h2{margin:0;font-size:19px}.cart-badge{min-width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#0f172a;color:#fff;font-size:11px;font-weight:950}.cart-items{padding:13px 15px;max-height:430px;overflow:auto}.cart-empty{padding:35px 18px;text-align:center;color:var(--muted);font-size:12px}.cart-item{display:grid;grid-template-columns:1fr auto;gap:9px;padding:12px;border:1px solid var(--line);border-radius:15px;margin-bottom:9px;background:#fbfcfe}.cart-item-name{font-size:12px;font-weight:900}.cart-item-meta{font-size:10px;color:var(--muted);margin-top:3px}.cart-item-side{text-align:right}.line-total{font-size:12px;font-weight:950}.qty{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-top:6px}.qty button{width:25px;height:25px;border-radius:8px;background:#e2e8f0;color:#334155;font-weight:950;cursor:pointer}.qty span{min-width:20px;text-align:center;font-size:11px;font-weight:900}.remove{font-size:10px;color:var(--danger);cursor:pointer;margin-top:5px}
+.cart-summary{padding:16px 18px;border-top:1px solid var(--line);background:linear-gradient(180deg,#f8fafc,#fff)}.sum-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;color:#475569;font-size:12px}.sum-row.total{margin-top:8px;padding-top:12px;border-top:2px solid var(--line);color:var(--text);font-weight:950}.sum-row.total strong{font-size:24px;letter-spacing:-.04em}.checkout-btn{margin-top:12px;width:100%;padding:14px 16px;border-radius:15px;background:linear-gradient(135deg,var(--accent),#4f46e5);color:#fff;font-weight:950;font-size:13px;cursor:pointer;box-shadow:0 13px 25px rgba(99,102,241,.26)}.checkout-btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.overlay.open{display:flex}.modal{width:min(680px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:26px;box-shadow:0 35px 90px -20px rgba(15,23,42,.45)}.modal-head{padding:22px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.modal-head h2{margin:0;font-size:21px}.modal-head p{margin:4px 0 0;color:var(--muted);font-size:11px}.close{width:36px;height:36px;border-radius:11px;background:#f1f5f9;color:#334155;cursor:pointer;font-size:20px}.modal-body{padding:22px 24px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin-bottom:13px}.field label{display:block;margin-bottom:6px;font-size:11px;font-weight:950}.field small{display:block;color:#94a3b8;font-size:10px;margin-top:5px}.order-box{margin:9px 0 16px;padding:15px;border-radius:17px;background:#f8fafc;border:1px solid var(--line)}.order-box-head{display:flex;justify-content:space-between;gap:10px;font-size:11px;font-weight:950}.order-lines{margin-top:9px;border-top:1px dashed var(--line);padding-top:8px}.order-line{display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-size:11px}.total-large{margin-top:9px;padding-top:10px;border-top:2px solid var(--line);display:flex;justify-content:space-between;font-weight:950}.total-large strong{font-size:22px}.pay-info{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;border-radius:14px;background:var(--primary-soft);border:1px solid rgba(16,185,129,.25);color:#065f46;font-size:11px;margin-bottom:14px}.submit-order{width:100%;padding:15px 18px;border-radius:15px;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-2));font-weight:950;font-size:14px;cursor:pointer;box-shadow:0 14px 26px rgba(16,185,129,.28)}.submit-order:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}.notice{display:none;margin-top:12px;padding:12px 13px;border-radius:13px;font-size:11px}.notice.ok{display:block;background:#ecfdf3;border:1px solid #34d399;color:#065f46}.notice.err{display:block;background:#fef2f2;border:1px solid #fca5a5;color:#991b1b}
+.success{display:none;padding:35px 26px 28px;text-align:center}.success.open{display:block}.success-icon{width:66px;height:66px;border-radius:20px;display:grid;place-items:center;margin:0 auto 15px;background:var(--primary-soft);color:var(--primary-2);font-size:31px}.success h3{margin:0;font-size:24px}.success p{color:var(--muted);font-size:12px;line-height:1.6}.order-number{display:inline-block;margin:7px 0 13px;padding:9px 12px;border-radius:10px;background:#0f172a;color:#fff;font-size:12px;font-weight:950}.success-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}.success-actions button{padding:11px 13px;border-radius:12px;background:#f1f5f9;color:#334155;font-size:11px;font-weight:900;cursor:pointer}
+footer{padding:0 0 36px;text-align:center;color:#94a3b8;font-size:10px}
+@media(max-width:1000px){.hero{grid-template-columns:1fr}.catalog{grid-template-columns:1fr}.cart-card{position:static}.products{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:650px){.wrap{width:min(100% - 16px,1220px)}.status{display:none}.toolbar{grid-template-columns:1fr}.products{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.hero-main{padding:23px}.hero-side{padding:21px}}
+</style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="topbar">
-        <div class="brand">
-          <div class="logo-mark">✓</div>
-          <div class="brand-copy">
-            <strong>SeatDesk Pro</strong>
-            <span>System rezerwacji miejsc nowej generacji</span>
-          </div>
-        </div>
-        <div class="status"><i class="status-dot"></i> Formularz aktywny & Gotowy</div>
-      </div>
-
-      <h1>Zarezerwuj swoje miejsce<br>bez zbędnych formalności.</h1>
-      <p class="lead">
-        Wybierz wolny sektor na mapie, dopasuj wariant godzinowy, dzienny lub Subskrypcję Plus i uzupełnij dane kontaktowe.
-        Zgłoszenie trafi na skonfigurowany adres e-mail administratora w czasie rzeczywistym.
-      </p>
-
-      <div class="trust-row">
-        <span class="trust">✨ Dynamiczna wycena w czasie rzeczywistym</span>
-        <span class="trust">⚡ Natychmiastowe zgłoszenie online</span>
-        <span class="trust">🛡️ Pełne bezpieczeństwo i szyfrowanie</span>
-      </div>
-    </header>
-
-    <div class="steps" aria-label="Proces rezerwacji">
-      <div class="step"><span class="step-num">01</span><div><strong>Wybierz miejsce</strong><span>Zielone sektory są dostępne</span></div></div>
-      <div class="step"><span class="step-num">02</span><div><strong>Podaj dane</strong><span>Kontakt i ławka źródłowa</span></div></div>
-      <div class="step"><span class="step-num">03</span><div><strong>Wyślij zgłoszenie</strong><span>Otrzymasz potwierdzenie wysłania</span></div></div>
-    </div>
-
-    <main class="layout">
-      <section class="card">
-        <div class="card-head">
-          <div>
-            <div class="eyebrow">01 · Wybór miejsca</div>
-            <h2>Układ ławek</h2>
-            <p>Zielony kolor oznacza sektor, który można wybrać jednym kliknięciem.</p>
-          </div>
-          <div class="mini-count"><span id="availableCount">3</span> wolne</div>
-        </div>
-
-        <div class="map-area">
-          <div class="map-top">
-            <div>
-              <strong>Mapa miejsc</strong>
-              <span> · kliknij jeden lub kilka zielonych sektorów</span>
-            </div>
-            <span id="selectionCount">0 wybranych</span>
-          </div>
-
-          <div class="map-grid">
-            <div class="lane">
-              <div class="lane-title"><strong>Lewy rząd</strong><span>Ławki 1–6</span></div>
-
-              <div class="bench">
-                <button class="seat unavailable" type="button" aria-label="Ławka 1 sektor A niedostępny"><span class="seat-label">L1-A</span></button>
-                <button class="seat unavailable" type="button" aria-label="Ławka 1 sektor B niedostępny"><span class="seat-label">L1-B</span></button>
-              </div>
-              <div class="bench">
-                <button class="seat unavailable" type="button" aria-label="Ławka 2 sektor A niedostępny"><span class="seat-label">L2-A</span></button>
-                <button class="seat unavailable" type="button" aria-label="Ławka 2 sektor B niedostępny"><span class="seat-label">L2-B</span></button>
-              </div>
-              <div class="bench">
-                <button class="seat available" type="button" data-seat="L3-A" aria-label="Ławka 3 sektor A — wybierz">
-                  <span class="seat-label">L3-A</span><span class="seat-name">Sektor A</span><span class="seat-status">Wolne</span><span class="selection-badge">✓</span>
-                </button>
-                <button class="seat available" type="button" data-seat="L3-B" aria-label="Ławka 3 sektor B — wybierz">
-                  <span class="seat-label">L3-B</span><span class="seat-name">Sektor B</span><span class="seat-status">Wolne</span><span class="selection-badge">✓</span>
-                </button>
-              </div>
-              <div class="bench">
-                <button class="seat unavailable" type="button" aria-label="Ławka 4 sektor A niedostępny"><span class="seat-label">L4-A</span></button>
-                <button class="seat unavailable" type="button" aria-label="Ławka 4 sektor B niedostępny"><span class="seat-label">L4-B</span></button>
-              </div>
-              <div class="bench">
-                <button class="seat available" type="button" data-seat="L5-A" aria-label="Ławka 5 sektor A — wybierz">
-                  <span class="seat-label">L5-A</span><span class="seat-name">Sektor A</span><span class="seat-status">Wolne</span><span class="selection-badge">✓</span>
-                </button>
-                <button class="seat unavailable" type="button" aria-label="Ławka 5 sektor B niedostępny"><span class="seat-label">L5-B</span></button>
-              </div>
-              <div class="bench">
-                <button class="seat unavailable" type="button" aria-label="Ławka 6 sektor A niedostępny"><span class="seat-label">L6-A</span></button>
-                <button class="seat unavailable" type="button" aria-label="Ławka 6 sektor B niedostępny"><span class="seat-label">L6-B</span></button>
-              </div>
-            </div>
-
-            <div class="lane">
-              <div class="lane-title"><strong>Prawy rząd</strong><span>Ławki 7–8</span></div>
-
-              <div class="bench">
-                <button class="seat unavailable" type="button" aria-label="Ławka 7 sektor A niedostępny"><span class="seat-label">P1-A</span></button>
-                <button class="seat unavailable" type="button" aria-label="Ławka 7 sektor B niedostępny"><span class="seat-label">P1-B</span></button>
-              </div>
-              <div class="bench">
-                <button class="seat unavailable" type="button" aria-label="Ławka 8 sektor A niedostępny"><span class="seat-label">P2-A</span></button>
-                <button class="seat unavailable" type="button" aria-label="Ławka 8 sektor B niedostępny"><span class="seat-label">P2-B</span></button>
-              </div>
-            </div>
-          </div>
-
-          <div class="legend">
-            <span class="free"><i></i> Wolne</span>
-            <span><i></i> Niedostępne</span>
-            <span class="chosen"><i></i> Wybrane</span>
-          </div>
-
-          <div class="selection-note">
-            <strong>💡 Wskazówka interaktywna:</strong>
-            <span>Możesz zaznaczyć więcej niż jedno wolne miejsce. Łączna cena i podsumowanie zostaną przeliczone natychmiastowo z efektami animacji.</span>
-          </div>
-        </div>
-      </section>
-
-      <section class="card">
-        <div class="card-head">
-          <div>
-            <div class="eyebrow">02 · Dane rezerwacji</div>
-            <h2>Dane najemcy</h2>
-            <p>Wypełnij poniższy formularz, aby przygotować kompletne zgłoszenie.</p>
-          </div>
-        </div>
-
-        <div class="card-body">
-          <form id="bookingForm">
-            <input type="hidden" id="hiddenName" name="name">
-            <input type="hidden" id="hiddenSubject" name="subject">
-            <input type="hidden" name="typ_zgloszenia" value="Rezerwacja miejsca w ławce">
-            <input type="hidden" id="hiddenMessage" name="message">
-
-            <div class="section-block" style="border-top:0;margin-top:0;padding-top:0">
-              <div class="section-title">
-                <span class="section-icon">A</span><strong>Kontakt</strong><span>Wymagane dane</span>
-              </div>
-
-              <div class="grid-2">
-                <div class="field">
-                  <label for="firstName">Imię</label>
-                  <input id="firstName" name="imie" autocomplete="given-name" placeholder="np. Jan" required>
-                </div>
-                <div class="field">
-                  <label for="lastName">Nazwisko</label>
-                  <input id="lastName" name="nazwisko" autocomplete="family-name" placeholder="np. Kowalski" required>
-                </div>
-              </div>
-
-              <div class="grid-2">
-                <div class="field">
-                  <label for="email">Adres e-mail</label>
-                  <input id="email" name="email" type="email" autocomplete="email" placeholder="jan@example.com" required>
-                </div>
-                <div class="field">
-                  <label for="phone">Telefon</label>
-                  <input id="phone" name="telefon" type="tel" autocomplete="tel" placeholder="+48 000 000 000">
-                </div>
-              </div>
-            </div>
-
-            <div class="section-block">
-              <div class="section-title">
-                <span class="section-icon">B</span><strong>Informacje organizacyjne</strong><span>Do rezerwacji</span>
-              </div>
-
-              <div class="field">
-                <label for="sourceBench">Z której innej ławki jesteś?</label>
-                <p class="helper">Wybierz swoją obecną ławkę źródłową.</p>
-                <select id="sourceBench" name="lawka_zrodlowa" required>
-                  <option value="">Wybierz ławkę</option>
-                  <option>Lewy rząd — ławka 1</option>
-                  <option>Lewy rząd — ławka 2</option>
-                  <option>Lewy rząd — ławka 3</option>
-                  <option>Lewy rząd — ławka 4</option>
-                  <option>Lewy rząd — ławka 5</option>
-                  <option>Lewy rząd — ławka 6</option>
-                  <option>Prawy rząd — ławka 7</option>
-                  <option>Prawy rząd — ławka 8</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="section-block">
-              <div class="section-title">
-                <span class="section-icon">C</span><strong>Okres najmu</strong><span>Cena za 1 miejsce</span>
-              </div>
-
-              <div class="plans">
-                <label class="plan plan-standard">
-                  <input type="radio" name="abonament" value="1 godzina" data-price="1" required>
-                  <span class="radio"></span>
-                  <span>
-                    <span class="plan-name">1 godzina</span><br>
-                    <span class="plan-note">Na szybki, krótkoterminowy dostęp</span>
-                  </span>
-                  <span><span class="price">1 zł</span><span class="plan-per">/ miejsce</span></span>
-                </label>
-
-                <label class="plan plan-standard">
-                  <input type="radio" name="abonament" value="1 dzień" data-price="5">
-                  <span class="radio"></span>
-                  <span>
-                    <span class="plan-name">1 dzień</span><br>
-                    <span class="plan-note">Wygodny dostęp na cały dzień</span>
-                  </span>
-                  <span><span class="price">5 zł</span><span class="plan-per">/ miejsce</span></span>
-                </label>
-
-                <label class="plan plan-plus bestseller">
-                  <span class="plan-ribbon">🔥 BESTSELLER</span>
-                  <span class="plan-glow"></span>
-                  <input type="radio" name="abonament" value="Subskrypcja Plus — 1 tydzień" data-price="15">
-                  <span class="radio"></span>
-                  <span>
-                    <span class="plan-name">Subskrypcja Plus · tydzień</span><br>
-                    <span class="plan-note">Świetny balans ceny i czasu</span>
-                  </span>
-                  <span><span class="price">15 zł</span><span class="plan-per">/ miejsce</span></span>
-                  <span class="plan-tagline">Najczęściej wybierana</span>
-                </label>
-
-                <label class="plan plan-plus best-offer">
-                  <span class="plan-ribbon">⭐ NAJLEPSZA OFERTA</span>
-                  <span class="plan-glow"></span>
-                  <input type="radio" name="abonament" value="Subskrypcja Plus — 1 miesiąc" data-price="50">
-                  <span class="radio"></span>
-                  <span>
-                    <span class="plan-name">Subskrypcja Plus · miesiąc</span><br>
-                    <span class="plan-note">Najlepsza cena przy dłuższym korzystaniu</span>
-                  </span>
-                  <span><span class="price">50 zł</span><span class="plan-per">/ miejsce</span></span>
-                  <span class="plan-tagline">Maksymalna opłacalność</span>
-                </label>
-              </div>
-            </div>
-
-            <div class="section-block">
-              <div class="section-title">
-                <span class="section-icon">D</span><strong>Dodatkowe informacje</strong><span>Opcjonalnie</span>
-              </div>
-
-              <div class="field">
-                <label for="notes">Uwagi</label>
-                <textarea id="notes" name="uwagi" maxlength="800" placeholder="Np. proszę o kontakt po godzinie 16:00..."></textarea>
-                <div class="counter"><span id="notesCount">0</span>/800</div>
-              </div>
-            </div>
-
-            <label class="checkbox">
-              <input id="consent" name="zgoda" type="checkbox" value="Tak" required>
-              <span>Potwierdzam poprawność podanych danych i zgadzam się na kontakt w sprawie wybranej rezerwacji.</span>
-            </label>
-
-            <div class="summary">
-              <div class="summary-head">
-                <strong>Podsumowanie rezerwacji</strong>
-                <span>Na żywo</span>
-              </div>
-              <div class="summary-row"><span>Wybrane miejsca</span><strong id="sumSeats">—</strong></div>
-              <div class="summary-row"><span>Abonament</span><strong id="sumPlan">—</strong></div>
-              <div class="summary-row"><span>Liczba miejsc</span><strong id="sumQty">0</strong></div>
-              <div class="summary-row"><span>Cena za miejsce</span><strong id="sumUnit">—</strong></div>
-              <div class="summary-row total"><span>Łącznie</span><strong id="sumTotal">—</strong></div>
-            </div>
-
-            <button class="cta" id="submitBtn" type="submit">
-              <span class="btn-icon">✉</span>
-              <span>Wyślij zgłoszenie rezerwacji</span>
-            </button>
-            <div class="secure-note">🔒 Dane są bezpiecznie przesyłane do endpointu Formspree.</div>
-
-            <div id="notice" class="notice" role="status" aria-live="polite"></div>
-          </form>
-        </div>
-      </section>
-    </main>
-
-    <section class="below-grid">
-      <div>
-        <div class="info-strip">
-          <div class="info-box"><strong>Automatyczna wycena</strong><span>Łączna kwota zależy bezpośrednio od liczby zaznaczonych miejsc.</span></div>
-          <div class="info-box"><strong>Kontakt zwrotny</strong><span>Adres osoby zgłaszającej trafia bezpośrednio do pola Reply-To.</span></div>
-          <div class="info-box"><strong>Czytelne zgłoszenie</strong><span>Do wiadomości trafia w pełni sformatowane podsumowanie.</span></div>
-        </div>
-      </div>
-
-      <div>
-        <details>
-          <summary>Co stanie się po wysłaniu?</summary>
-          <p>Formularz wyśle zgłoszenie do ustawionego endpointu Formspree. Po stronie odbiorcy pojawi się profesjonalny temat oraz czytelne podsumowanie rezerwacji.</p>
-        </details>
-        <details>
-          <summary>Czy można wybrać kilka miejsc?</summary>
-          <p>Tak! Wystarczy kliknąć dowolną liczbę zielonych sektorów na mapie. System automatycznie zsumuje wybrane pozycje.</p>
-        </details>
-        <details>
-          <summary>Gdzie zmienić ceny i opcje?</summary>
-          <p>Ceny są zapisane przy wariantach w kodzie HTML jako atrybuty <code>data-price</code> — możesz je w każdej chwili dostosować.</p>
-        </details>
-      </div>
-    </section>
-
-    <footer>
-      SeatDesk Pro · zaawansowany system rezerwacji miejsc · wszystkie prawa zastrzeżone
-    </footer>
+<div class="wrap">
+<header>
+  <div class="topbar">
+    <div class="brand"><div class="logo">🛍️</div><div><strong>SKLEP PRO</strong><span>Sklep szkolny online</span></div></div>
+    <div class="status"><i></i> Zamówienia online aktywne</div>
   </div>
 
-  <script>
-    const FORM_ENDPOINT = 'https://formspree.io/f/xzebvjop';
+  <div class="hero">
+    <section class="hero-main">
+      <div class="eyebrow">Szkolny mini-market</div>
+      <h1>Wybierz. Dodaj. Zamów.</h1>
+      <p class="lead">Produkty dostępne w Twoim szkolnym sklepie w jednym miejscu. Złóż zamówienie, a otrzymasz podsumowanie — Tobie zostaje przygotować towar i przyjąć dokładnie podaną kwotę.</p>
+      <div class="hero-chips">
+        <span class="chip">⚡ Szybki koszyk</span><span class="chip">🧾 Czytelne zamówienie</span><span class="chip">💵 Kwota do przyjęcia</span><span class="chip">📧 Powiadomienie e-mail</span>
+      </div>
+    </section>
+    <aside class="hero-side">
+      <div class="cash-label">Aktualna wartość koszyka</div>
+      <div class="cash-value" id="heroTotal">0,00 zł</div>
+      <div class="cash-note">Kwota zostanie wpisana również do wiadomości z zamówieniem.</div>
+      <div class="mini-stats"><div class="mini-stat"><strong id="heroItems">0</strong><span>szt. w koszyku</span></div><div class="mini-stat"><strong id="heroOrders">—</strong><span>numer zamówienia</span></div></div>
+    </aside>
+  </div>
+</header>
 
-    const selected = new Set();
-    const seatButtons = [...document.querySelectorAll('.seat.available')];
-    const form = document.getElementById('bookingForm');
-    const submitBtn = document.getElementById('submitBtn');
-    const notice = document.getElementById('notice');
-    const firstName = document.getElementById('firstName');
-    const lastName = document.getElementById('lastName');
-    const email = document.getElementById('email');
-    const notes = document.getElementById('notes');
+<div class="toolbar">
+  <div class="search"><span class="search-icon">⌕</span><input id="search" placeholder="Szukaj produktu, np. 7DAYS, Kubuś, chipsy…"></div>
+  <select id="category" class="control"><option value="all">Wszystkie kategorie</option></select>
+  <select id="sort" class="control"><option value="popular">Polecane</option><option value="priceAsc">Cena rosnąco</option><option value="priceDesc">Cena malejąco</option><option value="name">Nazwa A–Z</option></select>
+</div>
 
-    const availableCount = seatButtons.length;
-    document.getElementById('availableCount').textContent = availableCount;
+<main class="catalog">
+  <section class="products-card">
+    <div class="section-head"><div><h2>🧃 Produkty</h2><p>Wybierz produkt, a następnie ustaw ilość w koszyku.</p></div><div class="count" id="productCount">0 produktów</div></div>
+    <div class="products" id="products"></div>
+  </section>
 
-    function getPlan() {
-      return document.querySelector('input[name="abonament"]:checked');
-    }
+  <aside class="cart-card">
+    <div class="cart-head"><h2>🛒 Twój koszyk</h2><div class="cart-badge" id="cartBadge">0</div></div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-summary">
+      <div class="sum-row"><span>Liczba sztuk</span><strong id="cartQty">0</strong></div>
+      <div class="sum-row"><span>Wartość produktów</span><strong id="cartSubtotal">0,00 zł</strong></div>
+      <div class="sum-row total"><span>Do zapłaty</span><strong id="cartTotal">0,00 zł</strong></div>
+      <button class="checkout-btn" id="checkoutBtn" disabled>Przejdź do zamówienia →</button>
+    </div>
+  </aside>
+</main>
 
-    function formatMoney(value) {
-      return `${value.toLocaleString('pl-PL')} zł`;
-    }
+<footer>SKLEP PRO · wersja demonstracyjna · Sprzedaż tylko zgodnie z zasadami obowiązującymi w szkole.</footer>
+</div>
 
-    function updateSummary() {
-      const plan = getPlan();
-      const qty = selected.size;
-      const unit = plan ? Number(plan.dataset.price) : 0;
-      const total = qty * unit;
+<div class="overlay" id="overlay">
+  <div class="modal" id="modal">
+    <div class="modal-head"><div><h2>📦 Finalizacja zamówienia</h2><p>Podaj tylko dane potrzebne do przygotowania odbioru.</p></div><button class="close" id="closeModal" aria-label="Zamknij">×</button></div>
+    <div class="modal-body" id="formView">
+      <div class="order-box">
+        <div class="order-box-head"><span>Podsumowanie</span><span id="orderPreviewNumber">—</span></div>
+        <div class="order-lines" id="orderPreviewLines"></div>
+        <div class="total-large"><span>Do przyjęcia</span><strong id="orderPreviewTotal">0,00 zł</strong></div>
+      </div>
 
-      const sumSeatsEl = document.getElementById('sumSeats');
-      const sumTotalEl = document.getElementById('sumTotal');
+      <form id="orderForm">
+        <input type="hidden" name="_subject" id="subjectField">
+        <input type="hidden" name="order_number" id="orderNumberField">
+        <input type="hidden" name="order_total" id="orderTotalField">
+        <input type="hidden" name="order_items" id="orderItemsField">
+        <input type="hidden" name="order_message" id="orderMessageField">
+        <div class="form-grid">
+          <div class="field"><label for="name">Imię i nazwisko *</label><input id="name" name="imie_i_nazwisko" required placeholder="np. Jan Kowalski"></div>
+          <div class="field"><label for="class">Klasa *</label><input id="class" name="klasa" required placeholder="np. 7B"></div>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label for="email">E-mail</label><input id="email" name="email" type="email" placeholder="opcjonalnie"><small>Przyda się do odpowiedzi na zamówienie.</small></div>
+          <div class="field"><label for="contact">Kontakt</label><input id="contact" name="kontakt" placeholder="np. Discord / telefon — opcjonalnie"><small>Nie wpisuj wrażliwych danych.</small></div>
+        </div>
+        <div class="field"><label for="pickup">Odbiór</label><select id="pickup" name="odbior"><option>W szkole — osobiście</option><option>W szkole — na przerwie</option><option>Do ustalenia</option></select></div>
+        <div class="field"><label for="notes">Uwagi do zamówienia</label><textarea id="notes" name="uwagi" maxlength="500" placeholder="Np. proszę przygotować wszystko razem…"></textarea></div>
+        <div class="pay-info">💵 <span><strong>Płatność przy odbiorze.</strong> Zamówienie zawiera dokładną kwotę, którą masz przygotować/przyjąć. Strona nie pobiera pieniędzy online.</span></div>
+        <label style="display:flex;gap:10px;align-items:flex-start;font-size:11px;color:#475569;margin-bottom:13px"><input id="consent" type="checkbox" required style="width:18px;height:18px;margin:0;accent-color:var(--primary)"><span>Potwierdzam, że podane dane są poprawne i zgadzam się na wykorzystanie ich do obsługi tego zamówienia.</span></label>
+        <button class="submit-order" id="submitOrder" type="submit">✉ Wyślij zamówienie</button>
+        <div class="notice" id="notice"></div>
+      </form>
+    </div>
 
-      sumSeatsEl.textContent = qty ? [...selected].join(', ') : '—';
-      document.getElementById('sumPlan').textContent = plan ? plan.value : '—';
-      document.getElementById('sumQty').textContent = qty;
-      document.getElementById('sumUnit').textContent = plan ? formatMoney(unit) : '—';
-      sumTotalEl.textContent = plan ? formatMoney(total) : '—';
-      document.getElementById('selectionCount').textContent = `${qty} ${qty === 1 ? 'wybrane miejsce' : (qty < 5 ? 'wybrane miejsca' : 'wybranych miejsc')}`;
+    <div class="success" id="successView">
+      <div class="success-icon">✓</div>
+      <h3>Zamówienie wysłane!</h3>
+      <p>Twoje zamówienie trafiło do obsługi sklepu. Zanotuj numer:</p>
+      <div class="order-number" id="successOrderNumber">—</div>
+      <div class="success-actions"><button id="copyOrder">📋 Kopiuj numer</button><button id="closeSuccess">Zamknij</button></div>
+    </div>
+  </div>
+</div>
 
-      sumSeatsEl.title = qty ? [...selected].join(', ') : '';
+<script>
+/* =============================
+   KONFIGURACJA SKLEPU
+   ============================= */
+const FORM_ENDPOINT = 'https://formspree.io/f/xzebvjop';
+const SHOP_NAME = 'SKLEP PRO';
 
-      // Subtle pulse highlight effect on total price update
-      sumTotalEl.style.transform = 'scale(1.05)';
-      setTimeout(() => { sumTotalEl.style.transform = 'scale(1)'; }, 200);
-    }
+/* Produkty możesz dowolnie zmieniać tutaj. stock = aktualnie dostępna liczba sztuk. */
+const PRODUCTS = [
+  {id:'7days', name:'7DAYS', note:'Baton rogalikowy', price:4.00, stock:20, category:'Batoniki', icon:'🥐', badge:'🔥 HIT'},
+  {id:'ketchup', name:'Salatini Ketchup', note:'Mała słona przekąska', price:3.00, stock:18, category:'Przekąski', icon:'🥨'},
+  {id:'pretzel', name:'Salatini Pretzel Chips', note:'Chrupiąca przekąska', price:3.00, stock:18, category:'Przekąski', icon:'🥨'},
+  {id:'chips', name:'Salatini Chips', note:'Mała paczka chipsów', price:3.50, stock:16, category:'Przekąski', icon:'🥔', badge:'TOP'},
+  {id:'breadsticks', name:'Bread Sticks', note:'Paluszki / pieczywo', price:3.50, stock:14, category:'Przekąski', icon:'🥖'},
+  {id:'kubus', name:'Kubuś Play', note:'Napój dla dzieci', price:3.50, stock:12, category:'Napoje', icon:'🧃'},
+  {id:'vitamini', name:'Tymbark Vitamini', note:'Mały napój', price:3.50, stock:12, category:'Napoje', icon:'🍎'},
+  {id:'water', name:'Woda', note:'Butelka 500 ml', price:2.50, stock:15, category:'Napoje', icon:'💧'},
+  {id:'gum', name:'Guma do żucia', note:'Małe opakowanie', price:2.50, stock:20, category:'Słodycze', icon:'🍬'},
+  {id:'lollipop', name:'Lizak', note:'1 sztuka', price:1.50, stock:30, category:'Słodycze', icon:'🍭'},
+  {id:'candy', name:'Cukierek', note:'1 sztuka', price:0.75, stock:40, category:'Słodycze', icon:'🍬'},
+  {id:'wafer', name:'Wafelek', note:'Mała przekąska', price:2.50, stock:18, category:'Słodycze', icon:'🍫'}
+];
 
-    seatButtons.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        const seat = btn.dataset.seat;
-        if (selected.has(seat)) {
-          selected.delete(seat);
-          btn.classList.remove('selected');
-          btn.setAttribute('aria-label', `${seat} — wybierz`);
-        } else {
-          selected.add(seat);
-          btn.classList.add('selected');
-          btn.setAttribute('aria-label', `${seat} — wybrane`);
-        }
-        updateSummary();
-      });
-    });
+let cart = JSON.parse(localStorage.getItem('sklep_pro_cart') || '{}');
+let lastOrderNumber = null;
 
-    document.querySelectorAll('input[name="abonament"]').forEach((input) => {
-      input.addEventListener('change', updateSummary);
-    });
+const $ = (s) => document.querySelector(s);
+const $$ = (s) => [...document.querySelectorAll(s)];
+const money = (n) => Number(n).toLocaleString('pl-PL',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' zł';
+const getProduct = id => PRODUCTS.find(p => p.id === id);
+const cartQty = () => Object.values(cart).reduce((a,b)=>a+b,0);
+const cartTotal = () => Object.entries(cart).reduce((sum,[id,qty]) => { const p=getProduct(id); return sum + (p ? p.price*qty : 0); },0);
 
-    notes.addEventListener('input', () => {
-      document.getElementById('notesCount').textContent = notes.value.length;
-    });
+function generateOrderNumber(){
+  const d = new Date();
+  const stamp = [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('');
+  const random = Math.random().toString(36).slice(2,6).toUpperCase();
+  return `SP-${stamp}-${random}`;
+}
 
-    function showNotice(text, ok) {
-      notice.textContent = text;
-      notice.className = `notice ${ok ? 'ok' : 'err'}`;
-      notice.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-    }
+function persist(){ localStorage.setItem('sklep_pro_cart', JSON.stringify(cart)); }
 
-    function buildPolishMessage() {
-      const plan = getPlan();
-      const unit = plan ? Number(plan.dataset.price) : 0;
-      const total = selected.size * unit;
-      const source = document.getElementById('sourceBench').value;
-      const phone = document.getElementById('phone').value.trim();
-      const note = notes.value.trim();
-      const timestamp = new Intl.DateTimeFormat('pl-PL', {
-        dateStyle: 'full',
-        timeStyle: 'short'
-      }).format(new Date());
+function initCategories(){
+  const cats = [...new Set(PRODUCTS.map(p=>p.category))].sort((a,b)=>a.localeCompare(b,'pl'));
+  const select = $('#category');
+  cats.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; select.appendChild(o); });
+}
 
-      return [
-        '══════════════════════════════════════',
-        '        NOWE ZGŁOSZENIE REZERWACJI',
-        '══════════════════════════════════════',
-        '',
-        'DANE NAJEMCY',
-        `Imię i nazwisko: ${firstName.value.trim()} ${lastName.value.trim()}`,
-        `E-mail: ${email.value.trim()}`,
-        `Telefon: ${phone || 'Nie podano'}`,
-        '',
-        'SZCZEGÓŁY REZERWACJI',
-        `Wybrane miejsca: ${[...selected].join(', ')}`,
-        `Liczba miejsc: ${selected.size}`,
-        `Ławka źródłowa: ${source}`,
-        `Abonament: ${plan ? plan.value : 'Nie wybrano'}`,
-        `Cena za miejsce: ${plan ? formatMoney(unit) : '—'}`,
-        `Łączna kwota: ${plan ? formatMoney(total) : '—'}`,
-        '',
-        'DODATKOWE INFORMACJE',
-        `Uwagi: ${note || 'Brak'}`,
-        '',
-        `Data wysłania: ${timestamp}`,
-        '',
-        '══════════════════════════════════════',
-        'Wiadomość wygenerowana automatycznie przez formularz rezerwacji.'
-      ].join('\n');
-    }
+function renderProducts(){
+  const query = $('#search').value.trim().toLowerCase();
+  const category = $('#category').value;
+  const sort = $('#sort').value;
+  let list = PRODUCTS.filter(p => (!query || `${p.name} ${p.note} ${p.category}`.toLowerCase().includes(query)) && (category==='all'||p.category===category));
+  if(sort==='priceAsc') list.sort((a,b)=>a.price-b.price);
+  if(sort==='priceDesc') list.sort((a,b)=>b.price-a.price);
+  if(sort==='name') list.sort((a,b)=>a.name.localeCompare(b.name,'pl'));
+  $('#productCount').textContent = `${list.length} ${list.length===1?'produktów':'produktów'}`;
+  const root=$('#products'); root.innerHTML='';
+  if(!list.length){ root.innerHTML='<div class="empty">😕 Nie znalazłem takiego produktu.</div>'; return; }
+  list.forEach(p=>{
+    const inCart = cart[p.id]||0;
+    const left = Math.max(0,p.stock-inCart);
+    const stockClass = left===0?'out':(left<=3?'low':'');
+    const card=document.createElement('article'); card.className='product';
+    card.innerHTML=`${p.badge?`<div class="badge">${p.badge}</div>`:''}
+      <div class="product-top"><div class="product-icon">${p.icon}</div><div class="product-cat">${p.category}</div><div class="product-name">${p.name}</div><div class="product-note">${p.note}</div></div>
+      <div class="product-bottom"><div><div class="product-price">${money(p.price)}</div><span class="stock ${stockClass}">${left===0?'Brak wolnych sztuk':`Dostępne: ${left}`}</span></div><button class="add-btn" ${left===0?'disabled':''} data-add="${p.id}">${left===0?'Brak':'Dodaj +'}</button></div>`;
+    root.appendChild(card);
+  });
+  $$('[data-add]').forEach(btn=>btn.addEventListener('click',()=>addToCart(btn.dataset.add)));
+}
 
-    form.addEventListener('submit', async (event) => {
-      event.preventDefault();
+function addToCart(id){
+  const p=getProduct(id); if(!p) return;
+  const current=cart[id]||0;
+  if(current>=p.stock){ alert(`Nie ma więcej sztuk produktu „${p.name}”.`); return; }
+  cart[id]=current+1; persist(); renderAll();
+}
+function changeQty(id,delta){
+  const p=getProduct(id); if(!p) return;
+  const next=(cart[id]||0)+delta;
+  if(next<=0) delete cart[id];
+  else if(next<=p.stock) cart[id]=next;
+  else alert(`Maksymalnie możesz zamówić ${p.stock} szt. produktu „${p.name}”.`);
+  persist(); renderAll(); renderOrderPreview();
+}
+function removeItem(id){ delete cart[id]; persist(); renderAll(); renderOrderPreview(); }
 
-      if (!selected.size) {
-        showNotice('Najpierw wybierz co najmniej jedno wolne miejsce na mapie.', false);
-        return;
-      }
+function renderCart(){
+  const root=$('#cartItems'); root.innerHTML='';
+  const entries=Object.entries(cart).filter(([id,qty])=>qty>0&&getProduct(id));
+  if(!entries.length){ root.innerHTML='<div class="cart-empty">🛒<br><br>Twój koszyk jest pusty.<br>Dodaj coś z katalogu.</div>'; }
+  entries.forEach(([id,qty])=>{
+    const p=getProduct(id); const el=document.createElement('div'); el.className='cart-item';
+    el.innerHTML=`<div><div class="cart-item-name">${p.icon} ${p.name}</div><div class="cart-item-meta">${money(p.price)} / szt.</div><div class="remove" data-remove="${id}">Usuń</div></div><div class="cart-item-side"><div class="line-total">${money(p.price*qty)}</div><div class="qty"><button data-dec="${id}">−</button><span>${qty}</span><button data-inc="${id}">+</button></div></div>`;
+    root.appendChild(el);
+  });
+  $$('[data-dec]').forEach(b=>b.onclick=()=>changeQty(b.dataset.dec,-1));
+  $$('[data-inc]').forEach(b=>b.onclick=()=>changeQty(b.dataset.inc,1));
+  $$('[data-remove]').forEach(b=>b.onclick=()=>removeItem(b.dataset.remove));
 
-      const plan = getPlan();
-      if (!plan) {
-        showNotice('Wybierz okres abonamentu.', false);
-        return;
-      }
+  const qty=cartQty(), total=cartTotal();
+  $('#cartBadge').textContent=qty; $('#cartQty').textContent=qty; $('#cartSubtotal').textContent=money(total); $('#cartTotal').textContent=money(total); $('#heroTotal').textContent=money(total); $('#heroItems').textContent=qty;
+  $('#checkoutBtn').disabled=!qty;
+}
 
-      if (!form.reportValidity()) return;
+function buildOrderText(orderNumber){
+  const name=$('#name').value.trim(), cls=$('#class').value.trim(), email=$('#email').value.trim(), contact=$('#contact').value.trim(), pickup=$('#pickup').value, notes=$('#notes').value.trim();
+  const lines=Object.entries(cart).filter(([id,qty])=>qty>0&&getProduct(id)).map(([id,qty])=>{const p=getProduct(id); return `${p.name} — ${qty} szt. × ${money(p.price)} = ${money(p.price*qty)}`;});
+  const date=new Intl.DateTimeFormat('pl-PL',{dateStyle:'full',timeStyle:'short'}).format(new Date());
+  return [
+    '========================================',
+    `         NOWE ZAMÓWIENIE — ${SHOP_NAME}`,
+    '========================================',
+    `Numer zamówienia: ${orderNumber}`,
+    `Data: ${date}`,
+    '',
+    'DANE KLIENTA',
+    `Imię i nazwisko: ${name}`,
+    `Klasa: ${cls}`,
+    `E-mail: ${email||'Nie podano'}`,
+    `Kontakt: ${contact||'Nie podano'}`,
+    '',
+    'ZAMÓWIENIE',
+    ...lines,
+    '',
+    `Liczba sztuk: ${cartQty()}`,
+    `KWOTA DO PRZYJĘCIA: ${money(cartTotal())}`,
+    `Odbiór: ${pickup}`,
+    `Uwagi: ${notes||'Brak'}`,
+    '',
+    'Płatność: przy odbiorze.',
+    '========================================'
+  ].join('\n');
+}
 
-      document.getElementById('hiddenName').value = `${firstName.value.trim()} ${lastName.value.trim()}`;
-      document.getElementById('hiddenSubject').value =
-        `Rezerwacja miejsc — ${[...selected].join(', ')}`;
+function renderOrderPreview(){
+  $('#orderPreviewNumber').textContent=lastOrderNumber||'—';
+  const root=$('#orderPreviewLines'); root.innerHTML='';
+  Object.entries(cart).filter(([id,qty])=>qty>0&&getProduct(id)).forEach(([id,qty])=>{const p=getProduct(id); const row=document.createElement('div'); row.className='order-line'; row.innerHTML=`<span>${p.name} × ${qty}</span><strong>${money(p.price*qty)}</strong>`; root.appendChild(row);});
+  $('#orderPreviewTotal').textContent=money(cartTotal());
+  $('#heroOrders').textContent=lastOrderNumber||'—';
+}
 
-      const message = buildPolishMessage();
-      document.getElementById('hiddenMessage').value = message;
+function openModal(){
+  if(!cartQty()) return;
+  lastOrderNumber=generateOrderNumber();
+  $('#orderNumberField').value=lastOrderNumber;
+  $('#subjectField').value=`${SHOP_NAME} — zamówienie ${lastOrderNumber}`;
+  renderOrderPreview();
+  $('#successView').classList.remove('open'); $('#formView').style.display='block'; $('#notice').className='notice'; $('#notice').textContent=''; $('#overlay').classList.add('open');
+}
+function closeModal(){ $('#overlay').classList.remove('open'); }
 
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<span class="btn-icon">⌛</span><span>Wysyłanie zgłoszenia…</span>';
+function showNotice(text,ok){ const n=$('#notice'); n.textContent=text; n.className=`notice ${ok?'ok':'err'}`; }
 
-      const formData = new FormData(form);
+$('#search').addEventListener('input',renderProducts);
+$('#category').addEventListener('change',renderProducts);
+$('#sort').addEventListener('change',renderProducts);
+$('#checkoutBtn').onclick=openModal;
+$('#closeModal').onclick=closeModal;
+$('#overlay').addEventListener('click',e=>{if(e.target.id==='overlay') closeModal();});
+$('#closeSuccess').onclick=closeModal;
+$('#copyOrder').onclick=async()=>{ try{await navigator.clipboard.writeText(lastOrderNumber); $('#copyOrder').textContent='✓ Skopiowano'; setTimeout(()=>$('#copyOrder').textContent='📋 Kopiuj numer',1200);}catch(e){} };
 
-      formData.append('miejsca_rezerwowane', [...selected].join(', '));
-      formData.append('liczba_miejsc', String(selected.size));
-      formData.append('cena_laczna', formatMoney(selected.size * Number(plan.dataset.price)));
+$('#orderForm').addEventListener('submit',async e=>{
+  e.preventDefault();
+  if(!cartQty()){showNotice('Koszyk jest pusty.',false);return;}
+  if(!$('#orderForm').reportValidity()) return;
 
-      try {
-        const response = await fetch(FORM_ENDPOINT, {
-          method: 'POST',
-          body: formData,
-          headers: { 'Accept': 'application/json' }
-        });
+  const orderNumber=lastOrderNumber||generateOrderNumber();
+  const message=buildOrderText(orderNumber);
+  $('#orderItemsField').value=Object.entries(cart).filter(([id,qty])=>qty>0&&getProduct(id)).map(([id,qty])=>{const p=getProduct(id); return `${p.name} x${qty}`;}).join(', ');
+  $('#orderTotalField').value=money(cartTotal());
+  $('#orderMessageField').value=message;
 
-        if (!response.ok) throw new Error('send failed');
+  const button=$('#submitOrder'); button.disabled=true; button.textContent='⌛ Wysyłanie zamówienia…';
+  const fd=new FormData($('#orderForm'));
+  if($('#email').value.trim()) fd.set('_replyto',$('#email').value.trim());
+  try{
+    const response=await fetch(FORM_ENDPOINT,{method:'POST',body:fd,headers:{Accept:'application/json'}});
+    if(!response.ok) throw new Error('send failed');
+    $('#formView').style.display='none'; $('#successOrderNumber').textContent=orderNumber; $('#successView').classList.add('open');
+    cart={}; persist(); renderAll();
+  }catch(err){ showNotice('Nie udało się wysłać zamówienia. Sprawdź endpoint Formspree i spróbuj ponownie.',false); }
+  finally{button.disabled=false;button.textContent='✉ Wyślij zamówienie';}
+});
 
-        showNotice(
-          'Zgłoszenie zostało wysłane pomyślnie! W wiadomości e-mail znajdziesz kompletne podsumowanie wybranych miejsc.',
-          true
-        );
-
-        form.reset();
-        selected.clear();
-        seatButtons.forEach((button) => {
-          button.classList.remove('selected');
-        });
-        document.getElementById('notesCount').textContent = '0';
-        updateSummary();
-      } catch (error) {
-        showNotice(
-          'Nie udało się wysłać zgłoszenia. Sprawdź konfigurację Formspree lub spróbuj ponownie.',
-          false
-        );
-      } finally {
-        submitBtn.disabled = false;
-        submitBtn.innerHTML = '<span class="btn-icon">✉</span><span>Wyślij zgłoszenie rezerwacji</span>';
-      }
-    });
-
-    updateSummary();
-  </script>
+function renderAll(){renderProducts();renderCart();}
+initCategories();renderAll();
+</script>
 </body>
 </html>
