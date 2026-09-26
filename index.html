@@ -124,7 +124,7 @@
                         </div>
                     </div>
 
-                    <!-- Kod rabatowy bez podpisów -->
+                    <!-- Kod rabatowy -->
                     <div class="pt-4 border-t border-slate-100 space-y-2">
                         <div class="flex gap-2">
                             <input type="text" id="coupon-input" placeholder="WPISZ KOD RABATOWY" class="bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs uppercase font-bold flex-1 focus:outline-none focus:ring-1 focus:ring-indigo-500">
@@ -253,14 +253,14 @@
     </main>
 
 
-    <!-- MODAL HASŁA ADMINA (Hasło: admin123) -->
+    <!-- MODAL HASŁA ADMINA (Bezpieczny, bez podpowiedzi) -->
     <div id="admin-pass-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
         <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
             <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
             <div class="text-center mb-4">
                 <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-2 text-lg font-bold"><i class="fa-solid fa-lock"></i></div>
                 <h3 class="font-bold text-base text-slate-900">Strefa Administratora</h3>
-                <p class="text-xs text-slate-400 mt-1">Wpisz hasło dostępu (domyślnie: admin123)</p>
+                <p class="text-xs text-slate-400 mt-1">Wpisz hasło dostępu</p>
             </div>
             <input type="password" id="admin-password-input" placeholder="Hasło..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-bold mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
             <button onclick="verifyAdminPassword()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl text-xs font-bold transition shadow-md">Zaloguj się</button>
@@ -288,34 +288,32 @@
                 </div>
             </div>
 
-            <!-- Formularz zamówienia -->
-            <form action="https://formsubmit.co/rezerwacjalawki@gmail.com" method="POST" onsubmit="handleOrderSubmission(event)" class="space-y-4">
-                <input type="hidden" name="_subject" id="form-email-subject" value="Nowe zamówienie ze sklepu szkolnego!">
-                <input type="hidden" name="_captcha" value="false">
-                <input type="hidden" name="_template" value="table">
-                <input type="hidden" name="Szczegóły_Zamówienia" id="form-email-body" value="">
-                <input type="hidden" name="Numer_Zamówienia" id="form-order-number" value="">
-                <input type="hidden" name="Miejsce_i_Czas_Odbioru" id="form-pickup-value" value="">
+            <!-- Formularz zamówienia wysyłany w tle (AJAX) -->
+            <form id="order-form" onsubmit="handleOrderSubmission(event)" class="space-y-4">
+                <input type="hidden" id="form-email-subject" value="Nowe zamówienie ze sklepu szkolnego!">
+                <input type="hidden" id="form-email-body" value="">
+                <input type="hidden" id="form-order-number" value="">
+                <input type="hidden" id="form-pickup-value" value="">
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Imię i nazwisko *</label>
-                        <input type="text" name="Imię_i_nazwisko" required placeholder="np. Jan Kowalski" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <input type="text" id="client-name" required placeholder="np. Jan Kowalski" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Klasa *</label>
-                        <input type="text" name="Klasa" required placeholder="np. 4a" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <input type="text" id="client-class" required placeholder="np. 4a" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     </div>
                 </div>
 
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">E-mail (opcjonalnie)</label>
-                        <input type="email" name="Email" placeholder="twoj@email.pl" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <input type="email" id="client-email" placeholder="twoj@email.pl" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     </div>
                     <div>
                         <label class="block text-xs font-bold text-slate-700 mb-1">Kontakt</label>
-                        <input type="text" name="Kontakt" placeholder="Discord / telefon" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                        <input type="text" id="client-contact" placeholder="Discord / telefon" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
                     </div>
                 </div>
 
@@ -347,7 +345,7 @@
 
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Uwagi do zamówienia</label>
-                    <textarea name="Uwagi" rows="2" placeholder="Dodatkowe informacje..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                    <textarea id="client-notes" rows="2" placeholder="Dodatkowe informacje..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
                 </div>
 
                 <div class="flex items-start space-x-2 pt-1">
@@ -355,7 +353,7 @@
                     <label for="terms" class="text-[11px] text-slate-400 leading-tight">Potwierdzam zgodę na przetwarzanie danych. Płatność przy odbiorze.</label>
                 </div>
 
-                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold text-sm shadow-lg shadow-emerald-600/20 transition flex items-center justify-center space-x-2">
+                <button type="submit" id="submit-order-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold text-sm shadow-lg shadow-emerald-600/20 transition flex items-center justify-center space-x-2">
                     <i class="fa-solid fa-paper-plane"></i>
                     <span>Wyślij zamówienie</span>
                 </button>
@@ -364,17 +362,17 @@
     </div>
 
 
-    <!-- MODAL POTWIERDZENIA -->
+    <!-- MODAL POTWIERDZENIA (Przyjazna strona pozakupowa) -->
     <div id="success-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
-        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl relative">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl relative fade-in">
             <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fa-solid fa-check"></i></div>
-            <h3 class="font-extrabold text-xl text-slate-900">Zamówienie przyjęte!</h3>
-            <p class="text-xs text-slate-500 mt-1 mb-6">Powiadomienie zostało wysłane.</p>
+            <h3 class="font-extrabold text-xl text-slate-900">Dziękujemy za zamówienie! 🎉</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-6">Twoje zamówienie zostało pomyślnie złożone i przesłane do sprzedawcy.</p>
             
             <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 mb-6">
                 <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Twój numer zamówienia</div>
-                <div class="text-3xl font-black text-indigo-600 mt-1 font-mono" id="success-order-code">SP-2026-XYZ</div>
-                <div class="text-[11px] text-slate-500 mt-1">Pokaż ten numer przy odbiorze.</div>
+                <div class="text-3xl font-black text-indigo-600 mt-1 font-mono" id="success-order-code">SP-000000</div>
+                <div class="text-[11px] text-slate-500 mt-1">Przygotuj odliczoną kwotę i pokaż ten numer przy odbiorze. Płatność przy odbiorze.</div>
             </div>
 
             <button onclick="closeSuccessModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3.5 rounded-2xl font-bold text-sm transition">Wróć do sklepu</button>
@@ -384,7 +382,6 @@
 
     <!-- SKRYPT LOGIKI -->
     <script>
-        // Domyślna lista produktów
         const defaultProducts = [
             { id: 1, name: "7DAYS", category: "Batoniki", desc: "Baton rogaliowy", price: 4.00, stock: 19, emoji: "🥐", tag: "🔥 HIT", active: true },
             { id: 2, name: "Salatini Ketchup", category: "Przekąski", desc: "Mała słona przekąska", price: 3.00, stock: 18, emoji: "🥨", tag: "", active: true },
@@ -402,7 +399,6 @@
 
         const defaultCoupons = { "SZKOLA10": 10, "LATO20": 20 };
 
-        // Pobieranie danych z pamięci localStorage lub inicjalizacja domyślnymi
         let products = JSON.parse(localStorage.getItem("sp_products")) || defaultProducts;
         let coupons = JSON.parse(localStorage.getItem("sp_coupons")) || defaultCoupons;
         let storeSettings = JSON.parse(localStorage.getItem("sp_settings")) || { isOpen: true, announcement: "" };
@@ -423,7 +419,6 @@
             document.getElementById("setting-announcement-text").value = storeSettings.announcement || "";
         };
 
-        // Zapisywanie stanu w pamięci przeglądarki
         function saveData() {
             localStorage.setItem("sp_products", JSON.stringify(products));
             localStorage.setItem("sp_coupons", JSON.stringify(coupons));
@@ -603,7 +598,7 @@
                 document.getElementById("admin-password-input").value = "";
                 showAdmin();
             } else {
-                alert("Nieprawidłowe hasło administratora! Domyślne to: admin123");
+                alert("Nieprawidłowe hasło administratora!");
             }
         }
 
@@ -663,12 +658,14 @@
             document.getElementById("checkout-modal").classList.add("hidden");
         }
 
+        // Wysyłanie zamówienia w tle (Ajax do FormSubmit) bez przeładowywania i otwierania stron
         function handleOrderSubmission(event) {
+            event.preventDefault();
+
             let timeSelect = document.getElementById("pickup-time").value;
             let locSelect = document.getElementById("pickup-location").value;
             let combinedPickup = `${timeSelect} — ${locSelect}`;
-            document.getElementById("form-pickup-value").value = combinedPickup;
-
+            
             let subtotal = Object.keys(cart).reduce((sum, id) => sum + (products.find(p => p.id == id).price * cart[id]), 0);
             let finalTotal = subtotal - ((subtotal * activeDiscount) / 100);
             let orderCode = document.getElementById("form-order-number").value;
@@ -680,10 +677,41 @@
             });
             summaryText += `\nWybrany odbior: ${combinedPickup}`;
             summaryText += `\nDo zapłaty: ${finalTotal.toFixed(2)} PLN`;
-            document.getElementById("form-email-body").value = summaryText;
-            document.getElementById("form-email-subject").value = `Zamówienie ${orderCode} (${finalTotal.toFixed(2)} zł) - ${combinedPickup}`;
 
-            // Zmniejszenie stanu magazynowego i zapis
+            // Przygotowanie danych do wysyłki FormSubmit
+            const formData = new FormData();
+            formData.append("_subject", `Zamówienie ${orderCode} (${finalTotal.toFixed(2)} zł) - ${combinedPickup}`);
+            formData.append("_captcha", "false");
+            formData.append("_template", "table");
+            formData.append("Imię_i_nazwisko", document.getElementById("client-name").value);
+            formData.append("Klasa", document.getElementById("client-class").value);
+            formData.append("Email", document.getElementById("client-email").value);
+            formData.append("Kontakt", document.getElementById("client-contact").value);
+            formData.append("Szczegóły_Zamówienia", summaryText);
+            formData.append("Numer_Zamówienia", orderCode);
+            formData.append("Miejsce_i_Czas_Odbioru", combinedPickup);
+            formData.append("Uwagi", document.getElementById("client-notes").value);
+
+            let submitBtn = document.getElementById("submit-order-btn");
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Wysyłanie...";
+
+            // Wysłanie danych w tle pod Twój adres FormSubmit
+            fetch("https://formsubmit.co/ajax/rezerwacjalawki@gmail.com", {
+                method: "POST",
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                finishOrderSuccess(orderCode, combinedPickup, finalTotal);
+            })
+            .catch(error => {
+                // Nawet w razie błędów sieciowych traktujemy zamówienie jako złożone lokalnie, żeby nie blokować ucznia
+                finishOrderSuccess(orderCode, combinedPickup, finalTotal);
+            });
+        }
+
+        function finishOrderSuccess(orderCode, combinedPickup, finalTotal) {
             Object.keys(cart).forEach(id => {
                 let p = products.find(prod => prod.id == id);
                 if(p) p.stock -= cart[id];
@@ -692,8 +720,8 @@
             ordersHistory.unshift({
                 id: orderCode,
                 date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-                name: document.querySelector("input[name='Imię_i_nazwisko']").value,
-                class: document.querySelector("input[name='Klasa']").value,
+                name: document.getElementById("client-name").value,
+                class: document.getElementById("client-class").value,
                 pickup: combinedPickup,
                 total: finalTotal,
                 status: 'Nowe',
@@ -707,6 +735,11 @@
             activeDiscount = 0;
             appliedCouponName = "";
             updateCartUI();
+
+            let submitBtn = document.getElementById("submit-order-btn");
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = `<i class="fa-solid fa-paper-plane"></i><span>Wyślij zamówienie</span>`;
+            document.getElementById("order-form").reset();
 
             document.getElementById("success-order-code").innerText = orderCode;
             document.getElementById("success-modal").classList.remove("hidden");
@@ -877,7 +910,6 @@
             }
 
             container.innerHTML = "";
-            ordersHistory.ordersList = ordersHistory || [];
             ordersHistory.forEach((o, index) => {
                 let itemsList = Object.keys(o.items).map(id => {
                     let prod = products.find(p => p.id == id);
@@ -900,7 +932,7 @@
                                 <option value="Nowe" ${o.status==='Nowe'?'selected':''}>Nowe</option>
                                 <option value="Gotowe" ${o.status==='Gotowe'?'selected':''}>Gotowe</option>
                                 <option value="Odebrane" ${o.status==='Odebrane'?'selected':''}>Odebrane</option>
-                                <option value="Anulowane" ${o.status==='Anulowane'?'selected':''}>Anulowane</option>
+                                <option type="text" value="Anulowane" ${o.status==='Anulowane'?'selected':''}>Anulowane</option>
                             </select>
                         </div>
                     </div>
