@@ -1,354 +1,901 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pl">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>SKLEP PRO — Sklep szkolny</title>
-<meta name="description" content="Nowoczesny sklep szkolny z koszykiem i zamówieniami wysyłanymi e-mailem.">
-<style>
-:root{
-  --bg:#eef2f7;
-  --surface:#fff;
-  --surface-soft:#f8fafc;
-  --text:#0f172a;
-  --muted:#64748b;
-  --line:#e2e8f0;
-  --primary:#10b981;
-  --primary-2:#059669;
-  --primary-soft:#ecfdf5;
-  --accent:#6366f1;
-  --danger:#ef4444;
-  --warning:#f59e0b;
-  --shadow:0 22px 55px -20px rgba(15,23,42,.18);
-  --shadow-sm:0 8px 24px -10px rgba(15,23,42,.12);
-  --radius:24px;
-}
-*{box-sizing:border-box}
-html{scroll-behavior:smooth}
-body{
-  margin:0;background:
-  radial-gradient(circle at 5% 0%,rgba(16,185,129,.09),transparent 35%),
-  radial-gradient(circle at 95% 5%,rgba(99,102,241,.08),transparent 35%),
-  var(--bg);color:var(--text);
-  font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;
-}
-button,input,select,textarea{font:inherit}
-button{border:0;background:none}
-.wrap{width:min(1220px,calc(100% - 28px));margin:auto}
-header{padding:26px 0 18px}
-.topbar{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:11px 14px;border:1px solid rgba(255,255,255,.85);background:rgba(255,255,255,.78);backdrop-filter:blur(18px);border-radius:20px;box-shadow:var(--shadow-sm)}
-.brand{display:flex;align-items:center;gap:12px}
-.logo{width:46px;height:46px;border-radius:15px;display:grid;place-items:center;color:#fff;font-weight:1000;font-size:19px;background:linear-gradient(135deg,var(--primary),var(--accent));box-shadow:0 12px 24px rgba(16,185,129,.28)}
-.brand strong{display:block;font-size:15px;line-height:1.1}.brand span{display:block;color:var(--muted);font-size:11px;margin-top:3px}
-.status{display:inline-flex;align-items:center;gap:8px;padding:8px 12px;border-radius:999px;background:var(--primary-soft);color:#065f46;font-size:12px;font-weight:800;border:1px solid rgba(16,185,129,.2)}
-.status i{width:8px;height:8px;border-radius:50%;background:var(--primary);box-shadow:0 0 0 4px rgba(16,185,129,.12)}
-.hero{display:grid;grid-template-columns:1.3fr .7fr;gap:18px;align-items:stretch;margin-top:18px}
-.hero-main,.hero-side{border-radius:30px;background:rgba(255,255,255,.88);border:1px solid rgba(226,232,240,.9);box-shadow:var(--shadow);overflow:hidden}
-.hero-main{padding:30px}.eyebrow{font-size:11px;text-transform:uppercase;letter-spacing:.15em;color:var(--accent);font-weight:950;margin-bottom:8px}
-h1{margin:0;font-size:clamp(34px,5vw,58px);line-height:.98;letter-spacing:-.045em}.lead{margin:16px 0 0;color:var(--muted);font-size:16px;line-height:1.6;max-width:780px}
-.hero-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:20px}.chip{padding:9px 12px;border:1px solid var(--line);background:#fff;border-radius:999px;color:#475569;font-size:11px;font-weight:800}
-.hero-side{padding:24px;background:linear-gradient(145deg,#0f172a,#1e293b);color:#fff;position:relative}
-.hero-side:after{content:"";position:absolute;width:190px;height:190px;right:-55px;top:-70px;border-radius:50%;background:radial-gradient(circle,rgba(16,185,129,.34),transparent 68%)}
-.cash-label{font-size:11px;text-transform:uppercase;letter-spacing:.14em;color:#94a3b8;font-weight:900}.cash-value{font-size:38px;letter-spacing:-.04em;font-weight:1000;margin-top:5px}.cash-note{color:#cbd5e1;font-size:12px;margin-top:4px}.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:22px}.mini-stat{padding:13px;border:1px solid rgba(255,255,255,.1);background:rgba(255,255,255,.06);border-radius:15px}.mini-stat strong{display:block;font-size:16px}.mini-stat span{display:block;color:#94a3b8;font-size:10px;margin-top:2px}
-.toolbar{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin:18px 0}.search{position:relative}.search input{padding-left:42px}.search-icon{position:absolute;left:15px;top:50%;transform:translateY(-50%);color:#94a3b8}.control,input,select,textarea{width:100%;border:1px solid var(--line);background:#fff;color:var(--text);border-radius:15px;padding:13px 14px;outline:none;transition:.2s ease}.control:focus,input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 5px rgba(16,185,129,.12)}
-.catalog{display:grid;grid-template-columns:minmax(0,1fr) 360px;gap:20px;align-items:start;padding-bottom:42px}
-.products-card,.cart-card{background:rgba(255,255,255,.93);border:1px solid var(--line);border-radius:26px;box-shadow:var(--shadow);overflow:hidden}.section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:23px 24px 15px}.section-head h2{margin:0;font-size:20px;letter-spacing:-.025em}.section-head p{margin:5px 0 0;color:var(--muted);font-size:12px}.count{padding:7px 10px;border-radius:10px;background:#f1f5f9;color:#475569;font-size:11px;font-weight:900;white-space:nowrap}
-.products{padding:0 18px 20px;display:grid;grid-template-columns:repeat(3,1fr);gap:13px}.product{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);border-radius:19px;background:#fff;overflow:hidden;transition:.25s ease}.product:hover{transform:translateY(-3px);box-shadow:0 16px 35px -16px rgba(15,23,42,.25);border-color:#cbd5e1}.product-top{padding:16px 16px 10px}.product-icon{width:56px;height:56px;border-radius:16px;display:grid;place-items:center;font-size:29px;background:linear-gradient(145deg,#f1f5f9,#e2e8f0)}.product-cat{margin-top:10px;color:#6366f1;font-size:10px;font-weight:950;text-transform:uppercase;letter-spacing:.1em}.product-name{font-size:15px;font-weight:950;margin-top:4px}.product-note{font-size:11px;color:var(--muted);margin-top:3px;min-height:30px}.product-bottom{padding:12px 16px 15px;margin-top:auto;border-top:1px dashed var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px}.product-price{font-size:18px;font-weight:1000;letter-spacing:-.03em}.stock{display:block;color:#64748b;font-size:10px;margin-top:2px}.stock.low{color:#b45309}.stock.out{color:var(--danger);font-weight:900}.add-btn{padding:10px 12px;border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-2));font-size:11px;font-weight:900;cursor:pointer;box-shadow:0 8px 16px rgba(16,185,129,.22)}.add-btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}.badge{position:absolute;right:10px;top:10px;padding:5px 8px;border-radius:999px;background:#eef2ff;color:#4338ca;font-size:9px;font-weight:950}.empty{grid-column:1/-1;padding:38px;text-align:center;color:var(--muted);font-size:13px}
-.cart-card{position:sticky;top:14px}.cart-head{padding:21px 22px 15px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:10px}.cart-head h2{margin:0;font-size:19px}.cart-badge{min-width:30px;height:30px;border-radius:10px;display:grid;place-items:center;background:#0f172a;color:#fff;font-size:11px;font-weight:950}.cart-items{padding:13px 15px;max-height:430px;overflow:auto}.cart-empty{padding:35px 18px;text-align:center;color:var(--muted);font-size:12px}.cart-item{display:grid;grid-template-columns:1fr auto;gap:9px;padding:12px;border:1px solid var(--line);border-radius:15px;margin-bottom:9px;background:#fbfcfe}.cart-item-name{font-size:12px;font-weight:900}.cart-item-meta{font-size:10px;color:var(--muted);margin-top:3px}.cart-item-side{text-align:right}.line-total{font-size:12px;font-weight:950}.qty{display:flex;align-items:center;justify-content:flex-end;gap:6px;margin-top:6px}.qty button{width:25px;height:25px;border-radius:8px;background:#e2e8f0;color:#334155;font-weight:950;cursor:pointer}.qty span{min-width:20px;text-align:center;font-size:11px;font-weight:900}.remove{font-size:10px;color:var(--danger);cursor:pointer;margin-top:5px}
-.cart-summary{padding:16px 18px;border-top:1px solid var(--line);background:linear-gradient(180deg,#f8fafc,#fff)}.sum-row{display:flex;justify-content:space-between;gap:10px;padding:6px 0;color:#475569;font-size:12px}.sum-row.total{margin-top:8px;padding-top:12px;border-top:2px solid var(--line);color:var(--text);font-weight:950}.sum-row.total strong{font-size:24px;letter-spacing:-.04em}.checkout-btn{margin-top:12px;width:100%;padding:14px 16px;border-radius:15px;background:linear-gradient(135deg,var(--accent),#4f46e5);color:#fff;font-weight:950;font-size:13px;cursor:pointer;box-shadow:0 13px 25px rgba(99,102,241,.26)}.checkout-btn:disabled{opacity:.45;cursor:not-allowed;box-shadow:none}
-.overlay{position:fixed;inset:0;background:rgba(15,23,42,.55);backdrop-filter:blur(6px);display:none;align-items:center;justify-content:center;padding:18px;z-index:50}.overlay.open{display:flex}.modal{width:min(680px,100%);max-height:92vh;overflow:auto;background:#fff;border-radius:26px;box-shadow:0 35px 90px -20px rgba(15,23,42,.45)}.modal-head{padding:22px 24px;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;gap:15px;align-items:flex-start}.modal-head h2{margin:0;font-size:21px}.modal-head p{margin:4px 0 0;color:var(--muted);font-size:11px}.close{width:36px;height:36px;border-radius:11px;background:#f1f5f9;color:#334155;cursor:pointer;font-size:20px}.modal-body{padding:22px 24px}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}.field{margin-bottom:13px}.field label{display:block;margin-bottom:6px;font-size:11px;font-weight:950}.field small{display:block;color:#94a3b8;font-size:10px;margin-top:5px}.order-box{margin:9px 0 16px;padding:15px;border-radius:17px;background:#f8fafc;border:1px solid var(--line)}.order-box-head{display:flex;justify-content:space-between;gap:10px;font-size:11px;font-weight:950}.order-lines{margin-top:9px;border-top:1px dashed var(--line);padding-top:8px}.order-line{display:flex;justify-content:space-between;gap:10px;padding:4px 0;font-size:11px}.total-large{margin-top:9px;padding-top:10px;border-top:2px solid var(--line);display:flex;justify-content:space-between;font-weight:950}.total-large strong{font-size:22px}.pay-info{display:flex;align-items:flex-start;gap:10px;padding:12px 13px;border-radius:14px;background:var(--primary-soft);border:1px solid rgba(16,185,129,.25);color:#065f46;font-size:11px;margin-bottom:14px}.submit-order{width:100%;padding:15px 18px;border-radius:15px;color:#fff;background:linear-gradient(135deg,var(--primary),var(--primary-2));font-weight:950;font-size:14px;cursor:pointer;box-shadow:0 14px 26px rgba(16,185,129,.28)}.submit-order:disabled{opacity:.55;cursor:not-allowed;box-shadow:none}.notice{display:none;margin-top:12px;padding:12px 13px;border-radius:13px;font-size:11px}.notice.ok{display:block;background:#ecfdf3;border:1px solid #34d399;color:#065f46}.notice.err{display:block;background:#fef2f2;border:1px solid #fca5a5;color:#991b1b}
-.success{display:none;padding:35px 26px 28px;text-align:center}.success.open{display:block}.success-icon{width:66px;height:66px;border-radius:20px;display:grid;place-items:center;margin:0 auto 15px;background:var(--primary-soft);color:var(--primary-2);font-size:31px}.success h3{margin:0;font-size:24px}.success p{color:var(--muted);font-size:12px;line-height:1.6}.order-number{display:inline-block;margin:7px 0 13px;padding:9px 12px;border-radius:10px;background:#0f172a;color:#fff;font-size:12px;font-weight:950}.success-actions{display:flex;justify-content:center;gap:9px;flex-wrap:wrap}.success-actions button{padding:11px 13px;border-radius:12px;background:#f1f5f9;color:#334155;font-size:11px;font-weight:900;cursor:pointer}
-footer{padding:0 0 36px;text-align:center;color:#94a3b8;font-size:10px}
-@media(max-width:1000px){.hero{grid-template-columns:1fr}.catalog{grid-template-columns:1fr}.cart-card{position:static}.products{grid-template-columns:repeat(2,1fr)}}
-@media(max-width:650px){.wrap{width:min(100% - 16px,1220px)}.status{display:none}.toolbar{grid-template-columns:1fr}.products{grid-template-columns:1fr}.form-grid{grid-template-columns:1fr}.hero-main{padding:23px}.hero-side{padding:21px}}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SKLEP PRO - Szkolny Mini-Market</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
+        .fade-in { animation: fadeIn 0.25s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
 </head>
-<body>
-<div class="wrap">
-<header>
-  <div class="topbar">
-    <div class="brand"><div class="logo">🛍️</div><div><strong>SKLEP PRO</strong><span>Sklep szkolny online</span></div></div>
-    <div class="status"><i></i> Zamówienia online aktywne</div>
-  </div>
+<body class="text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
 
-  <div class="hero">
-    <section class="hero-main">
-      <div class="eyebrow">Szkolny mini-market</div>
-      <h1>Wybierz. Dodaj. Zamów.</h1>
-      <p class="lead">Produkty dostępne w Twoim szkolnym sklepie w jednym miejscu. Złóż zamówienie, a otrzymasz podsumowanie — Tobie zostaje przygotować towar i przyjąć dokładnie podaną kwotę.</p>
-      <div class="hero-chips">
-        <span class="chip">⚡ Szybki koszyk</span><span class="chip">🧾 Czytelne zamówienie</span><span class="chip">💵 Kwota do przyjęcia</span><span class="chip">📧 Powiadomienie e-mail</span>
-      </div>
-    </section>
-    <aside class="hero-side">
-      <div class="cash-label">Aktualna wartość koszyka</div>
-      <div class="cash-value" id="heroTotal">0,00 zł</div>
-      <div class="cash-note">Kwota zostanie wpisana również do wiadomości z zamówieniem.</div>
-      <div class="mini-stats"><div class="mini-stat"><strong id="heroItems">0</strong><span>szt. w koszyku</span></div><div class="mini-stat"><strong id="heroOrders">—</strong><span>numer zamówienia</span></div></div>
-    </aside>
-  </div>
-</header>
-
-<div class="toolbar">
-  <div class="search"><span class="search-icon">⌕</span><input id="search" placeholder="Szukaj produktu, np. 7DAYS, Kubuś, chipsy…"></div>
-  <select id="category" class="control"><option value="all">Wszystkie kategorie</option></select>
-  <select id="sort" class="control"><option value="popular">Polecane</option><option value="priceAsc">Cena rosnąco</option><option value="priceDesc">Cena malejąco</option><option value="name">Nazwa A–Z</option></select>
-</div>
-
-<main class="catalog">
-  <section class="products-card">
-    <div class="section-head"><div><h2>🧃 Produkty</h2><p>Wybierz produkt, a następnie ustaw ilość w koszyku.</p></div><div class="count" id="productCount">0 produktów</div></div>
-    <div class="products" id="products"></div>
-  </section>
-
-  <aside class="cart-card">
-    <div class="cart-head"><h2>🛒 Twój koszyk</h2><div class="cart-badge" id="cartBadge">0</div></div>
-    <div class="cart-items" id="cartItems"></div>
-    <div class="cart-summary">
-      <div class="sum-row"><span>Liczba sztuk</span><strong id="cartQty">0</strong></div>
-      <div class="sum-row"><span>Wartość produktów</span><strong id="cartSubtotal">0,00 zł</strong></div>
-      <div class="sum-row total"><span>Do zapłaty</span><strong id="cartTotal">0,00 zł</strong></div>
-      <button class="checkout-btn" id="checkoutBtn" disabled>Przejdź do zamówienia →</button>
-    </div>
-  </aside>
-</main>
-
-<footer>SKLEP PRO · wersja demonstracyjna · Sprzedaż tylko zgodnie z zasadami obowiązującymi w szkole.</footer>
-</div>
-
-<div class="overlay" id="overlay">
-  <div class="modal" id="modal">
-    <div class="modal-head"><div><h2>📦 Finalizacja zamówienia</h2><p>Podaj tylko dane potrzebne do przygotowania odbioru.</p></div><button class="close" id="closeModal" aria-label="Zamknij">×</button></div>
-    <div class="modal-body" id="formView">
-      <div class="order-box">
-        <div class="order-box-head"><span>Podsumowanie</span><span id="orderPreviewNumber">—</span></div>
-        <div class="order-lines" id="orderPreviewLines"></div>
-        <div class="total-large"><span>Do przyjęcia</span><strong id="orderPreviewTotal">0,00 zł</strong></div>
-      </div>
-
-      <form id="orderForm">
-        <input type="hidden" name="_subject" id="subjectField">
-        <input type="hidden" name="order_number" id="orderNumberField">
-        <input type="hidden" name="order_total" id="orderTotalField">
-        <input type="hidden" name="order_items" id="orderItemsField">
-        <input type="hidden" name="order_message" id="orderMessageField">
-        <div class="form-grid">
-          <div class="field"><label for="name">Imię i nazwisko *</label><input id="name" name="imie_i_nazwisko" required placeholder="np. Jan Kowalski"></div>
-          <div class="field"><label for="class">Klasa *</label><input id="class" name="klasa" required placeholder="np. 7B"></div>
+    <!-- Górny pasek nawigacyjny -->
+    <header class="bg-white/80 backdrop-blur-md border-b border-slate-100 sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="showStore()">
+                <div class="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-indigo-500/30 text-base">SP</div>
+                <div>
+                    <h1 class="font-extrabold text-sm tracking-wide text-slate-900">SKLEP PRO</h1>
+                    <p class="text-[10px] text-slate-400 font-medium">Sklep szkolny online</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-3">
+                <span id="store-status-badge" class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200">
+                    <span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Sklep otwarty
+                </span>
+                <button onclick="openAdminModal()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-lock text-slate-500"></i>
+                    <span>Panel Admina</span>
+                </button>
+            </div>
         </div>
-        <div class="form-grid">
-          <div class="field"><label for="email">E-mail</label><input id="email" name="email" type="email" placeholder="opcjonalnie"><small>Przyda się do odpowiedzi na zamówienie.</small></div>
-          <div class="field"><label for="contact">Kontakt</label><input id="contact" name="kontakt" placeholder="np. Discord / telefon — opcjonalnie"><small>Nie wpisuj wrażliwych danych.</small></div>
+    </header>
+
+    <!-- Ogłoszenie w sklepie (Dynamiczne) -->
+    <div id="store-announcement" class="hidden bg-indigo-600 text-white text-xs py-2.5 px-4 text-center font-medium shadow-inner"></div>
+
+    <!-- GŁÓWNY WIDOK SKLEPU -->
+    <main id="store-view" class="max-w-7xl mx-auto px-4 py-6 fade-in">
+        
+        <!-- Baner powitalny -->
+        <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm mb-8 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center">
+            <div class="max-w-xl z-10">
+                <span class="text-indigo-600 font-bold text-xs uppercase tracking-wider bg-indigo-50 px-3 py-1 rounded-full">Szkolny Mini-Market</span>
+                <h2 class="text-4xl font-extrabold text-slate-900 mt-3 mb-3 tracking-tight">Wybierz. Dodaj. <span class="text-indigo-600">Zamów.</span></h2>
+                <p class="text-slate-500 text-sm leading-relaxed">Wszystkie produkty Twojego szkolnego sklepu w jednym miejscu. Złóż zamówienie, wpisz kod rabatowy i odbierz na przerwie — płacisz przy odbiorze.</p>
+                
+                <div class="flex flex-wrap gap-2.5 mt-6 text-xs text-slate-600 font-semibold">
+                    <span class="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-bolt text-amber-500 mr-1.5"></i> Szybki koszyk</span>
+                    <span class="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-tag text-emerald-500 mr-1.5"></i> Kody rabatowe</span>
+                    <span class="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-wallet text-blue-500 mr-1.5"></i> Płatność przy odbiorze</span>
+                    <span class="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-envelope text-indigo-500 mr-1.5"></i> Powiadomienie e-mail</span>
+                </div>
+            </div>
+
+            <!-- Mini statystyki -->
+            <div class="mt-6 md:mt-0 bg-slate-900 text-white p-6 rounded-3xl w-full md:w-72 shadow-xl shadow-slate-900/10">
+                <div class="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">WARTOŚĆ KOSZYKA</div>
+                <div class="text-2xl font-black mt-1" id="banner-cart-total">0,00 zł</div>
+                <div class="text-[10px] text-slate-400 mb-4">Kwota po rabacie, do zapłaty przy odbiorze.</div>
+                
+                <div class="grid grid-cols-2 gap-3 pt-4 border-t border-slate-800 text-xs">
+                    <div class="bg-slate-800/80 p-3 rounded-2xl">
+                        <div class="font-black text-base" id="banner-cart-count">0</div>
+                        <div class="text-slate-400 text-[10px]">szt. w koszyku</div>
+                    </div>
+                    <div class="bg-slate-800/80 p-3 rounded-2xl">
+                        <div class="font-black text-base text-emerald-400" id="banner-status-text">Aktywny</div>
+                        <div class="text-slate-400 text-[10px]">status sklepu</div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="field"><label for="pickup">Odbiór</label><select id="pickup" name="odbior"><option>W szkole — osobiście</option><option>W szkole — na przerwie</option><option>Do ustalenia</option></select></div>
-        <div class="field"><label for="notes">Uwagi do zamówienia</label><textarea id="notes" name="uwagi" maxlength="500" placeholder="Np. proszę przygotować wszystko razem…"></textarea></div>
-        <div class="pay-info">💵 <span><strong>Płatność przy odbiorze.</strong> Zamówienie zawiera dokładną kwotę, którą masz przygotować/przyjąć. Strona nie pobiera pieniędzy online.</span></div>
-        <label style="display:flex;gap:10px;align-items:flex-start;font-size:11px;color:#475569;margin-bottom:13px"><input id="consent" type="checkbox" required style="width:18px;height:18px;margin:0;accent-color:var(--primary)"><span>Potwierdzam, że podane dane są poprawne i zgadzam się na wykorzystanie ich do obsługi tego zamówienia.</span></label>
-        <button class="submit-order" id="submitOrder" type="submit">✉ Wyślij zamówienie</button>
-        <div class="notice" id="notice"></div>
-      </form>
+
+        <!-- Siatka produktów i koszyk -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            
+            <!-- Lewa strona: Produkty i wyszukiwanie -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Pasek wyszukiwania i filtrów -->
+                <div class="flex flex-col sm:flex-row gap-3">
+                    <div class="relative flex-1">
+                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-slate-400 text-sm"></i>
+                        <input type="text" id="search-input" oninput="filterProducts()" placeholder="Szukaj produktu, np. 7DAYS, Kubuś, chipsy..." class="w-full bg-white border border-slate-200 rounded-2xl pl-11 pr-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 shadow-sm">
+                    </div>
+                    <select id="category-select" onchange="filterProducts()" class="bg-white border border-slate-200 rounded-2xl px-4 py-3 text-sm text-slate-700 font-medium focus:outline-none shadow-sm">
+                        <option value="Wszystkie">Wszystkie kategorie</option>
+                        <option value="Batoniki">Batoniki</option>
+                        <option value="Przekąski">Przekąski</option>
+                        <option value="Napoje">Napoje</option>
+                        <option value="Słodycze">Słodycze</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center justify-between px-1">
+                    <div class="flex items-center space-x-2">
+                        <i class="fa-solid fa-box-open text-indigo-600"></i>
+                        <h3 class="font-bold text-slate-900 text-base">Katalog produktów</h3>
+                    </div>
+                    <span id="product-count-badge" class="text-xs bg-slate-200 text-slate-700 px-3 py-1 rounded-full font-bold">12 prod.</span>
+                </div>
+
+                <!-- Katalog (Dynamiczny) -->
+                <div id="products-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4"></div>
+            </div>
+
+            <!-- Prawa strona: Koszyk -->
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm sticky top-24">
+                    <div class="flex items-center justify-between pb-4 border-b border-slate-100">
+                        <div class="flex items-center space-x-2">
+                            <i class="fa-solid fa-cart-shopping text-indigo-600"></i>
+                            <h3 class="font-bold text-slate-900">Twój koszyk</h3>
+                        </div>
+                        <span id="cart-badge-count" class="bg-slate-900 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">0</span>
+                    </div>
+
+                    <!-- Lista pozycji koszyka -->
+                    <div id="cart-items" class="py-4 space-y-3 min-h-[140px] max-h-60 overflow-y-auto divide-y divide-slate-50">
+                        <div class="text-center py-8 text-slate-400 text-xs">
+                            <i class="fa-solid fa-basket-shopping text-3xl mb-2 block text-slate-200"></i>
+                            Twój koszyk jest pusty.<br>Wybierz coś z katalogu!
+                        </div>
+                    </div>
+
+                    <!-- Kod rabatowy (czysty placeholder bez żadnych podpowiedzi o /admin) -->
+                    <div class="pt-4 border-t border-slate-100 space-y-2">
+                        <div class="flex gap-2">
+                            <input type="text" id="coupon-input" placeholder="WPISZ KOD RABATOWY" class="bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs uppercase font-bold flex-1 focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                            <button onclick="applyCoupon()" class="bg-slate-900 hover:bg-slate-800 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition shadow-sm">Użyj</button>
+                        </div>
+                        <div id="coupon-message" class="text-xs font-medium"></div>
+                    </div>
+
+                    <!-- Podsumowanie finansowe -->
+                    <div class="pt-4 border-t border-slate-100 space-y-2 text-xs">
+                        <div class="flex justify-between text-slate-500">
+                            <span>Liczba sztuk</span>
+                            <span id="summary-count" class="font-bold text-slate-800">0</span>
+                        </div>
+                        <div class="flex justify-between text-slate-500">
+                            <span>Wartość produktów</span>
+                            <span id="summary-subtotal" class="font-bold text-slate-800">0,00 zł</span>
+                        </div>
+                        <div id="discount-row" class="flex justify-between text-emerald-600 font-semibold hidden">
+                            <span id="discount-label">Rabat</span>
+                            <span id="summary-discount">-0,00 zł</span>
+                        </div>
+                        <div class="flex justify-between text-base font-extrabold text-slate-900 pt-2 border-t border-slate-100">
+                            <span>Do zapłaty</span>
+                            <span id="summary-total">0,00 zł</span>
+                        </div>
+                    </div>
+
+                    <!-- Przycisk kasy -->
+                    <button onclick="openCheckoutModal()" id="checkout-btn" disabled class="w-full mt-5 bg-indigo-300 text-white py-3.5 rounded-2xl font-bold text-sm shadow-lg cursor-not-allowed transition">
+                        Przejdź do zamówienia <i class="fa-solid fa-arrow-right ml-1.5"></i>
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+
+    <!-- PANEL ADMINISTRACYJNY (Ukryty widok) -->
+    <main id="admin-view" class="max-w-7xl mx-auto px-4 py-6 hidden fade-in">
+        <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm">
+            <div class="flex justify-between items-center mb-6 pb-4 border-b border-slate-100">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 bg-slate-900 rounded-2xl flex items-center justify-center text-white font-black"><i class="fa-solid fa-shield-halved"></i></div>
+                    <div>
+                        <span class="text-indigo-600 font-bold text-xs uppercase tracking-wider">SKLEP PRO — ADMIN</span>
+                        <h2 class="text-2xl font-extrabold text-slate-900 mt-0.5">Panel zarządzania</h2>
+                    </div>
+                </div>
+                <button onclick="showStore()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition shadow-md shadow-indigo-500/20">
+                    <i class="fa-solid fa-store mr-1.5"></i> Wróć do sklepu
+                </button>
+            </div>
+
+            <!-- Zakładki admina -->
+            <div class="flex space-x-2 border-b border-slate-100 pb-4 mb-6 text-sm font-bold overflow-x-auto">
+                <button onclick="switchAdminTab('orders')" id="admin-tab-btn-orders" class="px-4 py-2.5 rounded-xl bg-slate-900 text-white transition">Zamówienia</button>
+                <button onclick="switchAdminTab('products')" id="admin-tab-btn-products" class="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">Produkty</button>
+                <button onclick="switchAdminTab('coupons')" id="admin-tab-btn-coupons" class="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">Kody rabatowe</button>
+                <button onclick="switchAdminTab('settings')" id="admin-tab-btn-settings" class="px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition">Ustawienia sklepu</button>
+            </div>
+
+            <!-- Zakładka: Zamówienia -->
+            <div id="admin-tab-orders" class="space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                        <div class="text-2xl font-black text-slate-900" id="stat-new-orders">0</div>
+                        <div class="text-xs text-slate-500 font-medium mt-1">Nowe do przygotowania</div>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                        <div class="text-2xl font-black text-slate-900" id="stat-today-orders">0</div>
+                        <div class="text-xs text-slate-500 font-medium mt-1">Zamówienia dziś</div>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                        <div class="text-2xl font-black text-slate-900" id="stat-today-revenue">0,00 zł</div>
+                        <div class="text-xs text-slate-500 font-medium mt-1">Utarg dziś</div>
+                    </div>
+                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100">
+                        <div class="text-2xl font-black text-slate-900" id="stat-total-revenue">0,00 zł</div>
+                        <div class="text-xs text-slate-500 font-medium mt-1">Utarg łącznie</div>
+                    </div>
+                </div>
+
+                <div id="admin-orders-container" class="space-y-3">
+                    <div class="text-center py-12 text-slate-400 text-sm bg-slate-50 rounded-2xl border border-dashed border-slate-200">
+                        Brak złożonych zamówień w bieżącej sesji.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Zakładka: Produkty -->
+            <div id="admin-tab-products" class="hidden space-y-4">
+                <div class="flex justify-between items-center">
+                    <span class="text-xs text-slate-500 font-medium">Zarządzaj stanami magazynowymi i widocznością produktów w sklepie</span>
+                    <button onclick="addNewProductPrompt()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition">
+                        <i class="fa-solid fa-plus mr-1.5"></i> Dodaj produkt
+                    </button>
+                </div>
+                <div id="admin-products-list" class="space-y-3"></div>
+            </div>
+
+            <!-- Zakładka: Kody rabatowe -->
+            <div id="admin-tab-coupons" class="hidden space-y-4 max-w-2xl">
+                <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 flex gap-3 items-center">
+                    <input type="text" id="new-coupon-code" placeholder="KOD, NP. LATO20" class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs uppercase font-bold flex-1 focus:outline-none">
+                    <input type="number" id="new-coupon-discount" placeholder="10" value="10" class="bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-xs w-24 font-bold">
+                    <span class="text-xs font-bold text-slate-500">% rabatu</span>
+                    <button onclick="addNewCoupon()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-2.5 rounded-xl text-xs font-bold transition">+ Dodaj kod</button>
+                </div>
+                <div id="admin-coupons-list" class="space-y-3"></div>
+            </div>
+
+            <!-- Zakładka: Ustawienia -->
+            <div id="admin-tab-settings" class="hidden space-y-6 max-w-xl">
+                <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
+                    <div>
+                        <div class="font-bold text-sm text-slate-900">Przyjmowanie zamówień online</div>
+                        <div class="text-xs text-slate-500 mt-0.5">Wyłącz, gdy sklep jest nieczynny (np. ferie, przerwa wakacyjna).</div>
+                    </div>
+                    <label class="relative inline-flex items-center cursor-pointer">
+                        <input type="checkbox" id="setting-store-open" checked onchange="toggleStoreOpen(this)" class="sr-only peer">
+                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
+                    </label>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Ogłoszenie na górze strony</label>
+                    <textarea id="setting-announcement-text" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500" placeholder="Np. Dziś odbiór tylko na długiej przerwie! Zostaw puste, aby ukryć."></textarea>
+                </div>
+                <button onclick="saveSettings()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl text-xs font-bold transition shadow-sm">Zapisz ustawienia</button>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- MODAL HASŁA ADMINA -->
+    <div id="admin-pass-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-sm w-full p-6 shadow-2xl relative">
+            <button onclick="closeAdminModal()" class="absolute top-4 right-4 text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark"></i></button>
+            <div class="text-center mb-4">
+                <div class="w-12 h-12 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mx-auto mb-2 text-lg font-bold"><i class="fa-solid fa-lock"></i></div>
+                <h3 class="font-bold text-base text-slate-900">Strefa Administratora</h3>
+                <p class="text-xs text-slate-400 mt-1">Wpisz tajne hasło dostępu do panelu</p>
+            </div>
+            <input type="password" id="admin-password-input" placeholder="Hasło..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-xs font-bold mb-3 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+            <button onclick="verifyAdminPassword()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl text-xs font-bold transition shadow-md">Zaloguj się</button>
+        </div>
     </div>
 
-    <div class="success" id="successView">
-      <div class="success-icon">✓</div>
-      <h3>Zamówienie wysłane!</h3>
-      <p>Twoje zamówienie trafiło do obsługi sklepu. Zanotuj numer:</p>
-      <div class="order-number" id="successOrderNumber">—</div>
-      <div class="success-actions"><button id="copyOrder">📋 Kopiuj numer</button><button id="closeSuccess">Zamknij</button></div>
+
+    <!-- MODAL FINALIZACJI ZAMÓWIENIA -->
+    <div id="checkout-modal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-lg w-full p-6 shadow-2xl relative max-h-[90vh] overflow-y-auto">
+            <button onclick="closeCheckoutModal()" class="absolute top-5 right-5 text-slate-400 hover:text-slate-600 text-lg"><i class="fa-solid fa-xmark"></i></button>
+
+            <div class="flex items-center space-x-2.5 mb-2">
+                <div class="text-xl">📦</div>
+                <h3 class="font-bold text-lg text-slate-900">Finalizacja zamówienia</h3>
+            </div>
+            <p class="text-xs text-slate-400 mb-6">Podaj dane potrzebne do przygotowania odbioru w szkole.</p>
+
+            <!-- Podsumowanie w modalu -->
+            <div class="bg-slate-50 rounded-2xl p-4 border border-slate-100 mb-6 space-y-2 text-xs">
+                <div class="font-bold text-slate-700 mb-1">Twoje zamówienie</div>
+                <div id="modal-summary-items" class="space-y-1 text-slate-600"></div>
+                <div class="pt-2 border-t border-slate-200 flex justify-between font-black text-sm text-slate-900">
+                    <span>Do zapłaty przy odbiorze</span>
+                    <span id="modal-summary-total">0,00 zł</span>
+                </div>
+            </div>
+
+            <!-- Formularz wysyłający na rezerwacjalawki@gmail.com -->
+            <form action="https://formsubmit.co/rezerwacjalawki@gmail.com" method="POST" onsubmit="handleOrderSubmission(event)" class="space-y-4">
+                <input type="hidden" name="_subject" id="form-email-subject" value="Nowe zamówienie ze sklepu szkolnego!">
+                <input type="hidden" name="_captcha" value="false">
+                <input type="hidden" name="_template" value="table">
+                <input type="hidden" name="Szczegóły_Zamówienia" id="form-email-body" value="">
+                <input type="hidden" name="Numer_Zamówienia" id="form-order-number" value="">
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Imię i nazwisko *</label>
+                        <input type="text" name="Imię_i_nazwisko" required placeholder="np. Jan Kowalski" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Klasa *</label>
+                        <input type="text" name="Klasa" required placeholder="np. 4a" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">E-mail (opcjonalnie)</label>
+                        <input type="email" name="Email" placeholder="twoj@email.pl" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Kontakt</label>
+                        <input type="text" name="Kontakt" placeholder="Discord / telefon" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500">
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Odbiór</label>
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs font-bold">
+                        <label class="border border-emerald-500 bg-emerald-50/50 text-emerald-800 p-2.5 rounded-xl cursor-pointer flex items-center justify-center">
+                            <input type="radio" name="Odbiór" value="W szkole — osobiście" checked class="hidden"> Osobisty
+                        </label>
+                        <label class="border border-slate-200 p-2.5 rounded-xl cursor-pointer flex items-center justify-center text-slate-600">
+                            <input type="radio" name="Odbiór" value="W szkole — na przerwie" class="hidden"> Na przerwie
+                        </label>
+                        <label class="border border-slate-200 p-2.5 rounded-xl cursor-pointer flex items-center justify-center text-slate-600">
+                            <input type="radio" name="Odbiór" value="Do ustalenia" class="hidden"> Do ustalenia
+                        </label>
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Uwagi do zamówienia</label>
+                    <textarea name="Uwagi" rows="2" placeholder="Np. proszę przygotować wszystko razem..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:outline-none focus:ring-1 focus:ring-indigo-500"></textarea>
+                </div>
+
+                <div class="flex items-start space-x-2 pt-1">
+                    <input type="checkbox" required id="terms" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500">
+                    <label for="terms" class="text-[11px] text-slate-400 leading-tight">Potwierdzam zgodę na przetwarzanie danych do obsługi zamówienia. Płatność przy odbiorze w szkole.</label>
+                </div>
+
+                <button type="submit" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold text-sm shadow-lg shadow-emerald-600/20 transition flex items-center justify-center space-x-2">
+                    <i class="fa-solid fa-paper-plane"></i>
+                    <span>Wyślij zamówienie</span>
+                </button>
+            </form>
+        </div>
     </div>
-  </div>
-</div>
 
-<script>
-/* =============================
-   KONFIGURACJA SKLEPU
-   ============================= */
-const FORM_ENDPOINT = 'https://formspree.io/f/xzebvjop';
-const SHOP_NAME = 'SKLEP PRO';
 
-/* Produkty możesz dowolnie zmieniać tutaj. stock = aktualnie dostępna liczba sztuk. */
-const PRODUCTS = [
-  {id:'7days', name:'7DAYS', note:'Baton rogalikowy', price:4.00, stock:20, category:'Batoniki', icon:'🥐', badge:'🔥 HIT'},
-  {id:'ketchup', name:'Salatini Ketchup', note:'Mała słona przekąska', price:3.00, stock:18, category:'Przekąski', icon:'🥨'},
-  {id:'pretzel', name:'Salatini Pretzel Chips', note:'Chrupiąca przekąska', price:3.00, stock:18, category:'Przekąski', icon:'🥨'},
-  {id:'chips', name:'Salatini Chips', note:'Mała paczka chipsów', price:3.50, stock:16, category:'Przekąski', icon:'🥔', badge:'TOP'},
-  {id:'breadsticks', name:'Bread Sticks', note:'Paluszki / pieczywo', price:3.50, stock:14, category:'Przekąski', icon:'🥖'},
-  {id:'kubus', name:'Kubuś Play', note:'Napój dla dzieci', price:3.50, stock:12, category:'Napoje', icon:'🧃'},
-  {id:'vitamini', name:'Tymbark Vitamini', note:'Mały napój', price:3.50, stock:12, category:'Napoje', icon:'🍎'},
-  {id:'water', name:'Woda', note:'Butelka 500 ml', price:2.50, stock:15, category:'Napoje', icon:'💧'},
-  {id:'gum', name:'Guma do żucia', note:'Małe opakowanie', price:2.50, stock:20, category:'Słodycze', icon:'🍬'},
-  {id:'lollipop', name:'Lizak', note:'1 sztuka', price:1.50, stock:30, category:'Słodycze', icon:'🍭'},
-  {id:'candy', name:'Cukierek', note:'1 sztuka', price:0.75, stock:40, category:'Słodycze', icon:'🍬'},
-  {id:'wafer', name:'Wafelek', note:'Mała przekąska', price:2.50, stock:18, category:'Słodycze', icon:'🍫'}
-];
+    <!-- MODAL POTWIERDZENIA ZAMÓWIENIA Z NUMERKIEM -->
+    <div id="success-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 text-center shadow-2xl relative">
+            <div class="w-16 h-16 bg-emerald-100 text-emerald-600 rounded-3xl flex items-center justify-center mx-auto mb-4 text-2xl"><i class="fa-solid fa-check"></i></div>
+            <h3 class="font-extrabold text-xl text-slate-900">Zamówienie przyjęte!</h3>
+            <p class="text-xs text-slate-500 mt-1 mb-6">Powiadomienie zostało wysłane na <span class="font-bold text-slate-700">rezerwacjalawki@gmail.com</span>.</p>
+            
+            <div class="bg-slate-50 border border-slate-100 rounded-2xl p-4 mb-6">
+                <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider">Twój numer zamówienia</div>
+                <div class="text-3xl font-black text-indigo-600 mt-1 font-mono" id="success-order-code">SP-2026-XYZ</div>
+                <div class="text-[11px] text-slate-500 mt-1">Pokaż ten numer przy odbiorze w szkole.</div>
+            </div>
 
-let cart = JSON.parse(localStorage.getItem('sklep_pro_cart') || '{}');
-let lastOrderNumber = null;
+            <button onclick="closeSuccessModal()" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3.5 rounded-2xl font-bold text-sm transition">Wróć do sklepu</button>
+        </div>
+    </div>
 
-const $ = (s) => document.querySelector(s);
-const $$ = (s) => [...document.querySelectorAll(s)];
-const money = (n) => Number(n).toLocaleString('pl-PL',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' zł';
-const getProduct = id => PRODUCTS.find(p => p.id === id);
-const cartQty = () => Object.values(cart).reduce((a,b)=>a+b,0);
-const cartTotal = () => Object.entries(cart).reduce((sum,[id,qty]) => { const p=getProduct(id); return sum + (p ? p.price*qty : 0); },0);
 
-function generateOrderNumber(){
-  const d = new Date();
-  const stamp = [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('');
-  const random = Math.random().toString(36).slice(2,6).toUpperCase();
-  return `SP-${stamp}-${random}`;
-}
+    <!-- SKRYPT LOGIKI SKLEPU -->
+    <script>
+        // Baza danych aplikacji
+        let products = [
+            { id: 1, name: "7DAYS", category: "Batoniki", desc: "Baton rogaliowy", price: 4.00, stock: 19, emoji: "🥐", tag: "🔥 HIT", active: true },
+            { id: 2, name: "Salatini Ketchup", category: "Przekąski", desc: "Mała słona przekąska", price: 3.00, stock: 18, emoji: "🥨", tag: "", active: true },
+            { id: 3, name: "Salatini Pretzel Chips", category: "Przekąski", desc: "Chrupiąca przekąska", price: 3.00, stock: 18, emoji: "🥨", tag: "", active: true },
+            { id: 4, name: "Salatini Chips", category: "Przekąski", desc: "Małe paczki chipsów", price: 3.50, stock: 16, emoji: "🥔", tag: "TOP", active: true },
+            { id: 5, name: "Bread Sticks", category: "Przekąski", desc: "Paluszki / pieczywo", price: 3.50, stock: 14, emoji: "🥖", tag: "", active: true },
+            { id: 6, name: "Kubuś Play", category: "Napoje", desc: "Napój dla dzieci", price: 3.50, stock: 12, emoji: "🧃", tag: "", active: true },
+            { id: 7, name: "Tymbark Vitamini", category: "Napoje", desc: "Mały napój", price: 3.50, stock: 12, emoji: "🍎", tag: "", active: true },
+            { id: 8, name: "Woda", category: "Napoje", desc: "Butelka 500 ml", price: 2.50, stock: 15, emoji: "💧", tag: "", active: true },
+            { id: 9, name: "Guma do żucia", category: "Słodycze", desc: "Małe opakowanie", price: 2.50, stock: 20, emoji: "🍬", tag: "", active: true },
+            { id: 10, name: "Lizak", category: "Słodycze", desc: "1 sztuka", price: 1.50, stock: 30, emoji: "🍭", tag: "", active: true },
+            { id: 11, name: "Cukierek", category: "Słodycze", desc: "1 sztuka", price: 0.75, stock: 40, emoji: "🍬", tag: "", active: true },
+            { id: 12, name: "Wafelek", category: "Słodycze", desc: "Mała przekąska", price: 2.50, stock: 18, emoji: "🍫", tag: "", active: true }
+        ];
 
-function persist(){ localStorage.setItem('sklep_pro_cart', JSON.stringify(cart)); }
+        let cart = {};
+        let coupons = { "SZKOLA10": 10, "LATO20": 20 };
+        let activeDiscount = 0;
+        let appliedCouponName = "";
+        let ordersHistory = [];
+        let storeSettings = { isOpen: true, announcement: "" };
 
-function initCategories(){
-  const cats = [...new Set(PRODUCTS.map(p=>p.category))].sort((a,b)=>a.localeCompare(b,'pl'));
-  const select = $('#category');
-  cats.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; select.appendChild(o); });
-}
+        // Hasło admina zaszyfrowane funkcją skrótu SHA-256 (domyślny hash dla słowa: tajnehaslo)
+        // Możesz zmienić ciąg znaków poniżej na własny hash SHA-256 jeśli chcesz zmienić hasło.
+        // Hasło administratora (możesz je tutaj zmienić w cudzysłowie)
+        const ADMIN_PASSWORD = "admin123";
 
-function renderProducts(){
-  const query = $('#search').value.trim().toLowerCase();
-  const category = $('#category').value;
-  const sort = $('#sort').value;
-  let list = PRODUCTS.filter(p => (!query || `${p.name} ${p.note} ${p.category}`.toLowerCase().includes(query)) && (category==='all'||p.category===category));
-  if(sort==='priceAsc') list.sort((a,b)=>a.price-b.price);
-  if(sort==='priceDesc') list.sort((a,b)=>b.price-a.price);
-  if(sort==='name') list.sort((a,b)=>a.name.localeCompare(b.name,'pl'));
-  $('#productCount').textContent = `${list.length} ${list.length===1?'produktów':'produktów'}`;
-  const root=$('#products'); root.innerHTML='';
-  if(!list.length){ root.innerHTML='<div class="empty">😕 Nie znalazłem takiego produktu.</div>'; return; }
-  list.forEach(p=>{
-    const inCart = cart[p.id]||0;
-    const left = Math.max(0,p.stock-inCart);
-    const stockClass = left===0?'out':(left<=3?'low':'');
-    const card=document.createElement('article'); card.className='product';
-    card.innerHTML=`${p.badge?`<div class="badge">${p.badge}</div>`:''}
-      <div class="product-top"><div class="product-icon">${p.icon}</div><div class="product-cat">${p.category}</div><div class="product-name">${p.name}</div><div class="product-note">${p.note}</div></div>
-      <div class="product-bottom"><div><div class="product-price">${money(p.price)}</div><span class="stock ${stockClass}">${left===0?'Brak wolnych sztuk':`Dostępne: ${left}`}</span></div><button class="add-btn" ${left===0?'disabled':''} data-add="${p.id}">${left===0?'Brak':'Dodaj +'}</button></div>`;
-    root.appendChild(card);
-  });
-  $$('[data-add]').forEach(btn=>btn.addEventListener('click',()=>addToCart(btn.dataset.add)));
-}
+        window.onload = function() {
+            renderProducts();
+            renderAdminProducts();
+            renderAdminCoupons();
+            updateStoreStatusUI();
+        };
 
-function addToCart(id){
-  const p=getProduct(id); if(!p) return;
-  const current=cart[id]||0;
-  if(current>=p.stock){ alert(`Nie ma więcej sztuk produktu „${p.name}”.`); return; }
-  cart[id]=current+1; persist(); renderAll();
-}
-function changeQty(id,delta){
-  const p=getProduct(id); if(!p) return;
-  const next=(cart[id]||0)+delta;
-  if(next<=0) delete cart[id];
-  else if(next<=p.stock) cart[id]=next;
-  else alert(`Maksymalnie możesz zamówić ${p.stock} szt. produktu „${p.name}”.`);
-  persist(); renderAll(); renderOrderPreview();
-}
-function removeItem(id){ delete cart[id]; persist(); renderAll(); renderOrderPreview(); }
+        // Renderowanie produktów
+        function renderProducts() {
+            const grid = document.getElementById("products-grid");
+            grid.innerHTML = "";
+            
+            let query = document.getElementById("search-input").value.toLowerCase();
+            let cat = document.getElementById("category-select").value;
 
-function renderCart(){
-  const root=$('#cartItems'); root.innerHTML='';
-  const entries=Object.entries(cart).filter(([id,qty])=>qty>0&&getProduct(id));
-  if(!entries.length){ root.innerHTML='<div class="cart-empty">🛒<br><br>Twój koszyk jest pusty.<br>Dodaj coś z katalogu.</div>'; }
-  entries.forEach(([id,qty])=>{
-    const p=getProduct(id); const el=document.createElement('div'); el.className='cart-item';
-    el.innerHTML=`<div><div class="cart-item-name">${p.icon} ${p.name}</div><div class="cart-item-meta">${money(p.price)} / szt.</div><div class="remove" data-remove="${id}">Usuń</div></div><div class="cart-item-side"><div class="line-total">${money(p.price*qty)}</div><div class="qty"><button data-dec="${id}">−</button><span>${qty}</span><button data-inc="${id}">+</button></div></div>`;
-    root.appendChild(el);
-  });
-  $$('[data-dec]').forEach(b=>b.onclick=()=>changeQty(b.dataset.dec,-1));
-  $$('[data-inc]').forEach(b=>b.onclick=()=>changeQty(b.dataset.inc,1));
-  $$('[data-remove]').forEach(b=>b.onclick=()=>removeItem(b.dataset.remove));
+            let filtered = products.filter(p => {
+                let matchQuery = p.name.toLowerCase().includes(query) || p.desc.toLowerCase().includes(query);
+                let matchCat = cat === "Wszystkie" || p.category === cat;
+                return p.active && matchQuery && matchCat;
+            });
 
-  const qty=cartQty(), total=cartTotal();
-  $('#cartBadge').textContent=qty; $('#cartQty').textContent=qty; $('#cartSubtotal').textContent=money(total); $('#cartTotal').textContent=money(total); $('#heroTotal').textContent=money(total); $('#heroItems').textContent=qty;
-  $('#checkoutBtn').disabled=!qty;
-}
+            document.getElementById("product-count-badge").innerText = `${filtered.length} prod.`;
 
-function buildOrderText(orderNumber){
-  const name=$('#name').value.trim(), cls=$('#class').value.trim(), email=$('#email').value.trim(), contact=$('#contact').value.trim(), pickup=$('#pickup').value, notes=$('#notes').value.trim();
-  const lines=Object.entries(cart).filter(([id,qty])=>qty>0&&getProduct(id)).map(([id,qty])=>{const p=getProduct(id); return `${p.name} — ${qty} szt. × ${money(p.price)} = ${money(p.price*qty)}`;});
-  const date=new Intl.DateTimeFormat('pl-PL',{dateStyle:'full',timeStyle:'short'}).format(new Date());
-  return [
-    '========================================',
-    `         NOWE ZAMÓWIENIE — ${SHOP_NAME}`,
-    '========================================',
-    `Numer zamówienia: ${orderNumber}`,
-    `Data: ${date}`,
-    '',
-    'DANE KLIENTA',
-    `Imię i nazwisko: ${name}`,
-    `Klasa: ${cls}`,
-    `E-mail: ${email||'Nie podano'}`,
-    `Kontakt: ${contact||'Nie podano'}`,
-    '',
-    'ZAMÓWIENIE',
-    ...lines,
-    '',
-    `Liczba sztuk: ${cartQty()}`,
-    `KWOTA DO PRZYJĘCIA: ${money(cartTotal())}`,
-    `Odbiór: ${pickup}`,
-    `Uwagi: ${notes||'Brak'}`,
-    '',
-    'Płatność: przy odbiorze.',
-    '========================================'
-  ].join('\n');
-}
+            if(filtered.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-400 text-xs">Brak produktów spełniających kryteria wyszukiwania.</div>`;
+                return;
+            }
 
-function renderOrderPreview(){
-  $('#orderPreviewNumber').textContent=lastOrderNumber||'—';
-  const root=$('#orderPreviewLines'); root.innerHTML='';
-  Object.entries(cart).filter(([id,qty])=>qty>0&&getProduct(id)).forEach(([id,qty])=>{const p=getProduct(id); const row=document.createElement('div'); row.className='order-line'; row.innerHTML=`<span>${p.name} × ${qty}</span><strong>${money(p.price*qty)}</strong>`; root.appendChild(row);});
-  $('#orderPreviewTotal').textContent=money(cartTotal());
-  $('#heroOrders').textContent=lastOrderNumber||'—';
-}
+            filtered.forEach(p => {
+                let isOut = p.stock <= 0;
+                grid.innerHTML += `
+                    <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between relative transition hover:shadow-md">
+                        ${p.tag ? `<span class="absolute top-4 right-4 bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-black px-2.5 py-0.5 rounded-full">${p.tag}</span>` : ''}
+                        <div>
+                            <div class="text-2xl mb-2">${p.emoji}</div>
+                            <div class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider mb-0.5">${p.category}</div>
+                            <h4 class="font-bold text-slate-900 text-base">${p.name}</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">${p.desc}</p>
+                        </div>
+                        <div class="mt-6 pt-4 border-t border-dashed border-slate-100 flex items-center justify-between">
+                            <div>
+                                <div class="font-extrabold text-slate-900 text-base">${p.price.toFixed(2)} zł</div>
+                                <div class="text-[10px] font-bold ${isOut ? 'text-red-500' : 'text-slate-400'}">${isOut ? 'Wyprzedane' : `Dostępne: ${p.stock}`}</div>
+                            </div>
+                            <button onclick="addToCart(${p.id})" ${isOut || !storeSettings.isOpen ? 'disabled' : ''} class="${isOut || !storeSettings.isOpen ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-md shadow-emerald-500/20 cursor-pointer'} px-4 py-2 rounded-xl text-xs font-bold transition">
+                                ${isOut ? 'Brak' : 'Dodaj +'}
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
 
-function openModal(){
-  if(!cartQty()) return;
-  lastOrderNumber=generateOrderNumber();
-  $('#orderNumberField').value=lastOrderNumber;
-  $('#subjectField').value=`${SHOP_NAME} — zamówienie ${lastOrderNumber}`;
-  renderOrderPreview();
-  $('#successView').classList.remove('open'); $('#formView').style.display='block'; $('#notice').className='notice'; $('#notice').textContent=''; $('#overlay').classList.add('open');
-}
-function closeModal(){ $('#overlay').classList.remove('open'); }
+        function filterProducts() {
+            renderProducts();
+        }
 
-function showNotice(text,ok){ const n=$('#notice'); n.textContent=text; n.className=`notice ${ok?'ok':'err'}`; }
+        // Obsługa koszyka
+        function addToCart(id) {
+            if(!storeSettings.isOpen) {
+                alert("Sklep jest obecnie zamknięty.");
+                return;
+            }
+            let p = products.find(prod => prod.id === id);
+            if(!cart[id]) cart[id] = 0;
+            if(cart[id] < p.stock) {
+                cart[id]++;
+                updateCartUI();
+            } else {
+                alert("Osiągnięto limit stanu magazynowego tego produktu.");
+            }
+        }
 
-$('#search').addEventListener('input',renderProducts);
-$('#category').addEventListener('change',renderProducts);
-$('#sort').addEventListener('change',renderProducts);
-$('#checkoutBtn').onclick=openModal;
-$('#closeModal').onclick=closeModal;
-$('#overlay').addEventListener('click',e=>{if(e.target.id==='overlay') closeModal();});
-$('#closeSuccess').onclick=closeModal;
-$('#copyOrder').onclick=async()=>{ try{await navigator.clipboard.writeText(lastOrderNumber); $('#copyOrder').textContent='✓ Skopiowano'; setTimeout(()=>$('#copyOrder').textContent='📋 Kopiuj numer',1200);}catch(e){} };
+        function removeFromCart(id) {
+            if(cart[id]) {
+                cart[id]--;
+                if(cart[id] <= 0) delete cart[id];
+                updateCartUI();
+            }
+        }
 
-$('#orderForm').addEventListener('submit',async e=>{
-  e.preventDefault();
-  if(!cartQty()){showNotice('Koszyk jest pusty.',false);return;}
-  if(!$('#orderForm').reportValidity()) return;
+        function updateCartUI() {
+            let container = document.getElementById("cart-items");
+            container.innerHTML = "";
+            let totalCount = 0;
+            let subtotal = 0;
 
-  const orderNumber=lastOrderNumber||generateOrderNumber();
-  const message=buildOrderText(orderNumber);
-  $('#orderItemsField').value=Object.entries(cart).filter(([id,qty])=>qty>0&&getProduct(id)).map(([id,qty])=>{const p=getProduct(id); return `${p.name} x${qty}`;}).join(', ');
-  $('#orderTotalField').value=money(cartTotal());
-  $('#orderMessageField').value=message;
+            let keys = Object.keys(cart);
+            if(keys.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-8 text-slate-400 text-xs">
+                        <i class="fa-solid fa-basket-shopping text-3xl mb-2 block text-slate-200"></i>
+                        Twój koszyk jest pusty.<br>Wybierz coś z katalogu!
+                    </div>
+                `;
+                document.getElementById("checkout-btn").disabled = true;
+                document.getElementById("checkout-btn").className = "w-full mt-5 bg-indigo-300 text-white py-3.5 rounded-2xl font-bold text-sm shadow-lg cursor-not-allowed transition";
+            } else if(storeSettings.isOpen) {
+                document.getElementById("checkout-btn").disabled = false;
+                document.getElementById("checkout-btn").className = "w-full mt-5 bg-indigo-600 hover:bg-indigo-700 text-white py-3.5 rounded-2xl font-bold text-sm shadow-lg shadow-indigo-500/20 cursor-pointer transition";
+            }
 
-  const button=$('#submitOrder'); button.disabled=true; button.textContent='⌛ Wysyłanie zamówienia…';
-  const fd=new FormData($('#orderForm'));
-  if($('#email').value.trim()) fd.set('_replyto',$('#email').value.trim());
-  try{
-    const response=await fetch(FORM_ENDPOINT,{method:'POST',body:fd,headers:{Accept:'application/json'}});
-    if(!response.ok) throw new Error('send failed');
-    $('#formView').style.display='none'; $('#successOrderNumber').textContent=orderNumber; $('#successView').classList.add('open');
-    cart={}; persist(); renderAll();
-  }catch(err){ showNotice('Nie udało się wysłać zamówienia. Sprawdź endpoint Formspree i spróbuj ponownie.',false); }
-  finally{button.disabled=false;button.textContent='✉ Wyślij zamówienie';}
-});
+            keys.forEach(id => {
+                let p = products.find(prod => prod.id == id);
+                let qty = cart[id];
+                totalCount += qty;
+                let itemTotal = p.price * qty;
+                subtotal += itemTotal;
 
-function renderAll(){renderProducts();renderCart();}
-initCategories();renderAll();
-</script>
+                container.innerHTML += `
+                    <div class="flex items-center justify-between py-2.5 text-xs">
+                        <div>
+                            <div class="font-bold text-slate-800">${p.name}</div>
+                            <div class="text-slate-400 text-[10px]">${p.price.toFixed(2)} zł × ${qty}</div>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="font-bold text-slate-900">${itemTotal.toFixed(2)} zł</span>
+                            <button onclick="removeFromCart(${id})" class="text-slate-400 hover:text-red-500 p-1"><i class="fa-solid fa-minus"></i></button>
+                            <span class="font-bold w-4 text-center">${qty}</span>
+                            <button onclick="addToCart(${id})" class="text-slate-400 hover:text-emerald-500 p-1"><i class="fa-solid fa-plus"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            let discountAmount = (subtotal * activeDiscount) / 100;
+            let finalTotal = subtotal - discountAmount;
+
+            document.getElementById("cart-badge-count").innerText = totalCount;
+            document.getElementById("banner-cart-count").innerText = totalCount;
+            document.getElementById("banner-cart-total").innerText = finalTotal.toFixed(2) + " zł";
+            document.getElementById("summary-count").innerText = totalCount;
+            document.getElementById("summary-subtotal").innerText = subtotal.toFixed(2) + " zł";
+            document.getElementById("summary-total").innerText = finalTotal.toFixed(2) + " zł";
+
+            if(activeDiscount > 0) {
+                document.getElementById("discount-row").classList.remove("hidden");
+                document.getElementById("discount-label").innerText = `Rabat (${appliedCouponName})`;
+                document.getElementById("summary-discount").innerText = `-${discountAmount.toFixed(2)} zł (-${activeDiscount}%)`;
+            } else {
+                document.getElementById("discount-row").classList.add("hidden");
+            }
+        }
+
+        // Obsługa kodów rabatowych i ukrytego wejścia /admin
+        async function applyCoupon() {
+            let inputVal = document.getElementById("coupon-input").value.trim();
+            let upper = inputVal.toUpperCase();
+            let msg = document.getElementById("coupon-message");
+
+            // Bezpieczny, ukryty tryb administratora
+            if(inputVal === "/admin") {
+                document.getElementById("coupon-input").value = "";
+                openAdminModal();
+                return;
+            }
+
+            if(coupons[upper] !== undefined) {
+                activeDiscount = coupons[upper];
+                appliedCouponName = upper;
+                msg.className = "text-xs text-emerald-600 font-bold";
+                msg.innerText = `Kod ${upper} (-${activeDiscount}%) aktywny!`;
+                updateCartUI();
+            } else {
+                msg.className = "text-xs text-red-500 font-bold";
+                msg.innerText = "Nieprawidłowy kod rabatowy.";
+            }
+        }
+
+        // Funkcja szyfrująca hasło SHA-256
+        async function sha256(message) {
+            const msgBuffer = new TextEncoder().encode(message);
+            const hashBuffer = await crypto.subtle.digest('SHA-256', msgBuffer);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
+
+        // Logowanie do panelu admina
+        function openAdminModal() {
+            document.getElementById("admin-pass-modal").classList.remove("hidden");
+        }
+        function closeAdminModal() {
+            document.getElementById("admin-pass-modal").classList.add("hidden");
+        }
+        function verifyAdminPassword() {
+            let pass = document.getElementById("admin-password-input").value;
+            
+            if(pass === ADMIN_PASSWORD) {
+                closeAdminModal();
+                document.getElementById("admin-password-input").value = "";
+                showAdmin();
+            } else {
+                alert("Nieprawidłowe hasło administratora!");
+            }
+        }
+
+        // Przełączanie widoków sklepu i admina
+        function showStore() {
+            document.getElementById("store-view").classList.remove("hidden");
+            document.getElementById("admin-view").classList.add("hidden");
+            renderProducts();
+        }
+        function showAdmin() {
+            document.getElementById("store-view").classList.add("hidden");
+            document.getElementById("admin-view").classList.remove("hidden");
+            renderAdminOrders();
+            renderAdminProducts();
+            renderAdminCoupons();
+        }
+
+        function switchAdminTab(tab) {
+            ['orders', 'products', 'coupons', 'settings'].forEach(t => {
+                document.getElementById(`admin-tab-${t}`).classList.add("hidden");
+                document.getElementById(`admin-tab-btn-${t}`).className = "px-4 py-2.5 rounded-xl text-slate-600 hover:bg-slate-100 transition";
+            });
+            document.getElementById(`admin-tab-${tab}`).classList.remove("hidden");
+            document.getElementById(`admin-tab-btn-${tab}`).className = "px-4 py-2.5 rounded-xl bg-slate-900 text-white transition";
+        }
+
+        // Finalizacja zamówienia i wysyłka na maila
+        function openCheckoutModal() {
+            if(!storeSettings.isOpen) {
+                alert("Sklep jest zamknięty. Nie można złożyć zamówienia.");
+                return;
+            }
+            document.getElementById("checkout-modal").classList.remove("hidden");
+            let summaryItemsDiv = document.getElementById("modal-summary-items");
+            summaryItemsDiv.innerHTML = "";
+            
+            let subtotal = 0;
+            let summaryText = "";
+
+            Object.keys(cart).forEach(id => {
+                let p = products.find(prod => prod.id == id);
+                let qty = cart[id];
+                let itemTotal = p.price * qty;
+                subtotal += itemTotal;
+                summaryItemsDiv.innerHTML += `<div>${p.name} × ${qty} — ${itemTotal.toFixed(2)} zł</div>`;
+                summaryText += `• ${p.name} x ${qty} (${itemTotal.toFixed(2)} zł)\n`;
+            });
+
+            let discountAmount = (subtotal * activeDiscount) / 100;
+            let finalTotal = subtotal - discountAmount;
+
+            if(activeDiscount > 0) {
+                summaryItemsDiv.innerHTML += `<div class="text-emerald-600 font-bold">Rabat: ${appliedCouponName} (-${activeDiscount}%)</div>`;
+                summaryText += `Rabat: ${appliedCouponName} (-${activeDiscount}%)\n`;
+            }
+
+            document.getElementById("modal-summary-total").innerText = finalTotal.toFixed(2) + " zł";
+            
+            let orderCode = "SP-" + Math.floor(100000 + Math.random() * 900000);
+            document.getElementById("form-order-number").value = orderCode;
+
+            summaryText += `\nDo zapłaty: ${finalTotal.toFixed(2)} PLN`;
+            document.getElementById("form-email-body").value = summaryText;
+            document.getElementById("form-email-subject").value = `Zamówienie ${orderCode} (${finalTotal.toFixed(2)} zł)`;
+        }
+
+        function closeCheckoutModal() {
+            document.getElementById("checkout-modal").classList.add("hidden");
+        }
+
+        function handleOrderSubmission(event) {
+            // Zmniejszanie stanów magazynowych
+            Object.keys(cart).forEach(id => {
+                let p = products.find(prod => prod.id == id);
+                if(p) p.stock -= cart[id];
+            });
+
+            let orderCode = document.getElementById("form-order-number").value;
+            let subtotal = Object.keys(cart).reduce((sum, id) => sum + (products.find(p => p.id == id).price * cart[id]), 0);
+            let finalTotal = subtotal - ((subtotal * activeDiscount) / 100);
+
+            // Zapis w historii zamówień panelu admina
+            ordersHistory.unshift({
+                id: orderCode,
+                date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+                name: document.querySelector("input[name='Imię_i_nazwisko']").value,
+                class: document.querySelector("input[name='Klasa']").value,
+                total: finalTotal,
+                status: 'Nowe',
+                items: {...cart}
+            });
+
+            closeCheckoutModal();
+            cart = {};
+            activeDiscount = 0;
+            appliedCouponName = "";
+            updateCartUI();
+
+            document.getElementById("success-order-code").innerText = orderCode;
+            document.getElementById("success-modal").classList.remove("hidden");
+        }
+
+        function closeSuccessModal() {
+            document.getElementById("success-modal").classList.add("hidden");
+            showStore();
+        }
+
+        // Funkcje Panelu Admina
+        function renderAdminProducts() {
+            let list = document.getElementById("admin-products-list");
+            list.innerHTML = "";
+            products.forEach(p => {
+                list.innerHTML += `
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs">
+                        <div class="flex items-center space-x-3">
+                            <span class="text-xl">${p.emoji}</span>
+                            <div>
+                                <span class="font-bold text-slate-900 text-sm">${p.name}</span>
+                                <div class="text-slate-400 text-[10px]">${p.category} · ${p.price.toFixed(2)} zł</div>
+                            </div>
+                        </div>
+                        <div class="flex items-center space-x-4">
+                            <div class="flex items-center space-x-2 bg-white px-3 py-1.5 rounded-xl border border-slate-200">
+                                <button onclick="changeStock(${p.id}, -1)" class="text-slate-400 hover:text-red-500 font-bold">−</button>
+                                <span class="font-black w-6 text-center">${p.stock}</span>
+                                <button onclick="changeStock(${p.id}, 1)" class="text-slate-400 hover:text-emerald-500 font-bold">+</button>
+                            </div>
+                            <label class="relative inline-flex items-center cursor-pointer">
+                                <input type="checkbox" ${p.active ? 'checked' : ''} onchange="toggleProduct(${p.id})" class="sr-only peer">
+                                <div class="w-9 h-5 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
+                            </label>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function changeStock(id, amount) {
+            let p = products.find(prod => prod.id === id);
+            if(p) {
+                p.stock = Math.max(0, p.stock + amount);
+                renderAdminProducts();
+                renderProducts();
+            }
+        }
+
+        function toggleProduct(id) {
+            let p = products.find(prod => prod.id === id);
+            p.active = !p.active;
+            renderProducts();
+        }
+
+        function addNewProductPrompt() {
+            let name = prompt("Nazwa nowego produktu:");
+            if(!name) return;
+            let price = parseFloat(prompt("Cena w zł (np. 3.50):", "3.00"));
+            let stock = parseInt(prompt("Stan magazynowy:", "10"));
+            let category = prompt("Kategoria (Batoniki, Przekąski, Napoje, Słodycze):", "Przekąski");
+            
+            if(name && !isNaN(price)) {
+                products.push({
+                    id: products.length + 1,
+                    name: name,
+                    category: category || "Przekąski",
+                    desc: "Nowy produkt",
+                    price: price,
+                    stock: isNaN(stock) ? 10 : stock,
+                    emoji: "📦",
+                    tag: "",
+                    active: true
+                });
+                renderAdminProducts();
+                renderProducts();
+            }
+        }
+
+        function renderAdminCoupons() {
+            let list = document.getElementById("admin-coupons-list");
+            list.innerHTML = "";
+            Object.keys(coupons).forEach(code => {
+                list.innerHTML += `
+                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs font-bold">
+                        <span class="text-slate-900">${code}</span>
+                        <div class="flex items-center space-x-3">
+                            <span class="text-emerald-600">-${coupons[code]}%</span>
+                            <button onclick="deleteCoupon('${code}')" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function addNewCoupon() {
+            let code = document.getElementById("new-coupon-code").value.trim().toUpperCase();
+            let disc = parseInt(document.getElementById("new-coupon-discount").value);
+            if(code && disc) {
+                coupons[code] = disc;
+                renderAdminCoupons();
+                document.getElementById("new-coupon-code").value = "";
+                alert(`Dodano kod ${code} (${disc}%)`);
+            }
+        }
+
+        function deleteCoupon(code) {
+            delete coupons[code];
+            renderAdminCoupons();
+        }
+
+        function toggleStoreOpen(el) {
+            storeSettings.isOpen = el.checked;
+            updateStoreStatusUI();
+        }
+
+        function saveSettings() {
+            let annText = document.getElementById("setting-announcement-text").value.trim();
+            storeSettings.announcement = annText;
+            updateStoreStatusUI();
+            alert("Ustawienia zostały zapisane!");
+        }
+
+        function updateStoreStatusUI() {
+            let badge = document.getElementById("store-status-badge");
+            let bannerStatus = document.getElementById("banner-status-text");
+            let annDiv = document.getElementById("store-announcement");
+
+            if(storeSettings.isOpen) {
+                badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-emerald-50 text-emerald-700 border border-emerald-200";
+                badge.innerHTML = `<span class="w-2 h-2 mr-1.5 bg-emerald-500 rounded-full animate-pulse"></span> Sklep otwarty`;
+                bannerStatus.innerText = "Aktywny";
+                bannerStatus.className = "font-black text-base text-emerald-400";
+            } else {
+                badge.className = "inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-red-50 text-red-700 border border-red-200";
+                badge.innerHTML = `<span class="w-2 h-2 mr-1.5 bg-red-500 rounded-full"></span> Sklep zamknięty`;
+                bannerStatus.innerText = "Zamknięty";
+                bannerStatus.className = "font-black text-base text-red-400";
+            }
+
+            if(storeSettings.announcement) {
+                annDiv.innerText = storeSettings.announcement;
+                annDiv.classList.remove("hidden");
+            } else {
+                annDiv.classList.add("hidden");
+            }
+            renderProducts();
+        }
+
+        function renderAdminOrders() {
+            let container = document.getElementById("admin-orders-container");
+            document.getElementById("stat-new-orders").innerText = ordersHistory.filter(o => o.status === 'Nowe').length;
+            document.getElementById("stat-today-orders").innerText = ordersHistory.length;
+            
+            let totalRev = ordersHistory.reduce((sum, o) => sum + o.total, 0);
+            document.getElementById("stat-today-revenue").innerText = totalRev.toFixed(2) + " zł";
+            document.getElementById("stat-total-revenue").innerText = totalRev.toFixed(2) + " zł";
+
+            if(ordersHistory.length === 0) {
+                container.innerHTML = `<div class="text-center py-12 text-slate-400 text-sm bg-slate-50 rounded-2xl border border-dashed border-slate-200">Brak złożonych zamówień w bieżącej sesji.</div>`;
+                return;
+            }
+
+            container.innerHTML = "";
+            ordersHistory.forEach((o, index) => {
+                let itemsList = Object.keys(o.items).map(id => `${products.find(p => p.id == id).name} × ${o.items[id]}`).join(', ');
+                container.innerHTML += `
+                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs gap-3">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <span class="font-black text-slate-900">${o.name}</span>
+                                <span class="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded-md">kl. ${o.class}</span>
+                                <span class="text-slate-400 font-mono">${o.id}</span>
+                            </div>
+                            <div class="text-slate-500 mt-1">${itemsList}</div>
+                        </div>
+                        <div class="flex items-center space-x-3">
+                            <span class="font-black text-slate-900 text-sm">${o.total.toFixed(2)} zł</span>
+                            <select onchange="updateOrderStatus(${index}, this.value)" class="bg-white border border-slate-200 rounded-xl px-3 py-1.5 font-bold text-slate-700 focus:outline-none">
+                                <option value="Nowe" ${o.status==='Nowe'?'selected':''}>Nowe</option>
+                                <option value="Gotowe" ${o.status==='Gotowe'?'selected':''}>Gotowe</option>
+                                <option value="Odebrane" ${o.status==='Odebrane'?'selected':''}>Odebrane</option>
+                                <option value="Anulowane" ${o.status==='Anulowane'?'selected':''}>Anulowane</option>
+                            </select>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function updateOrderStatus(index, status) {
+            ordersHistory[index].status = status;
+            renderAdminOrders();
+        }
+    </script>
 </body>
 </html>
