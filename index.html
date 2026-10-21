@@ -13,6 +13,410 @@
         body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #f8fafc; }
         .fade-in { animation: fadeIn 0.25s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+
+        /* =========================================================
+           SKLEP PRO — REMODEL MOTION / 3D LAYER
+           Warstwa prezentacji: nie zmienia konfiguracji ani danych.
+           ========================================================= */
+        :root {
+            --shop-ink: #17213b;
+            --shop-violet: #6557ee;
+            --shop-violet-light: #8a7dff;
+            --shop-mint: #13b981;
+            --shop-glass: rgba(255,255,255,.78);
+            --shop-line: rgba(119,130,166,.18);
+        }
+
+        html { scroll-behavior: smooth; }
+        body {
+            color: var(--shop-ink);
+            background:
+                radial-gradient(ellipse at 5% 0%, rgba(117,102,255,.12), transparent 32%),
+                radial-gradient(ellipse at 95% 18%, rgba(56,210,201,.10), transparent 28%),
+                linear-gradient(155deg, #f7f8ff 0%, #fbfcff 48%, #f1f6ff 100%);
+            background-attachment: fixed;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            z-index: -1;
+            opacity: .2;
+            background-image: radial-gradient(rgba(101,87,238,.2) .7px, transparent .7px);
+            background-size: 22px 22px;
+            mask-image: linear-gradient(to bottom, black, transparent 75%);
+        }
+        button, input, select, textarea { -webkit-tap-highlight-color: transparent; }
+        button { transform-style: preserve-3d; }
+        button:not(:disabled) { transition: transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s ease, filter .22s ease; }
+        button:not(:disabled):active { transform: translateY(1px) scale(.975); }
+        input, select, textarea {
+            transition: border-color .2s ease, box-shadow .2s ease, background .2s ease, transform .2s ease;
+        }
+        input:focus, select:focus, textarea:focus {
+            border-color: rgba(101,87,238,.62) !important;
+            box-shadow: 0 0 0 4px rgba(101,87,238,.10), 0 8px 24px rgba(64,69,130,.06) !important;
+        }
+        header {
+            box-shadow: 0 8px 30px rgba(31,42,82,.035);
+            border-bottom-color: rgba(119,130,166,.15) !important;
+        }
+        header > div { min-height: 68px; }
+        header .bg-indigo-600.rounded-2xl {
+            transform: perspective(400px) rotateY(-10deg) rotateX(5deg);
+            box-shadow: 0 9px 0 rgba(73,59,194,.12), 0 16px 28px rgba(101,87,238,.28) !important;
+            transition: transform .35s cubic-bezier(.2,.8,.2,1), box-shadow .35s ease;
+        }
+        header .flex.items-center.space-x-3.cursor-pointer:hover .bg-indigo-600.rounded-2xl {
+            transform: perspective(400px) rotateY(8deg) rotateX(-4deg) translateY(-2px);
+            box-shadow: 0 5px 0 rgba(73,59,194,.12), 0 22px 34px rgba(101,87,238,.34) !important;
+        }
+        #store-status-badge { box-shadow: 0 4px 14px rgba(16,185,129,.08); }
+        #store-announcement {
+            background: linear-gradient(100deg, #5548d9, #7969ff 50%, #28a9c6) !important;
+            letter-spacing: .01em;
+        }
+        #store-view { padding-top: 30px; padding-bottom: 56px; }
+        .store-hero {
+            isolation: isolate;
+            border: 1px solid rgba(255,255,255,.9) !important;
+            background: linear-gradient(125deg, rgba(255,255,255,.97), rgba(247,247,255,.88) 56%, rgba(236,251,255,.82)) !important;
+            box-shadow: 0 24px 65px rgba(51,62,110,.08), inset 0 1px 0 #fff !important;
+            transform-style: preserve-3d;
+        }
+        .store-hero::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            width: 360px;
+            height: 360px;
+            right: 10%;
+            top: -235px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, rgba(160,148,255,.34), rgba(88,192,233,.08) 58%, transparent 72%);
+            filter: blur(2px);
+            animation: heroOrbFloat 9s ease-in-out infinite;
+            pointer-events: none;
+        }
+        .store-hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            z-index: -1;
+            pointer-events: none;
+            background: linear-gradient(112deg, transparent 24%, rgba(255,255,255,.55) 47%, transparent 58%);
+            transform: translateX(-100%);
+            animation: heroSheen 10s ease-in-out infinite;
+        }
+        .store-hero h2 { font-size: clamp(2rem, 4vw, 3.25rem) !important; line-height: 1.06; letter-spacing: -.055em !important; }
+        .store-hero > div:last-child {
+            border: 1px solid rgba(255,255,255,.12);
+            background: linear-gradient(145deg, #202b49, #11182d 62%, #20264b) !important;
+            box-shadow: 0 18px 0 rgba(21,29,54,.055), 0 27px 54px rgba(25,34,73,.2), inset 0 1px 0 rgba(255,255,255,.14) !important;
+            transform: perspective(1000px) rotateY(-5deg) rotateX(2deg);
+            transition: transform .35s ease, box-shadow .35s ease;
+        }
+        .store-hero > div:last-child:hover { transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-4px); box-shadow: 0 32px 60px rgba(25,34,73,.24) !important; }
+        @keyframes heroOrbFloat { 0%,100% { transform: translate3d(0,0,0) scale(1); } 50% { transform: translate3d(-16px,18px,0) scale(1.07); } }
+        @keyframes heroSheen { 0%,65%,100% { transform: translateX(-110%); } 82% { transform: translateX(110%); } }
+
+        #store-view input, #store-view select, #admin-view input:not([type="checkbox"]):not([type="file"]), #admin-view select, #admin-view textarea {
+            border-color: rgba(127,139,173,.22);
+            box-shadow: 0 3px 12px rgba(35,44,84,.025);
+        }
+        #search-input, #category-select { min-height: 48px; background-color: rgba(255,255,255,.9) !important; }
+        #product-count-badge { background: #eeedff !important; color: #5145c6 !important; }
+        #products-grid { perspective: 1400px; perspective-origin: 50% 40%; }
+        #products-grid .product-card {
+            --tilt-x: 0deg;
+            --tilt-y: 0deg;
+            --shine-x: 50%;
+            --shine-y: 0%;
+            position: relative;
+            isolation: isolate;
+            overflow: hidden;
+            min-width: 0;
+            border: 1px solid rgba(146,155,190,.2) !important;
+            border-radius: 25px !important;
+            background: linear-gradient(155deg, rgba(255,255,255,.99), rgba(250,250,255,.94)) !important;
+            box-shadow: 0 8px 20px rgba(39,49,89,.045), inset 0 1px 0 #fff !important;
+            transform: perspective(1050px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x)) translateY(0);
+            transform-style: preserve-3d;
+            will-change: transform;
+            transition: transform .25s cubic-bezier(.2,.75,.25,1), border-color .25s ease, box-shadow .25s ease, background .25s ease;
+            animation: productCardEnter .55s cubic-bezier(.18,.8,.25,1) both;
+        }
+        #products-grid .product-card:nth-child(3n + 2) { animation-delay: .045s; }
+        #products-grid .product-card:nth-child(3n + 3) { animation-delay: .09s; }
+        #products-grid .product-card::before {
+            content: "";
+            position: absolute;
+            z-index: 5;
+            inset: 0;
+            border-radius: inherit;
+            pointer-events: none;
+            opacity: 0;
+            background: radial-gradient(300px circle at var(--shine-x) var(--shine-y), rgba(123,112,255,.16), transparent 48%);
+            transition: opacity .25s ease;
+        }
+        #products-grid .product-card::after {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            width: 190px;
+            height: 190px;
+            right: -105px;
+            top: -105px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(115,104,255,.14), rgba(69,203,219,.07) 45%, transparent 70%);
+            opacity: .6;
+            transition: transform .45s ease, opacity .3s ease;
+            pointer-events: none;
+        }
+        #products-grid .product-card:hover {
+            transform: perspective(1050px) rotateX(var(--tilt-y)) rotateY(var(--tilt-x)) translateY(-7px) scale(1.012);
+            border-color: rgba(112,98,245,.36) !important;
+            box-shadow: 0 19px 34px rgba(52,55,115,.12), 0 4px 10px rgba(52,55,115,.05), inset 0 1px 0 #fff !important;
+        }
+        #products-grid .product-card:hover::before { opacity: 1; }
+        #products-grid .product-card:hover::after { transform: scale(1.45) translate(-7px,8px); opacity: 1; }
+        #products-grid .product-card > * { position: relative; z-index: 1; }
+        #products-grid .product-card .product-visual {
+            position: relative;
+            isolation: isolate;
+            height: 154px !important;
+            margin-bottom: 17px !important;
+            border-radius: 20px !important;
+            border: 1px solid rgba(129,140,190,.14) !important;
+            background: radial-gradient(ellipse at 50% 40%, rgba(255,255,255,.98), rgba(239,240,255,.88) 56%, rgba(233,248,255,.82)) !important;
+            box-shadow: inset 0 1px 0 #fff, inset 0 -12px 28px rgba(113,115,190,.035);
+            transform: translateZ(24px);
+            transform-style: preserve-3d;
+            overflow: hidden;
+        }
+        #products-grid .product-visual::before {
+            content: "";
+            position: absolute;
+            width: 92px;
+            height: 92px;
+            left: calc(50% - 46px);
+            top: calc(50% - 38px);
+            border-radius: 50%;
+            background: linear-gradient(140deg, rgba(132,117,255,.14), rgba(83,214,221,.14));
+            filter: blur(2px);
+            transform: translateZ(-12px);
+            transition: transform .4s ease, width .4s ease, height .4s ease;
+        }
+        #products-grid .product-card:hover .product-visual::before { transform: translateZ(-4px) scale(1.18); }
+        #products-grid .product-art {
+            position: relative;
+            z-index: 2;
+            display: inline-block;
+            transform: translateZ(38px) rotate(-4deg);
+            transform-style: preserve-3d;
+            filter: drop-shadow(0 13px 8px rgba(39,48,92,.14));
+            transition: transform .38s cubic-bezier(.2,.8,.2,1), filter .38s ease;
+            will-change: transform;
+        }
+        #products-grid .product-card:hover .product-art { transform: translateZ(58px) rotate(5deg) scale(1.12); filter: drop-shadow(0 18px 12px rgba(61,62,139,.2)); }
+        #products-grid .product-art-image { width: 100%; height: 100%; object-fit: contain; padding: 12px; }
+        #products-grid .product-card h4 { letter-spacing: -.025em; }
+        #products-grid .product-card .border-dashed { border-color: rgba(125,136,173,.22) !important; }
+        #products-grid .product-card button:not(:disabled) {
+            position: relative;
+            overflow: hidden;
+            border-radius: 13px !important;
+            background: linear-gradient(135deg, #6658ed, #8274ff) !important;
+            box-shadow: 0 7px 15px rgba(101,87,238,.19), inset 0 1px 0 rgba(255,255,255,.22) !important;
+        }
+        #products-grid .product-card button:not(:disabled)::after {
+            content: "";
+            position: absolute;
+            top: -80%;
+            left: -65%;
+            width: 45%;
+            height: 260%;
+            background: rgba(255,255,255,.24);
+            transform: rotate(25deg);
+            transition: left .42s ease;
+        }
+        #products-grid .product-card button:not(:disabled):hover { transform: translateY(-2px) translateZ(12px); box-shadow: 0 11px 23px rgba(101,87,238,.29) !important; filter: saturate(1.12); }
+        #products-grid .product-card button:not(:disabled):hover::after { left: 135%; }
+        #products-grid .product-card button:disabled { border-radius: 13px !important; }
+        @keyframes productCardEnter { from { opacity: 0; transform: perspective(1050px) translateY(16px) rotateX(-4deg) scale(.97); } to { opacity: 1; transform: perspective(1050px) translateY(0) rotateX(0) scale(1); } }
+        @keyframes addedCardBurst { 0% { box-shadow: 0 0 0 0 rgba(19,185,129,0), inset 0 1px 0 #fff; } 32% { box-shadow: 0 0 0 5px rgba(19,185,129,.16), 0 17px 34px rgba(19,185,129,.15), inset 0 1px 0 #fff; } 100% { box-shadow: 0 8px 20px rgba(39,49,89,.045), inset 0 1px 0 #fff; } }
+        #products-grid .product-card.was-added { animation: addedCardBurst .88s ease-out both; border-color: rgba(19,185,129,.6) !important; }
+        #products-grid .product-card.was-added .product-visual { animation: productStagePop .62s cubic-bezier(.2,.8,.2,1); }
+        @keyframes productStagePop { 0%,100% { transform: translateZ(24px) scale(1); } 48% { transform: translateZ(42px) scale(1.035); } }
+
+        .cart-panel {
+            border: 1px solid rgba(141,151,190,.22) !important;
+            background: linear-gradient(160deg, rgba(255,255,255,.98), rgba(250,250,255,.94)) !important;
+            box-shadow: 0 18px 48px rgba(44,52,100,.085), inset 0 1px 0 #fff !important;
+            transform-style: preserve-3d;
+        }
+        .cart-panel > div:first-child { border-color: rgba(125,136,173,.18) !important; }
+        #cart-badge-count, #banner-cart-count { transition: transform .24s ease, box-shadow .24s ease; }
+        #cart-badge-count.cart-bump, #banner-cart-count.cart-bump { animation: cartBadgeBump .58s cubic-bezier(.2,.8,.2,1); }
+        @keyframes cartBadgeBump { 0% { transform: scale(1); } 35% { transform: scale(1.38) rotate(-5deg); box-shadow: 0 0 0 5px rgba(101,87,238,.12); } 70% { transform: scale(.92) rotate(3deg); } 100% { transform: scale(1); } }
+        #cart-items > div:not(.text-center) { animation: cartLineEnter .35s cubic-bezier(.2,.8,.2,1) both; border-color: rgba(133,143,179,.15) !important; }
+        @keyframes cartLineEnter { from { opacity: 0; transform: translateX(10px) scale(.985); } to { opacity: 1; transform: translateX(0) scale(1); } }
+        #checkout-btn:not(:disabled) { background: linear-gradient(120deg, #6557eb, #8372ff) !important; box-shadow: 0 11px 24px rgba(101,87,238,.22) !important; }
+        #checkout-btn:not(:disabled):hover { transform: translateY(-2px); box-shadow: 0 15px 28px rgba(101,87,238,.3) !important; }
+
+        #admin-view > div {
+            border-color: rgba(143,153,187,.2) !important;
+            box-shadow: 0 22px 60px rgba(44,52,100,.075) !important;
+        }
+        #admin-view .bg-slate-50 { background-color: rgba(246,247,255,.88) !important; }
+        #admin-view button:not(:disabled):hover, #admin-view label[for] { transition: .2s ease; }
+        #admin-view button:not(:disabled):hover { filter: saturate(1.12); }
+        #admin-tab-btn-orders, #admin-tab-btn-products, #admin-tab-btn-coupons, #admin-tab-btn-settings { white-space: nowrap; }
+
+        #admin-pass-modal > div, #checkout-modal > div, #success-modal > div {
+            border: 1px solid rgba(255,255,255,.7);
+            box-shadow: 0 28px 90px rgba(26,34,76,.22), inset 0 1px 0 #fff;
+            animation: modalLiftIn .44s cubic-bezier(.16,.8,.2,1) both;
+        }
+        @keyframes modalLiftIn { from { opacity: 0; transform: perspective(900px) translateY(22px) rotateX(7deg) scale(.96); } to { opacity: 1; transform: perspective(900px) translateY(0) rotateX(0) scale(1); } }
+
+        /* Latający produkt i stos powiadomień — osobny, niezależny od logiki koszyka. */
+        #motion-toast-stack {
+            position: fixed;
+            z-index: 1000;
+            right: max(18px, env(safe-area-inset-right, 0px));
+            bottom: max(18px, env(safe-area-inset-bottom, 0px));
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 10px;
+            width: min(365px, calc(100vw - 28px));
+            pointer-events: none;
+        }
+        .motion-toast {
+            --toast-accent: #6557ee;
+            position: relative;
+            isolation: isolate;
+            display: grid;
+            grid-template-columns: 50px minmax(0,1fr) 28px;
+            align-items: center;
+            gap: 12px;
+            width: 100%;
+            min-height: 82px;
+            padding: 13px 14px;
+            overflow: hidden;
+            color: #202744;
+            border: 1px solid rgba(255,255,255,.85);
+            border-radius: 22px;
+            background: rgba(255,255,255,.92);
+            box-shadow: 0 18px 50px rgba(35,43,88,.2), inset 0 1px 0 #fff;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            pointer-events: auto;
+            transform-origin: 85% 100%;
+        }
+        .motion-toast::before {
+            content: "";
+            position: absolute;
+            z-index: -1;
+            inset: 0;
+            pointer-events: none;
+            background: radial-gradient(260px circle at 4% 45%, color-mix(in srgb, var(--toast-accent) 14%, transparent), transparent 70%);
+        }
+        .toast-symbol {
+            position: relative;
+            display: grid;
+            place-items: center;
+            width: 50px;
+            height: 50px;
+            border-radius: 17px;
+            color: white;
+            font-size: 24px;
+            background: linear-gradient(135deg, var(--toast-accent), #9d91ff);
+            box-shadow: 0 8px 17px color-mix(in srgb, var(--toast-accent) 26%, transparent), inset 0 1px 0 rgba(255,255,255,.35);
+            transform-style: preserve-3d;
+        }
+        .toast-copy { min-width: 0; }
+        .toast-title { display: block; font-size: 13px; line-height: 1.25; font-weight: 900; letter-spacing: -.02em; }
+        .toast-product { display: block; margin-top: 4px; color: #68728d; font-size: 11px; line-height: 1.35; overflow-wrap: anywhere; }
+        .toast-check { color: #12a874; font-weight: 900; font-size: 17px; text-align: center; }
+        .toast-progress { position: absolute; left: 0; bottom: 0; height: 3px; width: 100%; background: linear-gradient(90deg, var(--toast-accent), #3bd8c0); transform-origin: left; animation: toastProgress 3.4s linear forwards; }
+        @keyframes toastProgress { to { transform: scaleX(0); } }
+        .motion-toast.fx-flip { animation: toastFlip .72s cubic-bezier(.16,.8,.2,1) both; }
+        .motion-toast.fx-bounce { animation: toastBounce .68s cubic-bezier(.2,1.45,.4,1) both; }
+        .motion-toast.fx-prism { animation: toastPrism .7s cubic-bezier(.2,.8,.2,1) both; }
+        .motion-toast.fx-shockwave { animation: toastShock .66s cubic-bezier(.16,.8,.2,1) both; }
+        .motion-toast.fx-orbit { animation: toastOrbitIn .7s cubic-bezier(.16,.8,.2,1) both; }
+        .motion-toast.fx-hologram { animation: toastHolo .7s cubic-bezier(.16,.8,.2,1) both; }
+        .motion-toast.fx-glitch { animation: toastGlitch .63s steps(1,end) both; }
+        .motion-toast.fx-portal { animation: toastPortal .74s cubic-bezier(.16,.8,.2,1) both; }
+        @keyframes toastFlip { 0% { opacity:0; transform: perspective(900px) translate3d(35px,28px,100px) rotateX(-65deg) rotateY(-24deg) scale(.72); filter:blur(5px); } 68% { opacity:1; transform: perspective(900px) translate3d(-4px,-2px,0) rotateX(8deg) rotateY(3deg) scale(1.035); filter:blur(0); } 100% { transform: perspective(900px) translate3d(0,0,0) rotateX(0) rotateY(0) scale(1); } }
+        @keyframes toastBounce { 0% { opacity:0; transform: translate3d(0,65px,0) scale(.55) rotate(7deg); } 66% { opacity:1; transform: translate3d(0,-8px,0) scale(1.06) rotate(-2deg); } 84% { transform: translate3d(0,3px,0) scale(.98); } 100% { transform: none; } }
+        @keyframes toastPrism { 0% { opacity:0; transform: perspective(900px) rotateY(75deg) translateX(60px) scale(.8); filter:hue-rotate(90deg); } 70% { opacity:1; transform: perspective(900px) rotateY(-8deg) translateX(-4px) scale(1.02); } 100% { transform: perspective(900px) rotateY(0) translateX(0) scale(1); filter:hue-rotate(0); } }
+        @keyframes toastShock { 0% { opacity:0; transform: scale(.3); } 48% { opacity:1; transform: scale(1.07); } 65% { transform: scale(.96); } 100% { transform: scale(1); } }
+        @keyframes toastOrbitIn { 0% { opacity:0; transform: translate(70px,35px) rotate(14deg) scale(.72); } 72% { opacity:1; transform: translate(-5px,-2px) rotate(-2deg) scale(1.03); } 100% { transform: none; } }
+        @keyframes toastHolo { 0% { opacity:0; transform: perspective(700px) translateY(18px) rotateX(-32deg) scale(.9); filter:brightness(1.8) hue-rotate(70deg); } 62% { opacity:1; transform: perspective(700px) translateY(-3px) rotateX(5deg) scale(1.02); } 100% { transform:none; filter:none; } }
+        @keyframes toastGlitch { 0% { opacity:0; transform:translate(12px,10px) skewX(18deg); clip-path:inset(50% 0 50%); } 22% { opacity:1; transform:translate(-5px,0) skewX(-8deg); clip-path:inset(0 0 35%); } 38% { transform:translate(4px,-2px) skewX(6deg); clip-path:inset(28% 0 0); } 60%,100% { opacity:1; transform:none; clip-path:inset(0); } }
+        @keyframes toastPortal { 0% { opacity:0; transform: perspective(900px) translateY(22px) rotateY(90deg) scale(.2); filter:blur(8px); } 62% { opacity:1; transform: perspective(900px) translateY(-3px) rotateY(-9deg) scale(1.04); filter:blur(0); } 100% { transform: perspective(900px) rotateY(0) scale(1); } }
+        .fx-flip .toast-symbol { animation: symbolFlip .8s cubic-bezier(.2,.8,.2,1); }
+        .fx-bounce .toast-symbol { animation: symbolBounce .75s cubic-bezier(.2,1.5,.4,1); }
+        .fx-prism .toast-symbol { animation: symbolPrism .85s ease-out; }
+        .fx-shockwave .toast-symbol { animation: symbolShock .85s ease-out; }
+        .fx-orbit .toast-symbol::after, .fx-portal .toast-symbol::after {
+            content:""; position:absolute; inset:-6px; border:2px solid color-mix(in srgb, var(--toast-accent) 50%, transparent); border-radius:19px; pointer-events:none;
+        }
+        .fx-orbit .toast-symbol::after { animation: symbolOrbit .85s ease-out; }
+        .fx-portal .toast-symbol::after { border-radius:50%; animation: symbolPortal .9s ease-out; }
+        .fx-hologram .toast-title { background:linear-gradient(90deg,#6557ee,#0ba8bf,#6557ee); background-size:220% auto; -webkit-background-clip:text; background-clip:text; color:transparent; animation: holoText 1.3s linear; }
+        .fx-glitch .toast-symbol { animation: symbolGlitch .6s steps(1,end); }
+        @keyframes symbolFlip { 0% { transform: rotateY(-180deg) rotateX(40deg) scale(.6); } 75% { transform: rotateY(16deg) rotateX(-6deg) scale(1.12); } 100% { transform:none; } }
+        @keyframes symbolBounce { 0% { transform:translateY(18px) rotate(-12deg) scale(.65); } 65% { transform:translateY(-6px) rotate(7deg) scale(1.12); } 100% { transform:none; } }
+        @keyframes symbolPrism { 0% { transform:rotate(-18deg) scale(.5); filter:hue-rotate(180deg); } 70% { transform:rotate(12deg) scale(1.15); } 100% { transform:none; filter:none; } }
+        @keyframes symbolShock { 0% { transform:scale(.1); box-shadow:0 0 0 0 color-mix(in srgb, var(--toast-accent) 50%, transparent); } 65% { transform:scale(1.18); box-shadow:0 0 0 15px transparent; } 100% { transform:scale(1); } }
+        @keyframes symbolOrbit { from { transform:rotate(0) scale(.65); opacity:.9; } to { transform:rotate(180deg) scale(1.3); opacity:0; } }
+        @keyframes symbolPortal { from { transform:rotate(-90deg) scale(.1); opacity:1; } to { transform:rotate(160deg) scale(1.6); opacity:0; } }
+        @keyframes symbolGlitch { 0%,100% { transform:translate(0); } 20% { transform:translate(-4px,2px) rotate(-5deg); } 40% { transform:translate(4px,-1px) rotate(5deg); } 60% { transform:translate(-2px); } }
+        @keyframes holoText { to { background-position:220% center; } }
+        .motion-toast.is-leaving { animation: toastExit .25s ease-in forwards !important; }
+        @keyframes toastExit { to { opacity:0; transform:translate3d(28px,12px,0) scale(.92); filter:blur(4px); } }
+        .toast-confetti { position:absolute; z-index:4; top:50%; left:24px; width:6px; height:6px; border-radius:2px; pointer-events:none; animation:confettiBurst .85s cubic-bezier(.12,.72,.25,1) forwards; }
+        @keyframes confettiBurst { from { opacity:1; transform:translate3d(0,0,0) rotate(0) scale(1); } to { opacity:0; transform:translate3d(var(--confetti-x),var(--confetti-y),0) rotate(var(--confetti-r)) scale(.15); } }
+        .flying-product {
+            position:fixed;
+            z-index:1100;
+            display:grid;
+            place-items:center;
+            width:44px;
+            height:44px;
+            border-radius:15px;
+            color:#fff;
+            font-size:24px;
+            pointer-events:none;
+            background:linear-gradient(140deg, rgba(255,255,255,.98), rgba(236,235,255,.95));
+            border:1px solid rgba(255,255,255,.95);
+            box-shadow:0 12px 30px rgba(70,65,155,.24), inset 0 1px 0 #fff;
+            transform:translate(-50%,-50%);
+            will-change:transform,opacity;
+        }
+        .flying-product img { width:100%; height:100%; object-fit:contain; padding:5px; }
+        @media (max-width: 640px) {
+            #store-view { padding-top: 18px; }
+            .store-hero { padding: 22px !important; border-radius: 25px !important; }
+            .store-hero h2 { font-size: clamp(1.85rem, 8.5vw, 2.6rem) !important; }
+            .store-hero > div:last-child { transform: none; }
+            #products-grid .product-card { border-radius: 22px !important; }
+            #products-grid .product-card .product-visual { height: 145px !important; }
+            #motion-toast-stack { right: 12px; bottom: max(12px, env(safe-area-inset-bottom, 0px)); width: calc(100vw - 24px); }
+            .motion-toast { min-height: 76px; grid-template-columns: 44px minmax(0,1fr) 22px; gap: 10px; padding: 11px; border-radius: 19px; }
+            .toast-symbol { width: 44px; height: 44px; border-radius: 15px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+            #products-grid .product-card { transform: none !important; }
+        }
+
     </style>
 </head>
 <body class="text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
@@ -46,7 +450,7 @@
     <main id="store-view" class="max-w-7xl mx-auto px-4 py-6 fade-in">
         
         <!-- Baner powitalny -->
-        <div class="bg-white rounded-3xl p-8 border border-slate-100 shadow-sm mb-8 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center">
+        <div class="store-hero bg-white rounded-3xl p-8 border border-slate-100 shadow-sm mb-8 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center">
             <div class="max-w-xl z-10">
                 <span class="text-indigo-600 font-bold text-xs uppercase tracking-wider bg-indigo-50 px-3 py-1 rounded-full">Szkolny Mini-Market</span>
                 <h2 class="text-4xl font-extrabold text-slate-900 mt-3 mb-3 tracking-tight">Wybierz. Dodaj. <span class="text-indigo-600">Zamów.</span></h2>
@@ -110,7 +514,7 @@
 
             <!-- Prawa strona: Koszyk -->
             <div class="lg:col-span-1">
-                <div class="bg-white rounded-3xl p-6 border border-slate-100 shadow-sm sticky top-24">
+                <div class="cart-panel bg-white rounded-3xl p-6 border border-slate-100 shadow-sm sticky top-24">
                     <div class="flex items-center justify-between pb-4 border-b border-slate-100">
                         <div class="flex items-center space-x-2">
                             <i class="fa-solid fa-cart-shopping text-indigo-600"></i>
@@ -384,6 +788,8 @@
     </div>
 
 
+    <div id="motion-toast-stack" aria-live="polite" aria-atomic="false" aria-label="Powiadomienia sklepu"></div>
+
     <!-- SKRYPT LOGIKI -->
     <script>
         const defaultProducts = [
@@ -592,11 +998,11 @@ const firebaseConfig = {
             filtered.forEach(p => {
                 let isOut = p.stock <= 0;
                 grid.innerHTML += `
-                    <div class="bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between relative transition hover:shadow-md">
+                    <div class="product-card bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between relative transition hover:shadow-md" data-product-card="${p.id}">
                         ${p.tag ? `<span class="absolute top-4 right-4 bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-black px-2.5 py-0.5 rounded-full">${p.tag}</span>` : ''}
                         <div>
-                            <div class="w-full h-40 mb-3 rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden flex items-center justify-center">
-                                ${p.imageData ? `<img src="${p.imageData}" class="w-full h-full object-contain" alt="${p.name}">` : `<span class="text-5xl">${p.emoji}</span>`}
+                            <div class="product-visual w-full h-40 mb-3 rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden flex items-center justify-center">
+                                ${p.imageData ? `<img src="${p.imageData}" class="product-art product-art-image w-full h-full object-contain" alt="${p.name}">` : `<span class="product-art text-5xl">${p.emoji}</span>`}
                             </div>
                             <div class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider mb-0.5">${p.category}</div>
                             <h4 class="font-bold text-slate-900 text-base">${p.name}</h4>
@@ -607,29 +1013,174 @@ const firebaseConfig = {
                                 <div class="font-extrabold text-slate-900 text-base">${p.price.toFixed(2)} zł</div>
                                 <div class="text-[10px] font-bold ${isOut ? 'text-red-500' : 'text-slate-400'}">${isOut ? 'Wyprzedane' : `Dostępne: ${p.stock}`}</div>
                             </div>
-                            <button onclick="addToCart(${p.id})" ${isOut || !storeSettings.isOpen ? 'disabled' : ''} class="${isOut || !storeSettings.isOpen ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-md shadow-emerald-500/20 cursor-pointer'} px-4 py-2 rounded-xl text-xs font-bold transition">
+                            <button onclick="addToCart(${p.id}, this)" ${isOut || !storeSettings.isOpen ? 'disabled' : ''} class="${isOut || !storeSettings.isOpen ? 'bg-slate-200 text-slate-400 cursor-not-allowed' : 'bg-emerald-500 hover:bg-emerald-600 text-white shadow-md shadow-emerald-500/20 cursor-pointer'} px-4 py-2 rounded-xl text-xs font-bold transition">
                                 ${isOut ? 'Brak' : 'Dodaj +'}
                             </button>
                         </div>
                     </div>
                 `;
             });
+            enableProductCard3D(grid);
         }
 
         function filterProducts() {
             renderProducts();
         }
 
-        function addToCart(id) {
+        function enableProductCard3D(grid) {
+            if(!grid || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            grid.querySelectorAll('.product-card').forEach(card => {
+                if(card.dataset.tiltReady === '1') return;
+                card.dataset.tiltReady = '1';
+                card.addEventListener('pointermove', event => {
+                    if(event.pointerType === 'touch') return;
+                    const rect = card.getBoundingClientRect();
+                    const x = (event.clientX - rect.left) / Math.max(rect.width, 1);
+                    const y = (event.clientY - rect.top) / Math.max(rect.height, 1);
+                    card.style.setProperty('--tilt-x', `${(x - .5) * 10}deg`);
+                    card.style.setProperty('--tilt-y', `${(.5 - y) * 9}deg`);
+                    card.style.setProperty('--shine-x', `${x * 100}%`);
+                    card.style.setProperty('--shine-y', `${y * 100}%`);
+                });
+                card.addEventListener('pointerleave', () => {
+                    card.style.setProperty('--tilt-x', '0deg');
+                    card.style.setProperty('--tilt-y', '0deg');
+                    card.style.setProperty('--shine-x', '50%');
+                    card.style.setProperty('--shine-y', '0%');
+                });
+            });
+        }
+
+        const cartToastEffectNames = ['flip', 'bounce', 'prism', 'shockwave', 'orbit', 'hologram', 'glitch', 'portal'];
+        let lastCartToastEffect = '';
+
+        function pickCartToastEffect() {
+            const options = cartToastEffectNames.filter(name => name !== lastCartToastEffect);
+            const picked = options[Math.floor(Math.random() * options.length)] || cartToastEffectNames[0];
+            lastCartToastEffect = picked;
+            return picked;
+        }
+
+        function animateProductToCart(sourceButton, product) {
+            if(!sourceButton || !product || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+            const source = sourceButton.closest('.product-card')?.querySelector('.product-visual') || sourceButton;
+            const target = document.getElementById('cart-badge-count');
+            if(!source || !target) return;
+            const from = source.getBoundingClientRect();
+            const to = target.getBoundingClientRect();
+            const flyer = document.createElement('span');
+            flyer.className = 'flying-product';
+            flyer.setAttribute('aria-hidden', 'true');
+            if(product.imageData) {
+                const img = document.createElement('img');
+                img.src = product.imageData;
+                img.alt = '';
+                flyer.appendChild(img);
+            } else {
+                flyer.textContent = product.emoji || '📦';
+            }
+            flyer.style.left = `${from.left + from.width / 2}px`;
+            flyer.style.top = `${from.top + from.height / 2}px`;
+            document.body.appendChild(flyer);
+            const dx = (to.left + to.width / 2) - (from.left + from.width / 2);
+            const dy = (to.top + to.height / 2) - (from.top + from.height / 2);
+            const animation = flyer.animate([
+                { transform: 'translate(-50%,-50%) scale(1) rotate(0deg)', opacity: 1 },
+                { transform: `translate(calc(-50% + ${dx * .58}px),calc(-50% + ${dy * .58}px)) scale(.78) rotate(230deg)`, opacity: .95, offset: .65 },
+                { transform: `translate(calc(-50% + ${dx}px),calc(-50% + ${dy}px)) scale(.12) rotate(520deg)`, opacity: .12 }
+            ], { duration: 780, easing: 'cubic-bezier(.18,.78,.25,1)' });
+            animation.onfinish = () => flyer.remove();
+            animation.oncancel = () => flyer.remove();
+        }
+
+        function animateCartBadges() {
+            ['cart-badge-count', 'banner-cart-count'].forEach(id => {
+                const el = document.getElementById(id);
+                if(!el) return;
+                el.classList.remove('cart-bump');
+                void el.offsetWidth;
+                el.classList.add('cart-bump');
+                setTimeout(() => el.classList.remove('cart-bump'), 650);
+            });
+        }
+
+        function showCartToast(product, quantity, sourceButton) {
+            const stack = document.getElementById('motion-toast-stack');
+            if(!stack || !product) return;
+            const effect = pickCartToastEffect();
+            const toast = document.createElement('div');
+            toast.className = `motion-toast fx-${effect}`;
+            toast.setAttribute('role', 'status');
+            toast.style.setProperty('--toast-accent', effect === 'hologram' ? '#0aa7bd' : effect === 'glitch' ? '#d044bd' : effect === 'shockwave' ? '#13b981' : '#6557ee');
+
+            const symbol = document.createElement('div');
+            symbol.className = 'toast-symbol';
+            symbol.textContent = product.emoji || '🛍️';
+            symbol.setAttribute('aria-hidden', 'true');
+
+            const copy = document.createElement('div');
+            copy.className = 'toast-copy';
+            const title = document.createElement('span');
+            title.className = 'toast-title';
+            title.textContent = 'Dodano do koszyka';
+            const detail = document.createElement('span');
+            detail.className = 'toast-product';
+            detail.textContent = `${product.name} · sztuk w koszyku: ${quantity}`;
+            copy.append(title, detail);
+
+            const check = document.createElement('span');
+            check.className = 'toast-check';
+            check.textContent = '✓';
+            check.setAttribute('aria-hidden', 'true');
+            const progress = document.createElement('span');
+            progress.className = 'toast-progress';
+            progress.setAttribute('aria-hidden', 'true');
+            toast.append(symbol, copy, check, progress);
+
+            if(effect === 'prism' || effect === 'shockwave' || effect === 'portal') {
+                for(let i = 0; i < 12; i++) {
+                    const bit = document.createElement('i');
+                    bit.className = 'toast-confetti';
+                    bit.style.background = ['#6557ee', '#16bfa0', '#ff6db5', '#ffc857', '#31bfe4'][i % 5];
+                    bit.style.setProperty('--confetti-x', `${Math.round((Math.random() - .5) * 250)}px`);
+                    bit.style.setProperty('--confetti-y', `${Math.round((Math.random() - .5) * 145)}px`);
+                    bit.style.setProperty('--confetti-r', `${Math.round(Math.random() * 560 - 280)}deg`);
+                    bit.style.animationDelay = `${Math.random() * .13}s`;
+                    toast.appendChild(bit);
+                }
+            }
+
+            stack.appendChild(toast);
+            while(stack.children.length > 3) stack.firstElementChild.remove();
+            animateProductToCart(sourceButton, product);
+            const leave = () => {
+                if(!toast.isConnected) return;
+                toast.classList.add('is-leaving');
+                setTimeout(() => toast.remove(), 280);
+            };
+            setTimeout(leave, 3450);
+        }
+
+        function addToCart(id, sourceButton = null) {
             if(!storeSettings.isOpen) {
                 alert("Sklep jest obecnie zamknięty.");
                 return;
             }
             let p = products.find(prod => prod.id === id);
+            if(!p) return;
             if(!cart[id]) cart[id] = 0;
             if(cart[id] < p.stock) {
                 cart[id]++;
                 updateCartUI();
+                animateCartBadges();
+                const card = sourceButton?.closest('.product-card') || document.querySelector(`[data-product-card="${id}"]`);
+                if(card) {
+                    card.classList.remove('was-added');
+                    void card.offsetWidth;
+                    card.classList.add('was-added');
+                    setTimeout(() => card.classList.remove('was-added'), 900);
+                }
+                showCartToast(p, cart[id], sourceButton || card?.querySelector('button'));
             } else {
                 alert("Osiągnięto limit stanu magazynowego.");
             }
@@ -682,7 +1233,7 @@ const firebaseConfig = {
                             <span class="font-bold text-slate-900">${itemTotal.toFixed(2)} zł</span>
                             <button onclick="removeFromCart(${id})" class="text-slate-400 hover:text-red-500 p-1"><i class="fa-solid fa-minus"></i></button>
                             <span class="font-bold w-4 text-center">${qty}</span>
-                            <button onclick="addToCart(${id})" class="text-slate-400 hover:text-emerald-500 p-1"><i class="fa-solid fa-plus"></i></button>
+                            <button onclick="addToCart(${id}, this)" class="text-slate-400 hover:text-emerald-500 p-1"><i class="fa-solid fa-plus"></i></button>
                         </div>
                     </div>
                 `;
