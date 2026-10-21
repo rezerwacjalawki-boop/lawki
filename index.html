@@ -417,6 +417,113 @@
             #products-grid .product-card { transform: none !important; }
         }
 
+    
+        /* Mobile-first navigation and editable storefront controls */
+        .admin-settings-section { padding: clamp(14px, 2.5vw, 22px); border: 1px solid rgba(127,139,173,.18); border-radius: 22px; background: linear-gradient(145deg, rgba(255,255,255,.98), rgba(248,249,255,.94)); box-shadow: 0 12px 30px rgba(40,49,91,.04); }
+        .admin-settings-heading { display:flex; align-items:center; gap:12px; margin-bottom:17px; }
+        .admin-settings-icon { display:grid; place-items:center; flex:0 0 auto; width:42px; height:42px; border-radius:14px; color:var(--shop-violet); background:color-mix(in srgb, var(--shop-violet) 10%, white); box-shadow:inset 0 1px 0 white; }
+        .admin-settings-heading h3 { font-size:14px; font-weight:900; letter-spacing:-.025em; color:#17213b; }
+        .admin-settings-heading p { margin-top:3px; font-size:11px; line-height:1.5; color:#7c849b; }
+        .admin-field { display:flex; flex-direction:column; gap:7px; min-width:0; color:#505a75; font-size:11px; font-weight:800; }
+        .admin-field input, .admin-field textarea, .admin-field select { display:block; width:100%; min-width:0; border:1px solid rgba(127,139,173,.22); border-radius:13px; background:#fff; color:#202744; padding:11px 12px; font-size:12px; font-weight:600; outline:none; }
+        .admin-field textarea { resize:vertical; line-height:1.55; }
+        #mobile-side-tab { display:none; }
+        #mobile-side-drawer { position:fixed; z-index:91; inset:0 auto 0 0; display:flex; flex-direction:column; gap:0; width:min(330px,88vw); padding:calc(20px + env(safe-area-inset-top,0px)) 18px calc(18px + env(safe-area-inset-bottom,0px)); background:rgba(255,255,255,.97); border-right:1px solid rgba(127,139,173,.2); box-shadow:24px 0 70px rgba(26,34,78,.2); backdrop-filter:blur(22px); transform:translateX(-110%); visibility:hidden; transition:transform .32s cubic-bezier(.2,.8,.2,1),visibility .32s; }
+        #mobile-side-drawer.open { transform:translateX(0); visibility:visible; }
+        .mobile-backdrop { position:fixed; inset:0; z-index:90; background:rgba(15,20,40,.42); backdrop-filter:blur(5px); }
+        .mobile-backdrop.hidden { display:none; }
+        .drawer-close { display:grid; place-items:center; width:40px; height:40px; border:1px solid #e6e8f2; border-radius:14px; color:#56607c; background:#fff; }
+        .drawer-section-title { margin:20px 0 9px; color:#9098ae; font-size:10px; font-weight:900; letter-spacing:.12em; text-transform:uppercase; }
+        .drawer-link, .mobile-category-link { display:flex; align-items:center; gap:12px; width:100%; min-height:46px; padding:11px 13px; border:1px solid rgba(127,139,173,.15); border-radius:14px; color:#28314f; background:#fff; font-size:12px; font-weight:800; text-align:left; }
+        .drawer-link i { width:18px; color:var(--shop-violet); text-align:center; }
+        .drawer-count { display:grid; place-items:center; min-width:24px; height:24px; margin-left:auto; border-radius:9px; color:#fff; background:#202744; font-size:10px; }
+        .mobile-category-link { justify-content:space-between; }
+        .mobile-category-link.active { border-color:color-mix(in srgb, var(--shop-violet) 30%, white); background:color-mix(in srgb, var(--shop-violet) 8%, white); color:var(--shop-violet); }
+        #mobile-bottom-nav { display:none; }
+        .cart-sheet-close { display:none; }
+        #store-view .text-indigo-600 { color:var(--shop-violet) !important; }
+        #store-view .bg-indigo-600, #admin-view .bg-indigo-600 { background-color:var(--shop-violet) !important; }
+        #store-view .bg-indigo-50 { background-color:color-mix(in srgb, var(--shop-violet) 9%, white) !important; }
+        #products-grid .product-card button:not(:disabled) { background:linear-gradient(135deg, var(--shop-violet), var(--shop-violet-light)) !important; }
+        .store-hero #hero-title-accent { color:var(--shop-violet) !important; }
+        #brand-logo { background:linear-gradient(135deg, var(--shop-violet), var(--shop-violet-light)) !important; }
+        @media (max-width: 767px) {
+            body { padding-bottom:calc(72px + env(safe-area-inset-bottom,0px)); }
+            header { position:sticky; top:0; z-index:45; }
+            header > div { min-height:62px !important; height:auto !important; gap:8px; padding-left:12px !important; padding-right:12px !important; }
+            header .flex.items-center.space-x-3 { gap:8px; }
+            header .flex.items-center.space-x-3.cursor-pointer { min-width:0; }
+            header #brand-logo { width:36px; height:36px; border-radius:12px; flex-shrink:0; }
+            header #brand-name { max-width:35vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12px; }
+            header #brand-subtitle { max-width:37vw; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:9px; }
+            #store-status-badge { padding:5px 7px !important; font-size:9px !important; white-space:nowrap; }
+            header button[onclick="openAdminModal()"] { padding:9px 10px !important; border-radius:12px; font-size:10px !important; white-space:nowrap; }
+            header button[onclick="openAdminModal()"] i { margin-right:0; }
+            header button[onclick="openAdminModal()"] span { display:none; }
+            #store-view { padding:17px 12px calc(34px + env(safe-area-inset-bottom,0px)) !important; }
+            .store-hero { gap:18px !important; padding:20px !important; margin-bottom:20px !important; border-radius:24px !important; }
+            .store-hero h2 { font-size:clamp(1.8rem,8.5vw,2.55rem) !important; line-height:1.04 !important; overflow-wrap:anywhere; }
+            .store-hero > div:last-child { transform:none !important; margin-top:2px !important; padding:18px !important; border-radius:22px !important; }
+            .store-hero .feature-chip { padding:7px 9px !important; font-size:10px !important; }
+            #store-view > .grid { gap:18px !important; }
+            #store-view > .grid > .lg\:col-span-2 { min-width:0; }
+            #store-view > .grid > .lg\:col-span-1 { min-width:0; }
+            #search-input, #category-select { width:100%; min-width:0; min-height:48px; border-radius:15px !important; font-size:13px !important; }
+            #products-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:10px !important; }
+            #products-grid .product-card { padding:11px !important; border-radius:19px !important; }
+            #products-grid .product-card .product-visual { height:116px !important; margin-bottom:11px !important; border-radius:15px !important; }
+            #products-grid .product-art { font-size:2.4rem !important; }
+            #products-grid .product-card h4 { font-size:12px !important; line-height:1.3; overflow-wrap:anywhere; }
+            #products-grid .product-card p { font-size:10px !important; line-height:1.45; }
+            #products-grid .product-card .mt-6 { margin-top:12px !important; padding-top:10px !important; align-items:flex-start !important; gap:7px; flex-wrap:wrap; }
+            #products-grid .product-card .font-extrabold { font-size:13px !important; }
+            #products-grid .product-card button { padding:8px 10px !important; font-size:10px !important; }
+            #products-grid .product-card [class*="absolute top-4"] { top:8px !important; right:8px !important; padding:3px 6px !important; font-size:8px !important; max-width:calc(100% - 16px); overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+            .cart-panel { position:relative; top:auto !important; padding:18px !important; border-radius:23px !important; }
+            #admin-view { padding:14px 12px calc(30px + env(safe-area-inset-bottom,0px)) !important; }
+            #admin-view > div { padding:17px !important; border-radius:22px !important; }
+            #admin-view > div > div:first-child { align-items:flex-start; gap:12px; }
+            #admin-view > div > div:first-child > button { padding:10px 11px !important; font-size:10px !important; flex-shrink:0; }
+            #admin-view h2 { font-size:20px !important; }
+            #admin-view .flex.space-x-2.border-b { gap:6px; padding-bottom:10px; margin-bottom:15px; }
+            #admin-view .flex.space-x-2.border-b button { flex:0 0 auto; padding:10px 11px !important; font-size:10px !important; white-space:nowrap; }
+            #admin-tab-orders > .grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; gap:9px !important; }
+            #admin-tab-orders > .grid > div { padding:12px !important; border-radius:16px !important; }
+            #admin-tab-orders .text-2xl { font-size:19px !important; }
+            #admin-view input:not([type="checkbox"]):not([type="file"]), #admin-view select, #admin-view textarea { font-size:14px !important; min-height:43px; }
+            #admin-view label { overflow-wrap:anywhere; }
+            #admin-tab-coupons > .bg-slate-50 { align-items:stretch; flex-wrap:wrap; }
+            #admin-tab-coupons > .bg-slate-50 input:first-child { flex-basis:100%; }
+            #admin-tab-coupons > .bg-slate-50 button { flex:1; min-height:42px; }
+            #checkout-modal > div, #success-modal > div, #admin-pass-modal > div { max-height:calc(100dvh - 24px); overflow-y:auto; padding:22px !important; border-radius:23px !important; }
+            #order-form button[type="submit"] { min-height:48px; }
+            #mobile-side-tab { position:fixed; z-index:48; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:5px; left:0; top:43%; width:29px; min-height:86px; padding:9px 5px; border:1px solid rgba(255,255,255,.82); border-left:0; border-radius:0 13px 13px 0; color:#fff; background:linear-gradient(160deg,var(--shop-violet),var(--shop-violet-light)); box-shadow:0 9px 28px rgba(70,61,178,.25); font-size:10px; }
+            #mobile-side-tab span { writing-mode:vertical-rl; transform:rotate(180deg); letter-spacing:.04em; font-weight:900; }
+            #mobile-bottom-nav { position:fixed; z-index:49; display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); left:0; right:0; bottom:0; padding:7px 12px calc(7px + env(safe-area-inset-bottom,0px)); border-top:1px solid rgba(150,158,190,.22); background:rgba(255,255,255,.92); backdrop-filter:blur(22px); box-shadow:0 -12px 35px rgba(36,44,87,.09); }
+            .mobile-nav-item { display:flex; min-width:0; flex-direction:column; justify-content:center; align-items:center; gap:3px; min-height:48px; border:0; border-radius:15px; background:transparent; color:#8b93aa; font-size:10px; font-weight:800; }
+            .mobile-nav-item > i, .mobile-nav-icon > i { font-size:16px; }
+            .mobile-nav-item.active { color:var(--shop-violet); background:color-mix(in srgb, var(--shop-violet) 8%, white); }
+            .mobile-nav-icon { position:relative; display:inline-flex; }
+            .mobile-nav-icon b { position:absolute; top:-8px; right:-12px; display:grid; place-items:center; min-width:16px; height:16px; padding:0 3px; border-radius:7px; color:#fff; background:#202744; font-size:8px; }
+            body.mobile-cart-open { overflow:hidden; }
+            body.mobile-cart-open .cart-panel { position:fixed !important; z-index:100; left:0; right:0; bottom:0; top:auto !important; max-height:84dvh; margin:0 !important; padding:19px 17px calc(20px + env(safe-area-inset-bottom,0px)) !important; overflow-y:auto; border-radius:27px 27px 0 0 !important; box-shadow:0 -20px 70px rgba(20,28,66,.25) !important; animation:cartSheetIn .32s cubic-bezier(.2,.8,.2,1) both; }
+            body.mobile-cart-open .cart-panel #cart-items { max-height:24dvh; min-height:70px; }
+            .cart-sheet-close { display:grid; place-items:center; width:35px; height:35px; margin-left:auto; border:1px solid #e8eaf4; border-radius:12px; background:#fff; color:#606b85; }
+            body.mobile-cart-open #mobile-cart-backdrop { display:block; z-index:99; }
+            body.admin-open #mobile-bottom-nav, body.admin-open #mobile-side-tab { display:none !important; }
+            body.admin-open { padding-bottom:0; }
+        }
+        @media (max-width: 390px) {
+            #products-grid { grid-template-columns:1fr !important; }
+            #products-grid .product-card { padding:15px !important; }
+            #products-grid .product-card .product-visual { height:140px !important; }
+            #products-grid .product-card .mt-6 { align-items:center !important; flex-wrap:nowrap; }
+            header #brand-subtitle { display:none; }
+        }
+        @keyframes cartSheetIn { from { opacity:.5; transform:translateY(30px) scale(.985); } to { opacity:1; transform:translateY(0) scale(1); } }
+        @media (min-width: 768px) { #mobile-drawer-backdrop, #mobile-cart-backdrop, #mobile-side-drawer, #mobile-side-tab, #mobile-bottom-nav { display:none !important; } }
+        @media (prefers-reduced-motion: reduce) { #mobile-side-drawer { transition:none; } }
+
     </style>
 </head>
 <body class="text-slate-800 antialiased selection:bg-indigo-500 selection:text-white">
@@ -425,10 +532,10 @@
     <header class="bg-white/85 backdrop-blur-md border-b border-slate-100 sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
             <div class="flex items-center space-x-3 cursor-pointer" onclick="showStore()">
-                <div class="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-indigo-500/30 text-base">SP</div>
+                <div id="brand-logo" class="w-10 h-10 bg-indigo-600 rounded-2xl flex items-center justify-center text-white font-black shadow-lg shadow-indigo-500/30 text-base"><span id="brand-logo-text">SP</span></div>
                 <div>
-                    <h1 class="font-extrabold text-sm tracking-wide text-slate-900">SKLEP PRO</h1>
-                    <p class="text-[10px] text-slate-400 font-medium">Sklep szkolny online</p>
+                    <h1 id="brand-name" class="font-extrabold text-sm tracking-wide text-slate-900">SKLEP PRO</h1>
+                    <p id="brand-subtitle" class="text-[10px] text-slate-400 font-medium">Sklep szkolny online</p>
                 </div>
             </div>
             <div class="flex items-center space-x-3">
@@ -446,20 +553,42 @@
     <!-- Ogłoszenie w sklepie -->
     <div id="store-announcement" class="hidden bg-indigo-600 text-white text-xs py-2.5 px-4 text-center font-medium shadow-inner"></div>
 
+    <!-- Mobilne skróty: wysuwane menu kategorii, dolna nawigacja i koszyk typu bottom-sheet. -->
+    <div id="mobile-drawer-backdrop" class="mobile-backdrop hidden" onclick="closeMobileDrawer()" aria-hidden="true"></div>
+    <aside id="mobile-side-drawer" aria-label="Menu sklepu" aria-hidden="true">
+        <div class="flex items-center justify-between gap-3 pb-4 border-b border-slate-100">
+            <div><div class="text-[10px] uppercase tracking-widest font-black text-indigo-500">Szybka nawigacja</div><h2 class="text-lg font-extrabold text-slate-900 mt-1">Menu sklepu</h2></div>
+            <button type="button" class="drawer-close" onclick="closeMobileDrawer()" aria-label="Zamknij menu"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="drawer-section-title">Kategorie produktów</div>
+        <div id="mobile-category-links" class="grid gap-2"></div>
+        <div class="drawer-section-title">Skróty</div>
+        <button type="button" class="drawer-link" onclick="closeMobileDrawer(); scrollToCatalog()"><i class="fa-solid fa-store"></i><span>Cały katalog</span></button>
+        <button type="button" class="drawer-link" onclick="closeMobileDrawer(); openMobileCart()"><i class="fa-solid fa-cart-shopping"></i><span>Otwórz koszyk</span><span id="drawer-cart-count" class="drawer-count">0</span></button>
+        <div class="mt-auto pt-5 text-[10px] text-slate-400">SKLEP PRO · Szkolny Mini-Market</div>
+    </aside>
+    <button type="button" id="mobile-side-tab" aria-label="Otwórz menu kategorii" onclick="openMobileDrawer()"><i class="fa-solid fa-bars-staggered"></i><span>Menu</span></button>
+    <div id="mobile-cart-backdrop" class="mobile-backdrop hidden" onclick="closeMobileCart()" aria-hidden="true"></div>
+    <nav id="mobile-bottom-nav" aria-label="Szybka nawigacja mobilna">
+        <button type="button" class="mobile-nav-item active" onclick="scrollToCatalog()"><i class="fa-solid fa-store"></i><span>Sklep</span></button>
+        <button type="button" class="mobile-nav-item" onclick="openMobileCart()"><span class="mobile-nav-icon"><i class="fa-solid fa-basket-shopping"></i><b id="mobile-cart-count">0</b></span><span>Koszyk</span></button>
+        <button type="button" class="mobile-nav-item" onclick="openAdminModal()"><i class="fa-solid fa-shield-halved"></i><span>Admin</span></button>
+    </nav>
+
     <!-- GŁÓWNY WIDOK SKLEPU -->
     <main id="store-view" class="max-w-7xl mx-auto px-4 py-6 fade-in">
         
         <!-- Baner powitalny -->
         <div class="store-hero bg-white rounded-3xl p-8 border border-slate-100 shadow-sm mb-8 relative overflow-hidden flex flex-col md:flex-row justify-between items-start md:items-center">
             <div class="max-w-xl z-10">
-                <span class="text-indigo-600 font-bold text-xs uppercase tracking-wider bg-indigo-50 px-3 py-1 rounded-full">Szkolny Mini-Market</span>
-                <h2 class="text-4xl font-extrabold text-slate-900 mt-3 mb-3 tracking-tight">Wybierz. Dodaj. <span class="text-indigo-600">Zamów.</span></h2>
-                <p class="text-slate-500 text-sm leading-relaxed">Wszystkie produkty Twojego szkolnego sklepu w jednym miejscu. Złóż zamówienie, wpisz kod rabatowy i odbierz na wybranej przerwie — płacisz przy odbiorze.</p>
+                <span id="hero-badge" class="text-indigo-600 font-bold text-xs uppercase tracking-wider bg-indigo-50 px-3 py-1 rounded-full">Szkolny Mini-Market</span>
+                <h2 id="hero-title" class="text-4xl font-extrabold text-slate-900 mt-3 mb-3 tracking-tight"><span id="hero-title-main">Wybierz. Dodaj.</span> <span id="hero-title-accent" class="text-indigo-600">Zamów.</span></h2>
+                <p id="hero-description" class="text-slate-500 text-sm leading-relaxed">Wszystkie produkty Twojego szkolnego sklepu w jednym miejscu. Złóż zamówienie, wpisz kod rabatowy i odbierz na wybranej przerwie — płacisz przy odbiorze.</p>
                 
                 <div class="flex flex-wrap gap-2.5 mt-6 text-xs text-slate-600 font-semibold">
-                    <span class="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-bolt text-amber-500 mr-1.5"></i> Szybki koszyk</span>
-                    <span class="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-tag text-emerald-500 mr-1.5"></i> Kody rabatowe</span>
-                    <span class="bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-wallet text-blue-500 mr-1.5"></i> Płatność przy odbiorze</span>
+                    <span class="feature-chip bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-bolt text-amber-500 mr-1.5"></i> <span id="feature-one">Szybki koszyk</span></span>
+                    <span class="feature-chip bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-tag text-emerald-500 mr-1.5"></i> <span id="feature-two">Kody rabatowe</span></span>
+                    <span class="feature-chip bg-slate-50 border border-slate-200 px-3 py-1.5 rounded-xl"><i class="fa-solid fa-wallet text-blue-500 mr-1.5"></i> <span id="feature-three">Płatność przy odbiorze</span></span>
                 </div>
             </div>
 
@@ -520,6 +649,7 @@
                             <i class="fa-solid fa-cart-shopping text-indigo-600"></i>
                             <h3 class="font-bold text-slate-900">Twój koszyk</h3>
                         </div>
+                        <button type="button" class="cart-sheet-close" onclick="closeMobileCart()" aria-label="Zamknij koszyk"><i class="fa-solid fa-xmark"></i></button>
                         <span id="cart-badge-count" class="bg-slate-900 text-white text-xs font-bold px-2.5 py-0.5 rounded-full">0</span>
                     </div>
 
@@ -620,12 +750,21 @@
             </div>
 
             <div id="admin-tab-products" class="hidden space-y-4">
-                <div class="flex justify-between items-center">
-                    <span class="text-xs text-slate-500 font-medium">Globalny katalog: ceny, stany, zdjęcia i bestsellery</span>
-                    <button onclick="addNewProductPrompt()" class="bg-emerald-600 hover:bg-emerald-700 text-white px-4 py-2.5 rounded-xl text-xs font-bold transition">
-                        <i class="fa-solid fa-plus mr-1.5"></i> Dodaj produkt
-                    </button>
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span class="text-xs text-slate-500 font-medium">Edytuj wszystkie dane produktów: nazwę, kategorię, opis, cenę, stany, etykietę, widoczność i zdjęcie.</span>
                 </div>
+                <section class="admin-settings-section">
+                    <div class="admin-settings-heading"><span class="admin-settings-icon"><i class="fa-solid fa-plus"></i></span><div><h3>Dodaj nowy produkt</h3><p>Formularz dopasowany również do ekranów telefonu.</p></div></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                        <label class="admin-field">Nazwa<input id="new-product-name" maxlength="100" placeholder="Nazwa produktu"></label>
+                        <label class="admin-field">Kategoria<input id="new-product-category" maxlength="50" placeholder="Np. Napoje" value="Przekąski"></label>
+                        <label class="admin-field">Opis<input id="new-product-desc" maxlength="180" placeholder="Krótki opis"></label>
+                        <label class="admin-field">Cena (zł)<input id="new-product-price" type="number" min="0" step="0.01" placeholder="3.50"></label>
+                        <label class="admin-field">Stan początkowy<input id="new-product-stock" type="number" min="0" max="99999" step="1" value="10"></label>
+                        <label class="admin-field">Emoji / ikona<input id="new-product-emoji" maxlength="4" value="📦"></label>
+                    </div>
+                    <button onclick="addNewProductPrompt()" class="w-full sm:w-auto mt-3 bg-emerald-600 hover:bg-emerald-700 text-white px-5 py-3 rounded-xl text-xs font-bold transition"><i class="fa-solid fa-plus mr-1.5"></i>Dodaj produkt do katalogu</button>
+                </section>
                 <div id="admin-products-list" class="space-y-3"></div>
             </div>
 
@@ -639,23 +778,44 @@
                 <div id="admin-coupons-list" class="space-y-3"></div>
             </div>
 
-            <div id="admin-tab-settings" class="hidden space-y-6 max-w-xl">
-                <div class="flex items-center justify-between p-5 bg-slate-50 rounded-2xl border border-slate-100">
-                    <div>
-                        <div class="font-bold text-sm text-slate-900">Przyjmowanie zamówień online</div>
-                        <div class="text-xs text-slate-500 mt-0.5">Wyłącz, gdy sklep jest nieczynny.</div>
+            <div id="admin-tab-settings" class="hidden space-y-5">
+                <section class="admin-settings-section">
+                    <div class="admin-settings-heading"><span class="admin-settings-icon"><i class="fa-solid fa-store"></i></span><div><h3>Wygląd i treść sklepu</h3><p>Edytuj markę, baner, opisy i kolor akcentu bez zmiany kodu.</p></div></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="admin-field">Nazwa sklepu<input id="settings-brand-name" maxlength="70" value="SKLEP PRO"></label>
+                        <label class="admin-field">Podtytuł w nagłówku<input id="settings-brand-subtitle" maxlength="100" value="Sklep szkolny online"></label>
+                        <label class="admin-field">Skrót / logo (max 4 znaki)<input id="settings-logo-text" maxlength="4" value="SP"></label>
+                        <label class="admin-field">Etykieta nad nagłówkiem<input id="settings-hero-badge" maxlength="100" value="Szkolny Mini-Market"></label>
+                        <label class="admin-field">Nagłówek — pierwsza część<input id="settings-hero-title" maxlength="100" value="Wybierz. Dodaj."></label>
+                        <label class="admin-field">Nagłówek — wyróżniona część<input id="settings-hero-accent" maxlength="60" value="Zamów."></label>
+                        <label class="admin-field sm:col-span-2">Opis banera<textarea id="settings-hero-description" rows="3" maxlength="500">Wszystkie produkty Twojego szkolnego sklepu w jednym miejscu. Złóż zamówienie, wpisz kod rabatowy i odbierz na wybranej przerwie — płacisz przy odbiorze.</textarea></label>
+                        <label class="admin-field">Pierwsza zaleta / etykieta<input id="settings-feature-one" maxlength="60" value="Szybki koszyk"></label>
+                        <label class="admin-field">Druga zaleta / etykieta<input id="settings-feature-two" maxlength="60" value="Kody rabatowe"></label>
+                        <label class="admin-field sm:col-span-2">Trzecia zaleta / etykieta<input id="settings-feature-three" maxlength="70" value="Płatność przy odbiorze"></label>
+                        <label class="admin-field">Kolor przewodni<input id="settings-accent-color" type="color" value="#6557ee" class="!h-12 !p-1"></label>
                     </div>
-                    <label class="relative inline-flex items-center cursor-pointer">
-                        <input type="checkbox" id="setting-store-open" checked onchange="toggleStoreOpen(this)" class="sr-only peer">
-                        <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-                    </label>
+                </section>
+                <section class="admin-settings-section">
+                    <div class="admin-settings-heading"><span class="admin-settings-icon"><i class="fa-solid fa-bullhorn"></i></span><div><h3>Status i ogłoszenie</h3><p>Komunikat wyświetlany u góry strony sklepu.</p></div></div>
+                    <div class="flex items-center justify-between gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100 mb-4">
+                        <div><div class="font-bold text-sm text-slate-900">Przyjmowanie zamówień online</div><div class="text-xs text-slate-500 mt-0.5">Wyłącz, gdy sklep jest nieczynny.</div></div>
+                        <label class="relative inline-flex items-center cursor-pointer shrink-0"><input type="checkbox" id="setting-store-open" checked onchange="toggleStoreOpen(this)" class="sr-only peer"><div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div></label>
+                    </div>
+                    <label class="admin-field">Ogłoszenie na górze strony<textarea id="setting-announcement-text" rows="3" maxlength="600" placeholder="Np. Dziś wyjątkowe promocje!"></textarea></label>
+                </section>
+                <section class="admin-settings-section">
+                    <div class="admin-settings-heading"><span class="admin-settings-icon"><i class="fa-solid fa-location-dot"></i></span><div><h3>Odbiór zamówień</h3><p>Jedna opcja w każdym wierszu. Opcje pojawią się w formularzu zamówienia.</p></div></div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <label class="admin-field">Dostępne terminy<textarea id="settings-pickup-times" rows="7" placeholder="Przerwa przed lekcjami&#10;1 przerwa"></textarea></label>
+                        <label class="admin-field">Miejsca odbioru<textarea id="settings-pickup-locations" rows="7" placeholder="Świetlica&#10;Szatnia"></textarea></label>
+                    </div>
+                    <label class="admin-field mt-3">Tekst zgody przy zamówieniu<textarea id="settings-terms-text" rows="2" maxlength="300"></textarea></label>
+                </section>
+                <div class="sticky bottom-3 z-10 flex flex-col sm:flex-row gap-2 rounded-2xl border border-slate-200 bg-white/95 p-3 shadow-xl backdrop-blur">
+                    <button onclick="saveSettings()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl text-xs font-bold transition shadow-sm sm:flex-1"><i class="fa-solid fa-floppy-disk mr-2"></i>Zapisz wszystkie ustawienia</button>
+                    <button onclick="resetStorefrontSettings()" class="bg-slate-100 hover:bg-slate-200 text-slate-700 px-5 py-3 rounded-xl text-xs font-bold transition">Przywróć domyślne treści</button>
                 </div>
-                <div>
-                    <label class="block text-xs font-bold text-slate-700 mb-1.5">Ogłoszenie na górze strony</label>
-                    <textarea id="setting-announcement-text" rows="3" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs focus:outline-none" placeholder="Np. Dziś wyjątkowe promocje!"></textarea>
-                </div>
-                <button onclick="saveSettings()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-3 rounded-xl text-xs font-bold transition shadow-sm">Zapisz ustawienia</button>
-                <div class="text-[10px] text-slate-400 leading-relaxed">Firebase synchronizuje katalog, ceny, stany, bestsellery i grafiki między urządzeniami. Zamówienia i dane formularza pozostają lokalne/FormSubmit.</div>
+                <div class="text-[10px] text-slate-400 leading-relaxed">Katalog, ceny, stany, grafiki, kupony i treści sklepu są synchronizowane przez istniejącą konfigurację Firebase. Klucz dostępu do panelu pozostaje po stronie kodu aplikacji.</div>
             </div>
         </div>
     </main>
@@ -728,27 +888,13 @@
                 <!-- WYBÓR CZASU ODBIORU -->
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Czas odbioru *</label>
-                    <select id="pickup-time" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                        <option value="Przerwa przed lekcjami">Przerwa przed lekcjami</option>
-                        <option value="1 przerwa">1 przerwa</option>
-                        <option value="2 przerwa">2 przerwa</option>
-                        <option value="3 przerwa">3 przerwa</option>
-                        <option value="4 przerwa">4 przerwa</option>
-                        <option value="5 przerwa">5 przerwa</option>
-                        <option value="6 przerwa">6 przerwa</option>
-                    </select>
+                    <select id="pickup-time" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"></select>
                 </div>
 
                 <!-- WYBÓR MIEJSCA ODBIORU -->
                 <div>
                     <label class="block text-xs font-bold text-slate-700 mb-1">Miejsce odbioru *</label>
-                    <select id="pickup-location" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500">
-                        <option value="Świetlica">Świetlica</option>
-                        <option value="Toaleta góra">Toaleta góra</option>
-                        <option value="Toaleta dół">Toaleta dół</option>
-                        <option value="Szatnia">Szatnia</option>
-                        <option value="Twoja klasa">Twoja klasa</option>
-                    </select>
+                    <select id="pickup-location" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-bold text-slate-800 focus:outline-none focus:ring-1 focus:ring-indigo-500"></select>
                 </div>
 
                 <div>
@@ -758,7 +904,7 @@
 
                 <div class="flex items-start space-x-2 pt-1">
                     <input type="checkbox" required id="terms" class="mt-0.5 rounded text-indigo-600 focus:ring-indigo-500">
-                    <label for="terms" class="text-[11px] text-slate-400 leading-tight">Potwierdzam zgodę na przetwarzanie danych. Płatność przy odbiorze.</label>
+                    <label id="terms-label" for="terms" class="text-[11px] text-slate-400 leading-tight">Potwierdzam zgodę na przetwarzanie danych. Płatność przy odbiorze.</label>
                 </div>
 
                 <button type="submit" id="submit-order-btn" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-3.5 rounded-2xl font-bold text-sm shadow-lg shadow-emerald-600/20 transition flex items-center justify-center space-x-2">
@@ -825,24 +971,186 @@ const firebaseConfig = {
         let firebaseEnabled = false;
         let products = JSON.parse(localStorage.getItem("sp_products")) || defaultProducts;
         let coupons = JSON.parse(localStorage.getItem("sp_coupons")) || defaultCoupons;
-        let storeSettings = JSON.parse(localStorage.getItem("sp_settings")) || { isOpen: true, announcement: "" };
+        const defaultStoreSettings = {
+            isOpen: true,
+            announcement: "",
+            brandName: "SKLEP PRO",
+            brandSubtitle: "Sklep szkolny online",
+            logoText: "SP",
+            heroBadge: "Szkolny Mini-Market",
+            heroTitle: "Wybierz. Dodaj.",
+            heroAccent: "Zamów.",
+            heroDescription: "Wszystkie produkty Twojego szkolnego sklepu w jednym miejscu. Złóż zamówienie, wpisz kod rabatowy i odbierz na wybranej przerwie — płacisz przy odbiorze.",
+            featureOne: "Szybki koszyk",
+            featureTwo: "Kody rabatowe",
+            featureThree: "Płatność przy odbiorze",
+            accentColor: "#6557ee",
+            pickupTimes: ["Przerwa przed lekcjami", "1 przerwa", "2 przerwa", "3 przerwa", "4 przerwa", "5 przerwa", "6 przerwa"],
+            pickupLocations: ["Świetlica", "Toaleta góra", "Toaleta dół", "Szatnia", "Twoja klasa"],
+            termsText: "Potwierdzam zgodę na przetwarzanie danych. Płatność przy odbiorze."
+        };
+        let storeSettings = { ...defaultStoreSettings, ...(JSON.parse(localStorage.getItem("sp_settings")) || {}) };
 
         let cart = {};
         let activeDiscount = 0;
         let appliedCouponName = "";
         let ordersHistory = JSON.parse(localStorage.getItem("sp_orders")) || [];
 
-        const ADMIN_PASSWORD = "admin123";
+        const ADMIN_PASSWORD = "1q2W3e4r!";
 
         window.onload = function() {
+            storeSettings = { ...defaultStoreSettings, ...storeSettings };
+            populateSettingsForm();
+            applyStorefrontSettings();
+            renderPickupOptions();
+            renderMobileCategories();
             renderProducts();
             renderAdminProducts();
             renderAdminCoupons();
             updateStoreStatusUI();
             document.getElementById("setting-store-open").checked = storeSettings.isOpen;
             document.getElementById("setting-announcement-text").value = storeSettings.announcement || "";
+            updateMobileCartCount();
             initFirebase();
         };
+
+        function escapeHTML(value) {
+            return String(value ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        function parseLineOptions(value, fallback) {
+            const items = String(value || "").split(/\r?\n/).map(item => item.trim()).filter(Boolean);
+            return items.length ? [...new Set(items)].slice(0, 40) : fallback.slice();
+        }
+
+        function populateSettingsForm() {
+            const values = {
+                "settings-brand-name": storeSettings.brandName,
+                "settings-brand-subtitle": storeSettings.brandSubtitle,
+                "settings-logo-text": storeSettings.logoText,
+                "settings-hero-badge": storeSettings.heroBadge,
+                "settings-hero-title": storeSettings.heroTitle,
+                "settings-hero-accent": storeSettings.heroAccent,
+                "settings-hero-description": storeSettings.heroDescription,
+                "settings-feature-one": storeSettings.featureOne,
+                "settings-feature-two": storeSettings.featureTwo,
+                "settings-feature-three": storeSettings.featureThree,
+                "settings-accent-color": storeSettings.accentColor,
+                "setting-announcement-text": storeSettings.announcement,
+                "settings-pickup-times": (storeSettings.pickupTimes || defaultStoreSettings.pickupTimes).join("\n"),
+                "settings-pickup-locations": (storeSettings.pickupLocations || defaultStoreSettings.pickupLocations).join("\n"),
+                "settings-terms-text": storeSettings.termsText
+            };
+            Object.entries(values).forEach(([id, value]) => { const el = document.getElementById(id); if(el && value !== undefined && value !== null) el.value = value; });
+            const openSwitch = document.getElementById("setting-store-open");
+            if(openSwitch) openSwitch.checked = storeSettings.isOpen !== false;
+        }
+
+        function applyStorefrontSettings() {
+            const setText = (id, value) => { const el = document.getElementById(id); if(el) el.textContent = value == null ? "" : String(value); };
+            setText("brand-name", storeSettings.brandName || defaultStoreSettings.brandName);
+            setText("brand-subtitle", storeSettings.brandSubtitle || defaultStoreSettings.brandSubtitle);
+            setText("brand-logo-text", String(storeSettings.logoText || defaultStoreSettings.logoText).slice(0,4));
+            setText("hero-badge", storeSettings.heroBadge || defaultStoreSettings.heroBadge);
+            setText("hero-title-main", storeSettings.heroTitle || defaultStoreSettings.heroTitle);
+            setText("hero-title-accent", storeSettings.heroAccent || defaultStoreSettings.heroAccent);
+            setText("hero-description", storeSettings.heroDescription || defaultStoreSettings.heroDescription);
+            setText("feature-one", storeSettings.featureOne || defaultStoreSettings.featureOne);
+            setText("feature-two", storeSettings.featureTwo || defaultStoreSettings.featureTwo);
+            setText("feature-three", storeSettings.featureThree || defaultStoreSettings.featureThree);
+            setText("terms-label", storeSettings.termsText || defaultStoreSettings.termsText);
+            document.title = `${storeSettings.brandName || defaultStoreSettings.brandName} — ${storeSettings.brandSubtitle || defaultStoreSettings.brandSubtitle}`;
+            const accent = /^#[0-9a-f]{6}$/i.test(storeSettings.accentColor || "") ? storeSettings.accentColor : defaultStoreSettings.accentColor;
+            document.documentElement.style.setProperty("--shop-violet", accent);
+            document.documentElement.style.setProperty("--shop-violet-light", accent);
+        }
+
+        function renderPickupOptions() {
+            const timeSelect = document.getElementById("pickup-time");
+            const locationSelect = document.getElementById("pickup-location");
+            const fill = (select, values, defaults) => {
+                if(!select) return;
+                const current = select.value;
+                const items = Array.isArray(values) && values.length ? values : defaults;
+                select.innerHTML = items.map(v => `<option value="${escapeHTML(v)}">${escapeHTML(v)}</option>`).join("");
+                if(items.includes(current)) select.value = current;
+            };
+            fill(timeSelect, storeSettings.pickupTimes, defaultStoreSettings.pickupTimes);
+            fill(locationSelect, storeSettings.pickupLocations, defaultStoreSettings.pickupLocations);
+        }
+
+        function renderMobileCategories() {
+            const container = document.getElementById("mobile-category-links");
+            if(!container) return;
+            const categories = [...new Set(products.filter(p => p.active).map(p => String(p.category || "Inne").trim()).filter(Boolean))].sort((a,b) => a.localeCompare(b, "pl"));
+            const options = ["Wszystkie", ...categories];
+            const selectedCategory = document.getElementById("category-select")?.value || "Wszystkie";
+            container.innerHTML = options.map((category, i) => {
+                const isActive = category === selectedCategory;
+                return `<button type="button" data-mobile-category="${escapeHTML(category)}" class="mobile-category-link ${isActive ? 'active' : ''}"><span>${category === "Wszystkie" ? "Wszystkie produkty" : escapeHTML(category)}</span><i class="fa-solid ${i === 0 ? 'fa-layer-group' : 'fa-chevron-right'}"></i></button>`;
+            }).join("");
+            container.querySelectorAll("[data-mobile-category]").forEach(button => button.addEventListener("click", () => selectMobileCategory(button.dataset.mobileCategory)));
+        }
+
+        function renderCategoryOptions() {
+            const select = document.getElementById("category-select");
+            if(!select) return;
+            const selected = select.value || "Wszystkie";
+            const categories = [...new Set(products.map(p => String(p.category || "Inne").trim()).filter(Boolean))].sort((a,b) => a.localeCompare(b, "pl"));
+            select.innerHTML = `<option value="Wszystkie">Wszystkie kategorie</option>` + categories.map(c => `<option value="${escapeHTML(c)}">${escapeHTML(c)}</option>`).join("");
+            select.value = categories.includes(selected) ? selected : "Wszystkie";
+        }
+
+        function openMobileDrawer() {
+            const drawer = document.getElementById("mobile-side-drawer");
+            if(!drawer) return;
+            renderMobileCategories();
+            drawer.classList.add("open");
+            drawer.setAttribute("aria-hidden", "false");
+            document.getElementById("mobile-drawer-backdrop")?.classList.remove("hidden");
+        }
+        function closeMobileDrawer() {
+            const drawer = document.getElementById("mobile-side-drawer");
+            if(!drawer) return;
+            drawer.classList.remove("open");
+            drawer.setAttribute("aria-hidden", "true");
+            document.getElementById("mobile-drawer-backdrop")?.classList.add("hidden");
+        }
+        function selectMobileCategory(category) {
+            const select = document.getElementById("category-select");
+            if(select) select.value = category;
+            document.querySelectorAll("[data-mobile-category]").forEach(button => button.classList.toggle("active", button.dataset.mobileCategory === category));
+            closeMobileDrawer();
+            filterProducts();
+            scrollToCatalog();
+        }
+        function scrollToCatalog() {
+            closeMobileCart();
+            closeMobileDrawer();
+            document.getElementById("products-grid")?.scrollIntoView({ behavior: window.matchMedia("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth", block: "start" });
+            document.querySelectorAll(".mobile-nav-item").forEach((el, i) => el.classList.toggle("active", i === 0));
+        }
+        function openMobileCart() {
+            if(window.matchMedia("(max-width: 767px)").matches && !document.getElementById("admin-view").classList.contains("hidden")) showStore();
+            if(window.matchMedia("(max-width: 767px)").matches) {
+                closeMobileDrawer();
+                document.body.classList.add("mobile-cart-open");
+                document.getElementById("mobile-cart-backdrop")?.classList.remove("hidden");
+                document.querySelectorAll(".mobile-nav-item").forEach((el, i) => el.classList.toggle("active", i === 1));
+            } else {
+                document.querySelector(".cart-panel")?.scrollIntoView({ behavior: "smooth", block: "center" });
+            }
+        }
+        function closeMobileCart() {
+            document.body.classList.remove("mobile-cart-open");
+            document.getElementById("mobile-cart-backdrop")?.classList.add("hidden");
+            document.querySelectorAll(".mobile-nav-item").forEach((el, i) => el.classList.toggle("active", i === 0));
+        }
+        function updateMobileCartCount() {
+            const total = Object.values(cart).reduce((sum, qty) => sum + Number(qty || 0), 0);
+            ["mobile-cart-count", "drawer-cart-count"].forEach(id => { const el = document.getElementById(id); if(el) el.textContent = total; });
+        }
+        document.addEventListener("keydown", event => { if(event.key === "Escape") { closeMobileDrawer(); closeMobileCart(); closeAdminModal(); } });
 
         function firebaseConfigLooksReady() {
             return firebaseConfig.apiKey && !firebaseConfig.apiKey.startsWith("WKLEJ_") &&
@@ -893,8 +1201,7 @@ const firebaseConfig = {
                 });
                 batch.set(db.collection("shopConfig").doc("main"), {
                     coupons: coupons,
-                    isOpen: !!storeSettings.isOpen,
-                    announcement: storeSettings.announcement || ""
+                    ...storeSettings
                 }, {merge:true});
                 await batch.commit();
             } catch(err) {
@@ -926,6 +1233,7 @@ const firebaseConfig = {
                 const cloudProducts = snapshot.docs.map(d => ({...d.data(), id: Number(d.id)}));
                 cloudProducts.sort((a,b) => Number(a.id) - Number(b.id));
                 products = cloudProducts.map(p => ({
+                    ...p,
                     id: p.id, name: p.name || "Produkt", category: p.category || "Przekąski",
                     desc: p.desc || "", price: Number(p.price) || 0, stock: Math.max(0, Number(p.stock) || 0),
                     emoji: p.emoji || "📦", tag: p.tag || "", active: p.active !== false
@@ -943,12 +1251,14 @@ const firebaseConfig = {
                 if(!doc.exists) return;
                 const d = doc.data() || {};
                 coupons = d.coupons || coupons;
-                storeSettings.isOpen = d.isOpen !== false;
-                storeSettings.announcement = d.announcement || "";
+                const incomingSettings = { ...d };
+                delete incomingSettings.coupons;
+                storeSettings = { ...defaultStoreSettings, ...storeSettings, ...incomingSettings };
                 saveLocalData();
                 renderAdminCoupons();
-                document.getElementById("setting-store-open").checked = storeSettings.isOpen;
-                document.getElementById("setting-announcement-text").value = storeSettings.announcement;
+                populateSettingsForm();
+                renderPickupOptions();
+                applyStorefrontSettings();
                 updateStoreStatusUI();
             });
         }
@@ -978,7 +1288,8 @@ const firebaseConfig = {
         function renderProducts() {
             const grid = document.getElementById("products-grid");
             grid.innerHTML = "";
-            
+            renderCategoryOptions();
+            renderMobileCategories();
             let query = document.getElementById("search-input").value.toLowerCase();
             let cat = document.getElementById("category-select").value;
 
@@ -998,15 +1309,15 @@ const firebaseConfig = {
             filtered.forEach(p => {
                 let isOut = p.stock <= 0;
                 grid.innerHTML += `
-                    <div class="product-card bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between relative transition hover:shadow-md" data-product-card="${p.id}">
-                        ${p.tag ? `<span class="absolute top-4 right-4 bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-black px-2.5 py-0.5 rounded-full">${p.tag}</span>` : ''}
+                    <div class="product-card bg-white rounded-3xl p-5 border border-slate-100 shadow-sm flex flex-col justify-between relative transition hover:shadow-md" data-product-card="${escapeHTML(p.id)}">
+                        ${p.tag ? `<span class="absolute top-4 right-4 bg-amber-50 text-amber-700 border border-amber-200 text-[10px] font-black px-2.5 py-0.5 rounded-full">${escapeHTML(p.tag)}</span>` : ''}
                         <div>
                             <div class="product-visual w-full h-40 mb-3 rounded-2xl bg-slate-50 border border-slate-100 overflow-hidden flex items-center justify-center">
-                                ${p.imageData ? `<img src="${p.imageData}" class="product-art product-art-image w-full h-full object-contain" alt="${p.name}">` : `<span class="product-art text-5xl">${p.emoji}</span>`}
+                                ${p.imageData ? `<img src="${escapeHTML(p.imageData)}" class="product-art product-art-image w-full h-full object-contain" alt="${escapeHTML(p.name)}">` : `<span class="product-art text-5xl">${escapeHTML(p.emoji)}</span>`}
                             </div>
-                            <div class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider mb-0.5">${p.category}</div>
-                            <h4 class="font-bold text-slate-900 text-base">${p.name}</h4>
-                            <p class="text-xs text-slate-400 mt-0.5">${p.desc}</p>
+                            <div class="text-[11px] font-bold text-indigo-600 uppercase tracking-wider mb-0.5">${escapeHTML(p.category)}</div>
+                            <h4 class="font-bold text-slate-900 text-base">${escapeHTML(p.name)}</h4>
+                            <p class="text-xs text-slate-400 mt-0.5">${escapeHTML(p.desc)}</p>
                         </div>
                         <div class="mt-6 pt-4 border-t border-dashed border-slate-100 flex items-center justify-between">
                             <div>
@@ -1226,7 +1537,7 @@ const firebaseConfig = {
                 container.innerHTML += `
                     <div class="flex items-center justify-between py-2.5 text-xs">
                         <div>
-                            <div class="font-bold text-slate-800">${p.name}</div>
+                            <div class="font-bold text-slate-800">${escapeHTML(p.name)}</div>
                             <div class="text-slate-400 text-[10px]">${p.price.toFixed(2)} zł × ${qty}</div>
                         </div>
                         <div class="flex items-center space-x-2">
@@ -1244,6 +1555,7 @@ const firebaseConfig = {
 
             document.getElementById("cart-badge-count").innerText = totalCount;
             document.getElementById("banner-cart-count").innerText = totalCount;
+            updateMobileCartCount();
             document.getElementById("banner-cart-total").innerText = finalTotal.toFixed(2) + " zł";
             document.getElementById("summary-count").innerText = totalCount;
             document.getElementById("summary-subtotal").innerText = subtotal.toFixed(2) + " zł";
@@ -1299,16 +1611,24 @@ const firebaseConfig = {
         }
 
         function showStore() {
+            closeMobileCart();
+            closeMobileDrawer();
+            document.body.classList.remove("admin-open");
             document.getElementById("store-view").classList.remove("hidden");
             document.getElementById("admin-view").classList.add("hidden");
             renderProducts();
+            updateMobileCartCount();
         }
         function showAdmin() {
+            closeMobileCart();
+            closeMobileDrawer();
+            document.body.classList.add("admin-open");
             document.getElementById("store-view").classList.add("hidden");
             document.getElementById("admin-view").classList.remove("hidden");
             renderAdminOrders();
             renderAdminProducts();
             renderAdminCoupons();
+            populateSettingsForm();
         }
 
         function switchAdminTab(tab) {
@@ -1335,7 +1655,7 @@ const firebaseConfig = {
                 let qty = cart[id];
                 let itemTotal = p.price * qty;
                 subtotal += itemTotal;
-                summaryItemsDiv.innerHTML += `<div>${p.name} × ${qty} — ${itemTotal.toFixed(2)} zł</div>`;
+                summaryItemsDiv.innerHTML += `<div>${escapeHTML(p.name)} × ${qty} — ${itemTotal.toFixed(2)} zł</div>`;
             });
 
             let discountAmount = (subtotal * activeDiscount) / 100;
@@ -1450,50 +1770,32 @@ const firebaseConfig = {
             let list = document.getElementById("admin-products-list");
             list.innerHTML = "";
             products.forEach(p => {
+                const pid = Number(p.id);
                 list.innerHTML += `
-                    <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs space-y-3">
+                    <div class="admin-settings-section space-y-3" data-admin-product="${pid}">
                         <div class="flex items-center justify-between gap-3">
-                            <div class="flex items-center space-x-3 min-w-0">
+                            <div class="flex items-center gap-3 min-w-0">
                                 <div class="w-12 h-12 rounded-xl bg-white border border-slate-200 overflow-hidden flex items-center justify-center shrink-0">
-                                    ${p.imageData ? `<img src="${p.imageData}" class="w-full h-full object-contain" alt="">` : `<span class="text-2xl">${p.emoji}</span>`}
+                                    ${p.imageData ? `<img src="${escapeHTML(p.imageData)}" class="w-full h-full object-contain" alt="">` : `<span class="text-2xl">${escapeHTML(p.emoji)}</span>`}
                                 </div>
-                                <div class="min-w-0">
-                                    <span class="font-bold text-slate-900 text-sm block truncate">${p.name}</span>
-                                    <div class="text-slate-400 text-[10px]">${p.category} · ID ${p.id}</div>
-                                </div>
+                                <div class="min-w-0"><span class="font-black text-slate-900 text-sm block truncate">${escapeHTML(p.name)}</span><div class="text-slate-400 text-[10px]">ID ${pid} · ${p.active ? 'Widoczny w sklepie' : 'Ukryty'}</div></div>
                             </div>
-                            <label class="relative inline-flex items-center cursor-pointer shrink-0" title="Pokaż produkt">
-                                <input type="checkbox" ${p.active ? 'checked' : ''} onchange="toggleProduct(${p.id})" class="sr-only peer">
-                                <div class="w-9 h-5 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
-                            </label>
+                            <label class="relative inline-flex items-center cursor-pointer shrink-0" title="Pokaż produkt"><input type="checkbox" ${p.active ? 'checked' : ''} onchange="toggleProduct(${pid})" class="sr-only peer"><div class="w-9 h-5 bg-slate-200 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div></label>
                         </div>
-                        <div class="grid grid-cols-2 md:grid-cols-5 gap-2">
-                            <label class="text-[10px] font-bold text-slate-500">Cena
-                                <input id="price-${p.id}" type="number" step="0.01" min="0" value="${Number(p.price).toFixed(2)}" class="mt-1 w-full bg-white border border-slate-200 rounded-xl px-3 py-2 font-bold">
-                            </label>
-                            <label class="text-[10px] font-bold text-slate-500">Emoji
-                                <input id="emoji-${p.id}" type="text" maxlength="4" value="${p.emoji || ''}" class="mt-1 w-full bg-white border border-slate-200 rounded-xl px-3 py-2 text-lg">
-                            </label>
-                            <label class="text-[10px] font-bold text-slate-500">Tag / bestseller
-                                <input id="tag-${p.id}" type="text" maxlength="20" value="${p.tag || ''}" placeholder="🔥 HIT" class="mt-1 w-full bg-white border border-slate-200 rounded-xl px-3 py-2 font-bold">
-                            </label>
-                            <div class="text-[10px] font-bold text-slate-500">Stan
-                                <div class="mt-1 flex items-center space-x-2 bg-white border border-slate-200 rounded-xl px-2 py-1.5">
-                                    <button onclick="changeStock(${p.id}, -1)" class="text-slate-400 hover:text-red-500 font-bold px-1">−</button>
-                                    <span class="font-black w-7 text-center">${p.stock}</span>
-                                    <button onclick="changeStock(${p.id}, 1)" class="text-slate-400 hover:text-emerald-500 font-bold px-1">+</button>
-                                </div>
-                            </div>
-                            <div class="text-[10px] font-bold text-slate-500">Grafika
-                                <label class="mt-1 block bg-indigo-600 hover:bg-indigo-700 text-white text-center rounded-xl px-2 py-2 cursor-pointer transition">
-                                    <span>📷 Wybierz</span>
-                                    <input type="file" accept="image/png,image/jpeg,image/webp" class="hidden" onchange="handleProductImage(${p.id}, this.files[0])">
-                                </label>
-                            </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+                            <label class="admin-field">Nazwa produktu<input id="name-${pid}" maxlength="100" value="${escapeHTML(p.name)}"></label>
+                            <label class="admin-field">Kategoria<input id="category-${pid}" maxlength="50" value="${escapeHTML(p.category)}"></label>
+                            <label class="admin-field">Opis na karcie<input id="desc-${pid}" maxlength="180" value="${escapeHTML(p.desc)}"></label>
+                            <label class="admin-field">Cena (zł)<input id="price-${pid}" type="number" step="0.01" min="0" value="${Number(p.price).toFixed(2)}"></label>
+                            <label class="admin-field">Stan magazynowy<input id="stock-${pid}" type="number" step="1" min="0" max="99999" value="${Math.max(0, Number(p.stock) || 0)}"></label>
+                            <label class="admin-field">Emoji / ikona<input id="emoji-${pid}" maxlength="4" value="${escapeHTML(p.emoji || '')}"></label>
+                            <label class="admin-field sm:col-span-2">Etykieta / bestseller<input id="tag-${pid}" maxlength="40" value="${escapeHTML(p.tag || '')}" placeholder="🔥 HIT"></label>
+                            <div class="admin-field">Zdjęcie produktu<label class="mt-0.5 flex min-h-[43px] items-center justify-center gap-2 bg-indigo-600 hover:bg-indigo-700 text-white text-center rounded-xl px-3 py-2 cursor-pointer transition"><i class="fa-solid fa-image"></i><span>Wybierz grafikę</span><input type="file" accept="image/png,image/jpeg,image/webp" class="hidden" onchange="handleProductImage(${pid}, this.files[0])"></label></div>
                         </div>
-                        <div class="flex justify-end gap-2">
-                            <button onclick="removeProductImage(${p.id})" class="px-3 py-2 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-red-500 font-bold">Usuń grafikę</button>
-                            <button onclick="saveProductEdits(${p.id})" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold">Zapisz zmiany globalnie</button>
+                        <div class="flex flex-col sm:flex-row justify-end gap-2 pt-1">
+                            <button onclick="removeProductImage(${pid})" class="px-4 py-3 rounded-xl bg-white border border-slate-200 text-slate-500 hover:text-red-500 font-bold text-xs">Usuń grafikę</button>
+                            <button onclick="deleteProduct(${pid})" class="px-4 py-3 rounded-xl bg-rose-50 border border-rose-100 text-rose-600 hover:bg-rose-100 font-bold text-xs"><i class="fa-solid fa-trash mr-1.5"></i>Usuń produkt</button>
+                            <button onclick="saveProductEdits(${pid})" class="px-4 py-3 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs"><i class="fa-solid fa-floppy-disk mr-1.5"></i>Zapisz wszystkie pola</button>
                         </div>
                     </div>
                 `;
@@ -1558,19 +1860,54 @@ const firebaseConfig = {
             renderProducts();
         }
 
+        async function deleteProduct(id) {
+            const product = products.find(item => item.id === id);
+            if(!product) return;
+            if(!confirm(`Usunąć produkt „${product.name}”? Tej operacji nie można cofnąć.`)) return;
+            if(firebaseEnabled && db) {
+                try {
+                    await db.collection("products").doc(String(id)).delete();
+                    try { await db.collection("productImages").doc(String(id)).delete(); } catch(imageError) { console.warn("Nie udało się usunąć obrazu produktu:", imageError); }
+                } catch(error) {
+                    console.error("Usuwanie produktu:", error);
+                    alert("Nie udało się usunąć produktu z Firebase. Sprawdź reguły Firestore.");
+                    return;
+                }
+            }
+            products = products.filter(item => item.id !== id);
+            delete cart[id];
+            saveLocalData();
+            await syncCatalogToCloud();
+            renderAdminProducts();
+            renderProducts();
+            updateCartUI();
+            renderAdminOrders();
+        }
+
         async function saveProductEdits(id) {
             const p = products.find(x => x.id === id);
             if(!p) return;
             const price = parseFloat(document.getElementById(`price-${id}`).value);
-            if(isNaN(price) || price < 0) { alert("Podaj prawidłową cenę."); return; }
-            p.price = price;
+            const stock = parseInt(document.getElementById(`stock-${id}`).value, 10);
+            const name = document.getElementById(`name-${id}`).value.trim();
+            const category = document.getElementById(`category-${id}`).value.trim();
+            const desc = document.getElementById(`desc-${id}`).value.trim();
+            if(!name) { alert("Nazwa produktu nie może być pusta."); return; }
+            if(!category) { alert("Podaj kategorię produktu."); return; }
+            if(!Number.isFinite(price) || price < 0) { alert("Podaj prawidłową cenę."); return; }
+            if(!Number.isInteger(stock) || stock < 0 || stock > 99999) { alert("Stan musi być liczbą całkowitą od 0 do 99999."); return; }
+            p.name = name;
+            p.category = category;
+            p.desc = desc;
+            p.price = Math.round(price * 100) / 100;
+            p.stock = stock;
             p.emoji = document.getElementById(`emoji-${id}`).value.trim() || "📦";
             p.tag = document.getElementById(`tag-${id}`).value.trim();
             saveLocalData();
             await syncCatalogToCloud();
             renderAdminProducts();
             renderProducts();
-            alert("Zmiany zapisane globalnie.");
+            alert("Wszystkie pola produktu zapisane.");
         }
 
         function changeStock(id, amount) {
@@ -1591,49 +1928,65 @@ const firebaseConfig = {
         }
 
         function addNewProductPrompt() {
-            let name = prompt("Nazwa nowego produktu:");
-            if(!name) return;
-            let price = parseFloat(prompt("Cena w zł (np. 3.50):", "3.00"));
-            let stock = parseInt(prompt("Stan magazynowy:", "10"));
-            let category = prompt("Kategoria (Batoniki, Przekąski, Napoje, Słodycze):", "Przekąski");
-            
-            if(name && !isNaN(price)) {
-                products.push({
-                    id: Date.now(),
-                    name: name,
-                    category: category || "Przekąski",
-                    desc: "Nowy produkt",
-                    price: price,
-                    stock: isNaN(stock) ? 10 : stock,
-                    emoji: "📦",
-                    tag: "",
-                    active: true
-                });
-                saveData();
-                renderAdminProducts();
-                renderProducts();
-            }
+            const name = document.getElementById("new-product-name").value.trim();
+            const category = document.getElementById("new-product-category").value.trim() || "Przekąski";
+            const desc = document.getElementById("new-product-desc").value.trim();
+            const price = parseFloat(document.getElementById("new-product-price").value);
+            const stock = parseInt(document.getElementById("new-product-stock").value, 10);
+            const emoji = document.getElementById("new-product-emoji").value.trim() || "📦";
+            if(!name) { alert("Wpisz nazwę produktu."); document.getElementById("new-product-name").focus(); return; }
+            if(!Number.isFinite(price) || price < 0) { alert("Wpisz poprawną cenę produktu."); return; }
+            if(!Number.isInteger(stock) || stock < 0 || stock > 99999) { alert("Wpisz stan od 0 do 99999."); return; }
+            products.push({ id: Date.now(), name, category, desc, price: Math.round(price * 100) / 100, stock, emoji, tag: "", active: true });
+            saveData();
+            renderAdminProducts();
+            renderProducts();
+            ["new-product-name", "new-product-desc", "new-product-price"].forEach(id => document.getElementById(id).value = "");
+            document.getElementById("new-product-stock").value = "10";
+            document.getElementById("new-product-emoji").value = "📦";
+            alert("Produkt został dodany. Możesz teraz dodać zdjęcie lub dopracować pozostałe pola.");
         }
 
         function renderAdminCoupons() {
             let list = document.getElementById("admin-coupons-list");
             list.innerHTML = "";
             Object.keys(coupons).forEach(code => {
+                const safeId = encodeURIComponent(code).replace(/[!'()*]/g, char => "%" + char.charCodeAt(0).toString(16).toUpperCase());
                 list.innerHTML += `
-                    <div class="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs font-bold">
-                        <span class="text-slate-900">${code}</span>
-                        <div class="flex items-center space-x-3">
-                            <span class="text-emerald-600">-${coupons[code]}%</span>
-                            <button onclick="deleteCoupon('${code}')" class="text-slate-400 hover:text-red-500"><i class="fa-solid fa-trash"></i></button>
+                    <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-3 p-4 bg-slate-50 rounded-2xl border border-slate-100 text-xs font-bold">
+                        <label class="admin-field flex-1">Kod rabatowy<input id="coupon-code-${safeId}" maxlength="40" value="${escapeHTML(code)}"></label>
+                        <div class="flex items-end gap-2">
+                            <label class="admin-field">Rabat (%)<input id="coupon-value-${safeId}" type="number" min="1" max="100" step="1" value="${Number(coupons[code])}" aria-label="Procent rabatu dla ${escapeHTML(code)}" class="w-20 bg-white border border-slate-200 rounded-xl px-3 py-2 font-black"></label>
+                            <button onclick="saveCouponDiscount('${safeId}')" class="px-3 py-3 rounded-xl bg-indigo-600 text-white">Zapisz</button>
+                            <button onclick="deleteCoupon('${safeId}')" class="px-3 py-3 rounded-xl bg-white border border-slate-200 text-slate-400 hover:text-red-500" aria-label="Usuń kod"><i class="fa-solid fa-trash"></i></button>
                         </div>
                     </div>
                 `;
             });
         }
 
+        function saveCouponDiscount(encodedOldCode) {
+            const oldCode = decodeURIComponent(encodedOldCode);
+            const newCode = (document.getElementById(`coupon-code-${encodedOldCode}`)?.value || "").trim().toUpperCase();
+            const value = Number(document.getElementById(`coupon-value-${encodedOldCode}`)?.value);
+            if(!/^[A-Z0-9_-]{2,40}$/.test(newCode)) { alert("Kod może zawierać 2–40 znaków: litery, cyfry, myślnik lub podkreślenie."); return; }
+            if(!Number.isInteger(value) || value < 1 || value > 100) { alert("Rabat musi wynosić od 1 do 100%."); return; }
+            if(!Object.prototype.hasOwnProperty.call(coupons, oldCode)) return;
+            if(newCode !== oldCode && Object.prototype.hasOwnProperty.call(coupons, newCode)) { alert("Taki kod już istnieje."); return; }
+            const wasApplied = appliedCouponName === oldCode;
+            delete coupons[oldCode];
+            coupons[newCode] = value;
+            if(wasApplied) { appliedCouponName = newCode; activeDiscount = value; }
+            saveData();
+            renderAdminCoupons();
+            if(wasApplied) updateCartUI();
+        }
+
         function addNewCoupon() {
             let code = document.getElementById("new-coupon-code").value.trim().toUpperCase();
             let disc = parseInt(document.getElementById("new-coupon-discount").value);
+            if(!/^[A-Z0-9_-]{2,40}$/.test(code)) { alert("Kod może zawierać 2–40 znaków: litery, cyfry, myślnik lub podkreślenie."); return; }
+            if(!Number.isInteger(disc) || disc < 1 || disc > 100) { alert("Rabat musi wynosić od 1 do 100%."); return; }
             if(code && disc) {
                 coupons[code] = disc;
                 saveData();
@@ -1643,10 +1996,13 @@ const firebaseConfig = {
             }
         }
 
-        function deleteCoupon(code) {
+        function deleteCoupon(encodedCode) {
+            const code = decodeURIComponent(encodedCode);
             delete coupons[code];
+            if(appliedCouponName === code) { activeDiscount = 0; appliedCouponName = ""; }
             saveData();
             renderAdminCoupons();
+            updateCartUI();
         }
 
         function toggleStoreOpen(el) {
@@ -1656,14 +2012,51 @@ const firebaseConfig = {
         }
 
         function saveSettings() {
-            let annText = document.getElementById("setting-announcement-text").value.trim();
-            storeSettings.announcement = annText;
+            const read = id => document.getElementById(id)?.value?.trim() || "";
+            const color = read("settings-accent-color");
+            if(!/^#[0-9a-f]{6}$/i.test(color)) { alert("Wybierz prawidłowy kolor przewodni."); return; }
+            storeSettings = {
+                ...storeSettings,
+                brandName: read("settings-brand-name") || defaultStoreSettings.brandName,
+                brandSubtitle: read("settings-brand-subtitle") || defaultStoreSettings.brandSubtitle,
+                logoText: (read("settings-logo-text") || defaultStoreSettings.logoText).slice(0,4),
+                heroBadge: read("settings-hero-badge") || defaultStoreSettings.heroBadge,
+                heroTitle: read("settings-hero-title") || defaultStoreSettings.heroTitle,
+                heroAccent: read("settings-hero-accent") || defaultStoreSettings.heroAccent,
+                heroDescription: read("settings-hero-description") || defaultStoreSettings.heroDescription,
+                featureOne: read("settings-feature-one") || defaultStoreSettings.featureOne,
+                featureTwo: read("settings-feature-two") || defaultStoreSettings.featureTwo,
+                featureThree: read("settings-feature-three") || defaultStoreSettings.featureThree,
+                accentColor: color,
+                announcement: read("setting-announcement-text"),
+                pickupTimes: parseLineOptions(read("settings-pickup-times"), defaultStoreSettings.pickupTimes),
+                pickupLocations: parseLineOptions(read("settings-pickup-locations"), defaultStoreSettings.pickupLocations),
+                termsText: read("settings-terms-text") || defaultStoreSettings.termsText,
+                isOpen: document.getElementById("setting-store-open").checked
+            };
+            applyStorefrontSettings();
+            populateSettingsForm();
+            renderPickupOptions();
+            renderMobileCategories();
             saveData();
             updateStoreStatusUI();
-            alert("Ustawienia zostały zapisane!");
+            alert("Zapisano treści, kolor, opcje odbioru i ustawienia sklepu.");
+        }
+
+        function resetStorefrontSettings() {
+            if(!confirm("Przywrócić domyślne treści, kolor i opcje odbioru? Zmiana nie dotknie produktów, kuponów ani konfiguracji Firebase.")) return;
+            const wasOpen = storeSettings.isOpen;
+            storeSettings = { ...defaultStoreSettings, isOpen: wasOpen };
+            populateSettingsForm();
+            applyStorefrontSettings();
+            renderPickupOptions();
+            renderMobileCategories();
+            saveData();
+            updateStoreStatusUI();
         }
 
         function updateStoreStatusUI() {
+            applyStorefrontSettings();
             let badge = document.getElementById("store-status-badge");
             let bannerStatus = document.getElementById("banner-status-text");
             let annDiv = document.getElementById("store-announcement");
@@ -1714,11 +2107,11 @@ const firebaseConfig = {
                     <div class="p-4 bg-slate-50 rounded-2xl border border-slate-100 flex flex-col sm:flex-row justify-between items-start sm:items-center text-xs gap-3">
                         <div>
                             <div class="flex items-center space-x-2">
-                                <span class="font-black text-slate-900">${o.name}</span>
-                                <span class="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded-md">kl. ${o.class}</span>
-                                <span class="text-slate-400 font-mono">${o.id}</span>
+                                <span class="font-black text-slate-900">${escapeHTML(o.name)}</span>
+                                <span class="bg-indigo-50 text-indigo-700 font-bold px-2 py-0.5 rounded-md">kl. ${escapeHTML(o.class)}</span>
+                                <span class="text-slate-400 font-mono">${escapeHTML(o.id)}</span>
                             </div>
-                            <div class="text-slate-500 mt-1">${itemsList} | <strong class="text-indigo-600">${o.pickup}</strong></div>
+                            <div class="text-slate-500 mt-1">${escapeHTML(itemsList)} | <strong class="text-indigo-600">${escapeHTML(o.pickup)}</strong></div>
                         </div>
                         <div class="flex items-center space-x-3">
                             <span class="font-black text-slate-900 text-sm">${o.total.toFixed(2)} zł</span>
